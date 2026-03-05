@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Mic, Navigation, Shield, Zap, IndianRupee, RotateCw } from 'lucide-react';
+import { Search, MapPin, Mic, Navigation, Shield, Zap, IndianRupee, RotateCw, Loader2 } from 'lucide-react';
 
-export default function HomeSearch({ onSearch }) {
+export default function HomeSearch({ onSearch, isLoading }) {
     const [activeTab, setActiveTab] = useState('fastest');
 
     const tabs = [
@@ -71,9 +71,17 @@ export default function HomeSearch({ onSearch }) {
                 {/* Search Primary Button */}
                 <button
                     onClick={onSearch}
-                    className="w-full mt-6 bg-primary-600 hover:bg-primary-700 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-primary-500/30 interactive-tap hover-lift flex justify-center items-center gap-2"
+                    disabled={isLoading}
+                    className="w-full mt-6 bg-primary-600 hover:bg-primary-700 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-primary-500/30 interactive-tap hover-lift flex justify-center items-center gap-2 disabled:opacity-70 disabled:pointer-events-none transition-all"
                 >
-                    Find Routes
+                    {isLoading ? (
+                        <>
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            Analyzing Routes...
+                        </>
+                    ) : (
+                        'Find Routes'
+                    )}
                 </button>
             </div>
 

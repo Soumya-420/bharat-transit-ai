@@ -1,19 +1,35 @@
 import React from 'react';
 import { Clock, IndianRupee, ShieldCheck, ChevronRight, Train, Bus, PersonStanding, CarTaxiFront } from 'lucide-react';
 
-export default function RouteResults({ onSelectRoute }) {
+export default function RouteResults({ onSelectRoute, apiResult }) {
+    // Dynamic safety score or fallback
+    const dynamicSafety = apiResult?.safety_score ? parseInt(apiResult.safety_score) : null;
+
+    // Helper to parse "Metro -> Bus" into an array of {icon, label}
+    const parseRouteModes = (routeStr, fallbackModes) => {
+        if (!routeStr) return fallbackModes;
+
+        const modeLabels = routeStr.split('→').map(m => m.trim().toLowerCase());
+        return modeLabels.map(label => {
+            if (label.includes('metro') || label.includes('train')) return { icon: <Train size={16} />, label: 'Metro' };
+            if (label.includes('bus')) return { icon: <Bus size={16} />, label: 'Bus' };
+            if (label.includes('auto') || label.includes('cab')) return { icon: <CarTaxiFront size={16} />, label: 'Auto' };
+            return { icon: <PersonStanding size={16} />, label: 'Walk' };
+        });
+    };
+
     const routes = [
         {
             id: 1,
             type: 'Fastest',
             time: '32 mins',
             cost: '45',
-            safety: 82,
-            modes: [
+            safety: dynamicSafety || 82, // Use API score or default
+            modes: parseRouteModes(apiResult?.fastest_route, [
                 { icon: <Train size={16} />, label: 'Metro' },
                 { icon: <Bus size={16} />, label: 'Bus' },
                 { icon: <PersonStanding size={16} />, label: 'Walk' },
-            ],
+            ]),
             tagColor: 'bg-blue-100 text-blue-700 border-blue-200'
         },
         {
@@ -21,11 +37,11 @@ export default function RouteResults({ onSelectRoute }) {
             type: 'Safest',
             time: '40 mins',
             cost: '50',
-            safety: 94,
-            modes: [
+            safety: dynamicSafety || 94,
+            modes: parseRouteModes(apiResult?.safest_route, [
                 { icon: <Train size={16} />, label: 'Metro' },
                 { icon: <CarTaxiFront size={16} />, label: 'Auto' },
-            ],
+            ]),
             tagColor: 'bg-emerald-100 text-emerald-700 border-emerald-200',
             isRecommended: true
         },
@@ -34,7 +50,7 @@ export default function RouteResults({ onSelectRoute }) {
             type: 'Budget',
             time: '55 mins',
             cost: '15',
-            safety: 76,
+            safety: dynamicSafety ? Math.max(0, dynamicSafety - 15) : 76,
             modes: [
                 { icon: <Bus size={16} />, label: 'Bus (₹10 Mode)' },
             ],
@@ -53,6 +69,23 @@ export default function RouteResults({ onSelectRoute }) {
                     <Clock size={12} className="text-slate-400" /> Optimize
                 </div>
             </div>
+
+            {apiResult?.reason && (
+                <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-3xl mb-4 relative overflow-hidden shadow-sm">
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-indigo-100 rounded-full blur-2xl -mr-4 -mt-4"></div>
+                    <div className="relative z-10 flex gap-3">
+                        <div className="bg-indigo-100 p-2 text-indigo-600 rounded-xl h-fit">
+                            <ShieldCheck className="w-5 h-5" />
+                        </div>
+                        <div>
+                            <h3 className="text-sm font-bold text-indigo-900 mb-1">AI Recommendation Reason</h3>
+                            <p className="text-xs text-indigo-700 font-medium leading-relaxed">
+                                {apiResult.reason}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {routes.map((route) => (
                 <div

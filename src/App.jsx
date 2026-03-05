@@ -12,9 +12,23 @@ function App() {
   // currentScreen can be: 'home', 'results', 'navigation', 'scan', 'companion', 'budget', 'profile'
 
   const [selectedRoute, setSelectedRoute] = useState(null);
+  const [apiResult, setApiResult] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSearch = () => {
-    setCurrentScreen('results');
+  const handleSearch = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("https://YOUR_LAMBDA_URL.lambda-url.ap-south-1.on.aws/");
+      const data = await response.json();
+      const result = typeof data.body === 'string' ? JSON.parse(data.body) : data.body;
+      setApiResult(result || data); // Fallback to raw data if parsing isn't exact to user's example
+    } catch (error) {
+      console.error("Error connecting to backend:", error);
+      // alert("Error connecting to backend"); // Keeping UX smooth for demo, not alerting directly here
+    } finally {
+      setIsLoading(false);
+      setCurrentScreen('results');
+    }
   };
 
   const handleSelectRoute = (route) => {
@@ -25,9 +39,9 @@ function App() {
   const renderContent = () => {
     switch (currentScreen) {
       case 'home':
-        return <HomeSearch onSearch={handleSearch} />;
+        return <HomeSearch onSearch={handleSearch} isLoading={isLoading} />;
       case 'results':
-        return <RouteResults onSelectRoute={handleSelectRoute} />;
+        return <RouteResults onSelectRoute={handleSelectRoute} apiResult={apiResult} />;
       case 'navigation':
         return <LiveNavigation route={selectedRoute} />;
       case 'companion':
