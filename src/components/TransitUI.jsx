@@ -1,7 +1,7 @@
 import { useState } from "react"
 
 const API_URL =
-    "https://6bgj5h4ds5jind5ja52riuars40khvxt.lambda-url.ap-south-1.on.aws/"
+    "https://6bgj5h4ds5ijnd5ja52riuars40khvxt.lambda-url.ap-south-1.on.aws/"
 
 export default function TransitUI() {
 
