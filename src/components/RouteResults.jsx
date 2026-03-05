@@ -1,0 +1,124 @@
+import React from 'react';
+import { Clock, IndianRupee, ShieldCheck, ChevronRight, Train, Bus, PersonStanding, CarTaxiFront } from 'lucide-react';
+
+export default function RouteResults({ onSelectRoute }) {
+    const routes = [
+        {
+            id: 1,
+            type: 'Fastest',
+            time: '32 mins',
+            cost: '45',
+            safety: 82,
+            modes: [
+                { icon: <Train size={16} />, label: 'Metro' },
+                { icon: <Bus size={16} />, label: 'Bus' },
+                { icon: <PersonStanding size={16} />, label: 'Walk' },
+            ],
+            tagColor: 'bg-blue-100 text-blue-700 border-blue-200'
+        },
+        {
+            id: 2,
+            type: 'Safest',
+            time: '40 mins',
+            cost: '50',
+            safety: 94,
+            modes: [
+                { icon: <Train size={16} />, label: 'Metro' },
+                { icon: <CarTaxiFront size={16} />, label: 'Auto' },
+            ],
+            tagColor: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+            isRecommended: true
+        },
+        {
+            id: 3,
+            type: 'Budget',
+            time: '55 mins',
+            cost: '15',
+            safety: 76,
+            modes: [
+                { icon: <Bus size={16} />, label: 'Bus (₹10 Mode)' },
+            ],
+            tagColor: 'bg-amber-100 text-amber-700 border-amber-200'
+        }
+    ];
+
+    return (
+        <div className="p-4 space-y-4 pb-24 animate-fade-in bg-slate-50 min-h-full">
+            <div className="flex items-center justify-between mb-2">
+                <div>
+                    <h2 className="text-xl font-bold tracking-tight text-slate-800">Available Routes</h2>
+                    <p className="text-xs text-slate-500 font-medium">NDLS to India Gate</p>
+                </div>
+                <div className="bg-white px-3 py-1.5 rounded-full shadow-sm text-xs font-bold text-slate-600 border border-slate-200 flex items-center gap-1">
+                    <Clock size={12} className="text-slate-400" /> Optimize
+                </div>
+            </div>
+
+            {routes.map((route) => (
+                <div
+                    key={route.id}
+                    className={`bg-white rounded-3xl p-5 border transition-all hover-lift interactive-tap relative overflow-hidden
+            ${route.isRecommended ? 'border-emerald-500 shadow-md shadow-emerald-500/10' : 'border-slate-100 shadow-sm'}
+          `}
+                    onClick={() => onSelectRoute(route)}
+                >
+                    {route.isRecommended && (
+                        <div className="absolute right-0 top-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl z-10">
+                            Ai Recommended
+                        </div>
+                    )}
+
+                    <div className="flex justify-between items-start mb-4">
+                        <span className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg border ${route.tagColor}`}>
+                            {route.type}
+                        </span>
+                        <div className="text-right">
+                            <span className="font-black text-2xl text-slate-800 flex items-center justify-end">
+                                <span className="text-sm text-slate-400 mr-0.5 font-bold">₹</span>{route.cost}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-4 mb-5">
+                        <div className="flex items-center gap-1.5 px-3 py-2 bg-slate-50 rounded-xl font-semibold text-sm text-slate-700 w-fit">
+                            <Clock className="w-4 h-4 text-slate-400" />
+                            {route.time}
+                        </div>
+
+                        <div className={`flex items-center gap-1.5 px-3 py-2 rounded-xl font-bold text-sm bg-opacity-10
+              ${route.safety > 90 ? 'text-emerald-700 bg-emerald-500' : 'text-amber-700 bg-amber-500'}
+            `}>
+                            <ShieldCheck className="w-4 h-4" />
+                            Safety {route.safety}%
+                        </div>
+                    </div>
+
+                    {/* Transit Steps Graphic */}
+                    <div className="relative pt-2 pb-4 px-2">
+                        <div className="absolute top-1/2 left-0 w-full h-[2px] bg-slate-100 -translate-y-1/2 z-0 rounded-full"></div>
+
+                        <div className="relative z-10 flex justify-between">
+                            {route.modes.map((mode, idx) => (
+                                <div key={idx} className="flex flex-col items-center">
+                                    <div className="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center shadow-md mb-2">
+                                        {mode.icon}
+                                    </div>
+                                    <span className="text-[10px] font-bold text-slate-500 text-center uppercase tracking-wide">
+                                        {mode.label}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center group">
+                        <span className="text-sm font-bold text-primary-600">View Details</span>
+                        <div className="bg-primary-50 p-1.5 rounded-full text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-colors">
+                            <ChevronRight className="w-4 h-4" />
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+}
