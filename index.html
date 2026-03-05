@@ -1,131 +1,20 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Bharat Transit AI</title>
-
-  <style>
-    body {
-      font-family: Arial;
-      background: #f4f6f8;
-      text-align: center;
-    }
-
-    h1 {
-      margin-top: 40px;
-      color: #1a237e;
-    }
-
-    .container {
-      width: 400px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    input {
-      width: 90%;
-      padding: 10px;
-      margin: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      padding: 10px 20px;
-      background: #ff9800;
-      border: none;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #f57c00;
-    }
-
-    .card {
-      margin-top: 20px;
-      padding: 15px;
-      background: #f1f3f5;
-      border-radius: 8px;
-    }
-
-    .score {
-      font-size: 22px;
-      color: green;
-    }
-  </style>
 </head>
 
-
 <body>
-
-  <h1>Bharat Transit AI</h1>
-
-  <div class="container">
-
-    <input id="origin" placeholder="Enter Origin" />
-
-    <input id="destination" placeholder="Enter Destination" />
-
-    <button onclick="findRoute()">Find Route</button>
-
-    <div id="results"></div>
-
-  </div>
-
-
-  <script>
-
-    async function findRoute() {
-
-      const origin = document.getElementById("origin").value
-      const destination = document.getElementById("destination").value
-
-
-      const res = await fetch(
-        "https://6bgj5h4ds5ijnd5ja52riuars40khvxt.lambda-url.ap-south-1.on.aws/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            origin: origin,
-            destination: destination
-          })
-        }
-      )
-
-      const data = await res.json()
-
-      document.getElementById("results").innerHTML = `
-
-<div class="card">
-<h3>⚡ Fastest Route</h3>
-<p>${data.fastest_route}</p>
-</div>
-
-<div class="card">
-<h3>🛡 Safest Route</h3>
-<p>${data.safest_route}</p>
-</div>
-
-<div class="card">
-<h3>Safety Score</h3>
-<div class="score">${data.safety_score}/100</div>
-<p>${data.reason}</p>
-</div>
-
-`
-
-    }
-
-  </script>
-
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
 </body>
 
 </html>
