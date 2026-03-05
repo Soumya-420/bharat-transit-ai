@@ -18,13 +18,25 @@ function App() {
   const handleSearch = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("https://YOUR_LAMBDA_URL.lambda-url.ap-south-1.on.aws/");
+      const response = await fetch("https://6bqi5h4ds5iind5ia52riuars40khvxt.lambda-url.ap-south-1.on.aws/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          origin: "Salt Lake Sector V",
+          destination: "Howrah Station"
+        })
+      });
+
       const data = await response.json();
-      const result = typeof data.body === 'string' ? JSON.parse(data.body) : data.body;
-      setApiResult(result || data); // Fallback to raw data if parsing isn't exact to user's example
+      // AWS Lambda proxy integratons often wrap the payload in a 'body' string
+      const result = (data && data.body && typeof data.body === 'string') ? JSON.parse(data.body) : data;
+
+      setApiResult(result);
     } catch (error) {
       console.error("Error connecting to backend:", error);
-      // alert("Error connecting to backend"); // Keeping UX smooth for demo, not alerting directly here
+      alert("Error connecting to backend");
     } finally {
       setIsLoading(false);
       setCurrentScreen('results');
