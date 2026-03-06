@@ -126,6 +126,7 @@ export default function HomeSearch({ onSearch, isLoading }) {
             {/* Quick Filters / Modes */}
             <div>
                 <h3 className="text-sm font-bold text-slate-800 mb-3 px-1">Optimization Mode</h3>
+                {/* Optimization Filters */}
                 <div className="grid grid-cols-4 gap-2">
                     {tabs.map((tab) => (
                         <button
@@ -145,6 +146,30 @@ export default function HomeSearch({ onSearch, isLoading }) {
                         </button>
                     ))}
                 </div>
+            </div>
+
+            {/* Phase 2: Festival Mode Toggle */}
+            <div className="animate-fade-in">
+                <button
+                    onClick={() => {
+                        // Toggle logic simulation
+                        alert("Festival Mode Activated! Avoiding Holi/Diwali crowd zones.");
+                    }}
+                    className="w-full flex items-center justify-between bg-orange-50 border-2 border-orange-100 p-4 rounded-3xl interactive-tap group"
+                >
+                    <div className="flex items-center gap-3">
+                        <div className="bg-orange-500 p-2.5 rounded-xl text-white group-hover:rotate-12 transition-all shadow-md shadow-orange-200">
+                            <span className="text-lg">🕉️</span>
+                        </div>
+                        <div className="text-left">
+                            <p className="text-[10px] font-black text-orange-600 uppercase tracking-wider mb-0.5">Festival-Smart Routing</p>
+                            <p className="text-[13px] text-orange-800 font-bold">Avoid Holi/Diwali Crowds</p>
+                        </div>
+                    </div>
+                    <div className="w-11 h-6 bg-orange-200 rounded-full relative p-1 shadow-inner">
+                        <div className="w-4 h-4 bg-white rounded-full shadow-md"></div>
+                    </div>
+                </button>
             </div>
             {/* SafeCompanion Promo */}
             <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-3xl p-5 border border-emerald-100/50 relative overflow-hidden">

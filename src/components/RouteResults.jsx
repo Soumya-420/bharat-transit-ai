@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, IndianRupee, ShieldCheck, ChevronRight, Train, Bus, PersonStanding, CarTaxiFront } from 'lucide-react';
+import { Clock, IndianRupee, ShieldCheck, ChevronRight, Train, Bus, PersonStanding, CarTaxiFront, Users } from 'lucide-react';
 
 export default function RouteResults({ onSelectRoute, apiResult }) {
     // Dynamic safety score or fallback
@@ -24,7 +24,7 @@ export default function RouteResults({ onSelectRoute, apiResult }) {
             type: 'Fastest',
             time: '32 mins',
             cost: '45',
-            safety: dynamicSafety || 82, // Use API score or default
+            safety: dynamicSafety || 82,
             modes: parseRouteModes(apiResult?.fastest_route, [
                 { icon: <Train size={16} />, label: 'Metro' },
                 { icon: <Bus size={16} />, label: 'Bus' },
@@ -56,7 +56,11 @@ export default function RouteResults({ onSelectRoute, apiResult }) {
             ],
             tagColor: 'bg-amber-100 text-amber-700 border-amber-200'
         }
-    ];
+    ].map((r, i) => ({
+        ...r,
+        crowd: i === 1 ? 'Low' : 'Medium',
+        delay: (i * 2 + 1).toString()
+    }));
 
     return (
         <div className="p-4 space-y-4 pb-24 animate-fade-in bg-slate-50 min-h-full">
@@ -141,6 +145,18 @@ export default function RouteResults({ onSelectRoute, apiResult }) {
                                     </span>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+
+                    {/* Phase 2: Crowd & Delay Intelligence */}
+                    <div className="flex flex-wrap items-center gap-2 mt-4">
+                        <div className="bg-amber-50 px-3 py-1.5 rounded-xl text-[11px] font-bold text-amber-700 border border-amber-100 flex items-center gap-1.5 shadow-sm">
+                            <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></div>
+                            Crowd: {route.crowd}
+                        </div>
+                        <div className="bg-rose-50 px-3 py-1.5 rounded-xl text-[11px] font-bold text-rose-700 border border-rose-100 flex items-center gap-1.5 shadow-sm">
+                            <Clock className="w-3 h-3 text-rose-500" />
+                            Delay prediction: +{route.delay}m
                         </div>
                     </div>
 

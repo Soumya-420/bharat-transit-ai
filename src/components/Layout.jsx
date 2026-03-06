@@ -15,11 +15,14 @@ export default function Layout({ children, currentScreen, setCurrentScreen }) {
                         Bharat <span className="text-accent-amber">Transit</span> AI
                     </h1>
                     <div className="flex items-center gap-1 mt-0.5 bg-slate-100 px-2 py-0.5 rounded-md">
-                        <span className="text-[9px] font-bold text-primary-600 uppercase">EN</span>
-                        <span className="text-slate-300 text-[8px]">|</span>
-                        <span className="text-[9px] font-medium text-slate-500 hover:text-primary-600 cursor-pointer transition-colors">HI</span>
-                        <span className="text-slate-300 text-[8px]">|</span>
-                        <span className="text-[9px] font-medium text-slate-500 hover:text-primary-600 cursor-pointer transition-colors">BN</span>
+                        <span className="text-[9px] font-bold text-primary-600 uppercase tracking-tighter">EN</span>
+                        <div className="w-[1px] h-2 bg-slate-300 mx-0.5"></div>
+                        <span className="text-[9px] font-medium text-slate-500 hover:text-primary-600 cursor-pointer transition-colors tracking-tighter">हिंदी</span>
+                        <div className="w-[1px] h-2 bg-slate-200 mx-0.5"></div>
+                        <div className="flex items-center gap-1 ml-1 pl-1 border-l border-slate-200">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                            <span className="text-[8px] font-black text-emerald-600 uppercase tracking-[0.1em]">Offline Ready</span>
+                        </div>
                     </div>
                 </div>
                 <button className="p-2 -mr-2 rounded-full hover:bg-slate-100 transition-colors interactive-tap text-slate-700">
