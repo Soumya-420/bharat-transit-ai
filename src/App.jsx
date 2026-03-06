@@ -24,7 +24,8 @@ function App() {
       const response = await fetch("https://ow6sg43ydy2sumvnfcylkakw240qqudq.lambda-url.ap-south-1.on.aws/", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          // Send as text/plain to bypass strict browser CORS preflight (OPTIONS) checks
+          "Content-Type": "text/plain"
         },
         body: JSON.stringify({
           origin: origin,
