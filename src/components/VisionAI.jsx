@@ -7,16 +7,16 @@ export default function VisionAI({ lang, onNavigate }) {
     const [showLiveData, setShowLiveData] = useState(false);
     const [busProgress, setBusProgress] = useState(1);
     const [mockLocation, setMockLocation] = useState({
-        near: "Park Street",
-        status: "Moving toward Ballygunge"
+        near: "Nehru Place",
+        status: "Moving toward IIT Gate"
     });
     const [isSaved, setIsSaved] = useState(false);
 
     const stops = [
-        { id: 1, name: "Park Street", time: "10:15 AM", status: "Passed" },
-        { id: 2, name: "Elliot Road", time: "10:22 AM", status: "Near" },
-        { id: 3, name: "Beckbagan", time: "10:35 AM", status: "Upcoming" },
-        { id: 4, name: "Ballygunge", time: "10:45 AM", status: "Destination" }
+        { id: 1, name: "Nehru Place", time: "10:15 AM", status: "Passed" },
+        { id: 2, name: "IIT Gate", time: "10:30 AM", status: "Near" },
+        { id: 3, name: "Munirka", time: "10:45 AM", status: "Upcoming" },
+        { id: 4, name: "Dhaula Kuan", time: "11:15 AM", status: "Destination" }
     ];
 
     // Translation dictionary
@@ -73,7 +73,7 @@ export default function VisionAI({ lang, onNavigate }) {
             const timer = setTimeout(() => {
                 setScanStatus('identified');
                 announceIdentification();
-            }, 3000);
+            }, 5000);
             return () => clearTimeout(timer);
         }
     }, [scanStatus, mode]);
@@ -83,10 +83,10 @@ export default function VisionAI({ lang, onNavigate }) {
         const interval = setInterval(() => {
             setBusProgress(prev => {
                 const next = (prev % 4) + 1;
-                if (next === 1) setMockLocation({ near: "Park Street", status: "Moving toward Elliot Road" });
-                if (next === 2) setMockLocation({ near: "Elliot Road", status: "Moving toward Beckbagan" });
-                if (next === 3) setMockLocation({ near: "Beckbagan", status: "Moving toward Ballygunge" });
-                if (next === 4) setMockLocation({ near: "Near Ballygunge", status: "Arriving at Destination" });
+                if (next === 1) setMockLocation({ near: "Nehru Place", status: "Moving toward IIT Gate" });
+                if (next === 2) setMockLocation({ near: "IIT Gate", status: "Moving toward Munirka" });
+                if (next === 3) setMockLocation({ near: "Munirka", status: "Moving toward Dhaula Kuan" });
+                if (next === 4) setMockLocation({ near: "Near Dhaula Kuan", status: "Arriving at Destination" });
                 return next;
             });
         }, 5000);
@@ -227,7 +227,7 @@ export default function VisionAI({ lang, onNavigate }) {
                                     <h3 className="font-black text-2xl text-slate-900 leading-tight">Bus 764</h3>
                                     <div className="flex items-center gap-1.5 text-[10px] font-black mt-1 text-slate-500 uppercase tracking-tighter">
                                         <span className="text-primary-600 px-1.5 py-0.5 bg-primary-50 rounded-md border border-primary-100">DTC Route</span>
-                                        <span className="flex items-center gap-1 leading-none"><MapPin size={10} className="text-primary-500" /> Park Street → Ballygunge</span>
+                                        <span className="flex items-center gap-1 leading-none"><MapPin size={10} className="text-primary-500" /> Nehru Place → Dhaula Kuan</span>
                                     </div>
                                 </div>
                             </div>
@@ -302,7 +302,7 @@ export default function VisionAI({ lang, onNavigate }) {
                             <span className="bg-primary-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Live Tracking</span>
                             <h3 className="text-4xl font-black text-white mt-2 tracking-tighter">Bus 764</h3>
                             <p className="text-primary-400 text-xs font-bold flex items-center gap-2 mt-1">
-                                <Navigation2 size={12} className="rotate-45" /> Park Street → Ballygunge
+                                <Navigation2 size={12} className="rotate-45" /> Nehru Place → Dhaula Kuan
                             </p>
                         </div>
                         <button onClick={() => setShowLiveData(false)} className="bg-white/10 p-4 rounded-full text-white border border-white/10 group">
