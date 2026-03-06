@@ -3,6 +3,41 @@ import { Search, MapPin, Mic, Navigation, Shield, Zap, IndianRupee, RotateCw, Lo
 
 export default function HomeSearch({ onSearch, isLoading }) {
     const [activeTab, setActiveTab] = useState('fastest');
+    const [isListening, setIsListening] = useState(false);
+    const [destinationText, setDestinationText] = useState("India Gate");
+
+    const handleVoiceInput = () => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert("Speech Recognition API is not supported in your browser.");
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-IN';
+        recognition.interimResults = false;
+
+        recognition.onstart = () => {
+            setIsListening(true);
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            setDestinationText(transcript);
+            setIsListening(false);
+        };
+
+        recognition.onerror = (event) => {
+            console.error("Speech recognition error", event.error);
+            setIsListening(false);
+        };
+
+        recognition.onend = () => {
+            setIsListening(false);
+        };
+
+        recognition.start();
+    };
 
     const tabs = [
         { id: 'fastest', label: 'Fastest', icon: <Zap size={14} /> },
@@ -44,7 +79,8 @@ export default function HomeSearch({ onSearch, isLoading }) {
                             type="text"
                             className="block w-full pl-12 pr-4 py-3.5 bg-slate-50 border-0 rounded-2xl text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all shadow-inner font-medium text-[15px]"
                             placeholder="Enter Destination"
-                            defaultValue="India Gate"
+                            value={destinationText}
+                            onChange={(e) => setDestinationText(e.target.value)}
                         />
                     </div>
                 </div>
@@ -52,12 +88,14 @@ export default function HomeSearch({ onSearch, isLoading }) {
                 {/* Action Buttons */}
                 <div className="mt-6 space-y-3">
                     <button
-                        className="w-full bg-primary-50 hover:bg-primary-100 text-primary-700 py-3.5 rounded-2xl font-bold flex items-center justify-center gap-2 transition-colors interactive-tap border-2 border-primary-100"
-                        onClick={() => { }}
+                        className={`w-full py-3.5 rounded-2xl font-bold flex items-center justify-center gap-2 transition-colors interactive-tap border-2
+                            ${isListening ? 'bg-rose-100 text-rose-700 border-rose-200 animate-pulse' : 'bg-primary-50 hover:bg-primary-100 text-primary-700 border-primary-100'}
+                        `}
+                        onClick={handleVoiceInput}
                     >
-                        <Mic className="h-5 w-5" />
-                        <span>Voice Input</span>
-                        <span className="bg-primary-200 text-primary-800 text-[10px] uppercase font-black px-2 py-0.5 rounded-full ml-1 rotate-3">Tap to Speak</span>
+                        <Mic className={`h-5 w-5 ${isListening ? 'animate-bounce' : ''}`} />
+                        <span>{isListening ? 'Listening...' : 'Voice Input'}</span>
+                        {!isListening && <span className="bg-primary-200 text-primary-800 text-[10px] uppercase font-black px-2 py-0.5 rounded-full ml-1 rotate-3">Tap to Speak</span>}
                     </button>
 
                     <button
@@ -70,7 +108,7 @@ export default function HomeSearch({ onSearch, isLoading }) {
 
                 {/* Search Primary Button */}
                 <button
-                    onClick={onSearch}
+                    onClick={() => onSearch("New Delhi Railway Station", destinationText)}
                     disabled={isLoading}
                     className="w-full mt-6 bg-primary-600 hover:bg-primary-700 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-primary-500/30 interactive-tap hover-lift flex justify-center items-center gap-2 disabled:opacity-70 disabled:pointer-events-none transition-all"
                 >

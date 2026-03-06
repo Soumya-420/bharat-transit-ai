@@ -10,9 +10,18 @@ export default function Layout({ children, currentScreen, setCurrentScreen }) {
                 <button className="p-2 -ml-2 rounded-full hover:bg-slate-100 transition-colors interactive-tap text-slate-700">
                     <Menu className="w-6 h-6" />
                 </button>
-                <h1 className="text-xl font-bold text-slate-800 tracking-tight">
-                    Bharat <span className="text-accent-amber">Transit</span> AI
-                </h1>
+                <div className="flex flex-col items-center">
+                    <h1 className="text-xl font-bold text-slate-800 tracking-tight leading-tight">
+                        Bharat <span className="text-accent-amber">Transit</span> AI
+                    </h1>
+                    <div className="flex items-center gap-1 mt-0.5 bg-slate-100 px-2 py-0.5 rounded-md">
+                        <span className="text-[9px] font-bold text-primary-600 uppercase">EN</span>
+                        <span className="text-slate-300 text-[8px]">|</span>
+                        <span className="text-[9px] font-medium text-slate-500 hover:text-primary-600 cursor-pointer transition-colors">HI</span>
+                        <span className="text-slate-300 text-[8px]">|</span>
+                        <span className="text-[9px] font-medium text-slate-500 hover:text-primary-600 cursor-pointer transition-colors">BN</span>
+                    </div>
+                </div>
                 <button className="p-2 -mr-2 rounded-full hover:bg-slate-100 transition-colors interactive-tap text-slate-700">
                     <MoreVertical className="w-6 h-6" />
                 </button>
