@@ -12,6 +12,7 @@ function App() {
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [apiResult, setApiResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [festivalMode, setFestivalMode] = useState(false);
 
   const handleSearch = async (originArg, destinationArg) => {
     setIsLoading(true);
@@ -81,7 +82,7 @@ function App() {
   const renderContent = () => {
     switch (currentScreen) {
       case 'home':
-        return <HomeSearch onSearch={handleSearch} isLoading={isLoading} festivalMode={festivalMode} setFestivalMode={setFestivalMode} />;
+        return <HomeSearch onSearch={handleSearch} isLoading={isLoading} />;
       case 'results':
         return <RouteResults onSelectRoute={handleSelectRoute} apiResult={apiResult} festivalMode={festivalMode} />;
       case 'navigation':
