@@ -1,47 +1,38 @@
 import React, { useMemo } from 'react';
-import { Mic, ShieldAlert, Share2, Compass, ArrowRight, Train, Navigation, BellRing } from 'lucide-react';
-import Map, { Marker, Source, Layer } from 'react-map-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import { Mic, ShieldAlert, Share2, Compass, ArrowRight, Train, Navigation, BellRing, MapPin } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, Polyline, ZoomControl } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+// Fix for default marker icons in React Leaflet
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: markerIcon2x,
+    iconUrl: markerIcon,
+    shadowUrl: markerShadow,
+});
 
 export default function LiveNavigation({ route, apiResult }) {
-    // GeoJSON route feature
-    const routeGeojson = useMemo(() => {
-        if (!apiResult?.route_geojson) return null;
-        return {
-            type: 'Feature',
-            properties: {},
-            geometry: {
-                type: 'LineString',
-                coordinates: apiResult.route_geojson
-            }
-        };
+    // Leaflet uses [latitude, longitude], while GeoJSON uses [longitude, latitude]
+    // We must swap the coordinates for the polyline
+    const polylineCoords = useMemo(() => {
+        if (!apiResult?.route_geojson) return [];
+        return apiResult.route_geojson.map(coord => [coord[1], coord[0]]);
     }, [apiResult]);
 
-    // Layer styling for the path
-    const routeLayerStyle = {
-        id: 'route-line',
-        type: 'line',
-        source: 'route',
-        layout: {
-            'line-join': 'round',
-            'line-cap': 'round'
-        },
-        paint: {
-            'line-color': '#0ea5e9', // Primary blue
-            'line-width': 6,
-            'line-opacity': 0.8
-        }
-    };
-
     // Calculate dynamic coordinates from data if available
-    const startCoords = apiResult?.route_geojson?.[0] || [77.2185, 28.6141];
-    const endCoords = apiResult?.route_geojson?.[apiResult.route_geojson.length - 1] || [77.2090, 28.6139];
+    const startCoords = polylineCoords.length > 0 ? polylineCoords[0] : [28.6141, 77.2185];
+    const endCoords = polylineCoords.length > 0 ? polylineCoords[polylineCoords.length - 1] : [28.6139, 77.2090];
 
     return (
-        <div className="h-full flex flex-col bg-slate-50 animate-slide-up pb-20">
+        <div className="h-full flex flex-col bg-slate-50 animate-slide-up pb-20 relative">
 
             {/* Search Header Info */}
-            <div className="bg-white px-4 py-3 shadow-sm z-10">
+            <div className="bg-white px-4 py-3 shadow-sm z-[1001]">
                 <div className="flex items-center gap-3 bg-slate-50 rounded-xl p-3 border border-slate-100">
                     <div className="bg-emerald-100 p-2 rounded-lg">
                         <Train className="w-5 h-5 text-emerald-600" />
@@ -57,37 +48,39 @@ export default function LiveNavigation({ route, apiResult }) {
                 </div>
             </div>
 
-            {/* Map Area */}
-            <div className="flex-1 relative bg-slate-200 overflow-hidden">
-                <Map
-                    initialViewState={{
-                        longitude: startCoords[0],
-                        latitude: startCoords[1],
-                        zoom: 13
-                    }}
-                    mapStyle="mapbox://styles/mapbox/streets-v12"
-                    mapboxAccessToken="pk.eyJ1IjoicGxhY2Vob2xkZXIiLCJhIjoiY2xhY2Vob2xkZXIifQ.placeholder" // Replace with real token
-                    style={{ width: '100%', height: '100%' }}
+            {/* Map Area - Leaflet */}
+            <div className="flex-1 relative bg-slate-200 overflow-hidden z-0">
+                <MapContainer
+                    center={startCoords}
+                    zoom={14}
+                    scrollWheelZoom={true}
+                    style={{ height: '100%', width: '100%' }}
+                    zoomControl={false}
                 >
-                    {routeGeojson && (
-                        <Source id="route-source" type="geojson" data={routeGeojson}>
-                            <Layer {...routeLayerStyle} />
-                        </Source>
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+
+                    {polylineCoords.length > 0 && (
+                        <Polyline
+                            positions={polylineCoords}
+                            pathOptions={{ color: '#0ea5e9', weight: 6, opacity: 0.8, lineJoin: 'round' }}
+                        />
                     )}
 
-                    <Marker longitude={endCoords[0]} latitude={endCoords[1]} anchor="bottom">
-                        <div className="bg-white p-1 rounded-full shadow-lg border-2 border-emerald-500">
-                            <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
-                        </div>
+                    {/* Start Marker */}
+                    <Marker position={startCoords}>
                     </Marker>
-                    <Marker longitude={startCoords[0]} latitude={startCoords[1]} anchor="bottom">
-                        <div className="bg-primary-500 text-white p-1.5 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)] border-2 border-white">
-                            <Navigation className="w-4 h-4" />
-                        </div>
-                    </Marker>
-                </Map>
 
-                <div className="absolute right-4 bottom-4 flex flex-col gap-2 z-20">
+                    {/* End Marker */}
+                    <Marker position={endCoords}>
+                    </Marker>
+
+                    <ZoomControl position="bottomright" />
+                </MapContainer>
+
+                <div className="absolute right-4 bottom-28 flex flex-col gap-2 z-[1000]">
                     <button className="bg-white p-2.5 rounded-full shadow-[0_4px_10px_rgba(0,0,0,0.1)] text-slate-700 hover:text-primary-600 transition-colors interactive-tap">
                         <Compass className="w-5 h-5" />
                     </button>
@@ -98,7 +91,7 @@ export default function LiveNavigation({ route, apiResult }) {
             </div>
 
             {/* Floating Instruction Card */}
-            <div className="absolute bottom-24 left-4 right-4 bg-slate-900 text-white rounded-3xl p-5 shadow-2xl z-20 border border-slate-800 glass-panel-dark">
+            <div className="absolute bottom-24 left-4 right-4 bg-slate-900 text-white rounded-3xl p-5 shadow-2xl z-[1000] border border-slate-800 glass-panel-dark">
                 <div className="flex gap-4">
                     <div className="bg-primary-500/20 p-3 rounded-2xl h-fit border border-primary-500/30">
                         <ArrowRight className="w-6 h-6 text-primary-400" />
