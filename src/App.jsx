@@ -55,15 +55,46 @@ function App() {
         }
       };
 
-      setApiResult(orchestratedResult);
+      // AUTO-DETECTION & SMART ROUTING LOGIC (Simulated AI)
+      const isFestival = destination.toLowerCase().includes("kolkata") || destination.toLowerCase().includes("gate") || destination.toLowerCase().includes("chowk");
+      setFestivalMode(isFestival);
 
-      // AUTO-DETECTION LOGIC (Simulated AI)
-      // If user is searching in a city with an active festival (e.g., Kolkata during Puja)
-      if (destination.toLowerCase().includes("kolkata") || destination.toLowerCase().includes("gate") || destination.toLowerCase().includes("chowk")) {
-        setFestivalMode(true);
+      if (isFestival) {
+        orchestratedResult.festival_reason = "Major Carnival/Event in progress";
+        orchestratedResult.festival_guidance = "AI is routing via crowd-free secondary lanes and pedestrian-friendly paths to avoid heavy event congestion.";
+        orchestratedResult.reason = "Optimized for festival safety: Avoiding 4 high-density crowd zones near the venue.";
+
+        // Inject Festival-Aware labels
+        orchestratedResult.labels = {
+          fastest: "Fastest (Smart Avoidance)",
+          safest: "Safest (Crowd-Free)",
+          cheapest: "Cheapest (Festival Optimized)"
+        };
+
+        // Granular Step Generation for Festival
+        orchestratedResult.detailed_steps = [
+          { type: 'walk', instruction: "Walk 150m towards the northern exit to avoid main gate crowds", distance: "150m", pathType: "Walking Path" },
+          { type: 'turn', instruction: "Turn Right at the police kiosk", distance: "Turn", pathType: "Walking Path" },
+          { type: 'transit', instruction: "Board Special Festival Shuttle (Route S-1) towards Park Street", distance: "Board", pathType: "Driving Road" },
+          { type: 'walk', instruction: "Walk 200m through the illuminated pedestrian lane", distance: "200m", pathType: "Walking Path" },
+          { type: 'arrive', instruction: "Arrive safely at your destination", distance: "Arrive", pathType: "Destination" }
+        ];
       } else {
-        setFestivalMode(false);
+        orchestratedResult.labels = {
+          fastest: "Fastest Route",
+          safest: "Safest Route",
+          cheapest: "Cheapest Route"
+        };
+
+        orchestratedResult.detailed_steps = [
+          { type: 'walk', instruction: "Walk 200m to the nearest station", distance: "200m", pathType: "Walking Path" },
+          { type: 'transit', instruction: "Board Metro Blue Line towards destination", distance: "Board", pathType: "Driving Road" },
+          { type: 'walk', instruction: "Walk 100m to exit", distance: "100m", pathType: "Walking Path" },
+          { type: 'arrive', instruction: "Arrive at destination", distance: "Arrive", pathType: "Destination" }
+        ];
       }
+
+      setApiResult(orchestratedResult);
 
     } catch (error) {
       console.error("Backend Orchestration Error:", error);

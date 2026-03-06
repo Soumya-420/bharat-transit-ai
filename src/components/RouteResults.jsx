@@ -29,7 +29,7 @@ export default function RouteResults({ onSelectRoute, apiResult, festivalMode })
     const routes = [
         {
             id: 1,
-            type: 'Fastest',
+            type: apiResult?.labels?.fastest || 'Fastest Route',
             time: '32 mins',
             cost: '45',
             safety: dynamicSafety || 82,
@@ -42,7 +42,7 @@ export default function RouteResults({ onSelectRoute, apiResult, festivalMode })
         },
         {
             id: 2,
-            type: 'Safest',
+            type: apiResult?.labels?.safest || 'Safest Route',
             time: '40 mins',
             cost: '50',
             safety: dynamicSafety || 94,
@@ -55,7 +55,7 @@ export default function RouteResults({ onSelectRoute, apiResult, festivalMode })
         },
         {
             id: 3,
-            type: 'Budget',
+            type: apiResult?.labels?.cheapest || 'Cheapest Route',
             time: '55 mins',
             cost: '15',
             safety: dynamicSafety ? Math.max(0, dynamicSafety - 15) : 76,
@@ -73,24 +73,24 @@ export default function RouteResults({ onSelectRoute, apiResult, festivalMode })
     return (
         <div className="p-4 space-y-4 pb-24 animate-fade-in bg-slate-50 min-h-full">
             {festivalMode && (
-                <div className="bg-orange-500 text-white p-5 rounded-3xl mb-2 shadow-lg shadow-orange-300 border-2 border-orange-400 animate-bounce-in flex items-center gap-4 relative z-50">
+                <div className="bg-orange-600 text-white p-5 rounded-3xl mb-4 shadow-xl shadow-orange-200 border-2 border-orange-400 animate-bounce-in flex items-center gap-4 relative z-50">
                     <div className="bg-white/20 p-2.5 rounded-2xl">
                         <RotateCw className="w-6 h-6 animate-spin-slow" />
                     </div>
                     <div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 mb-0.5 text-orange-100">AI Safety Override</p>
-                        <p className="text-[13px] font-black leading-tight">Avoiding 4 high-congestion zones near India Gate.</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 mb-0.5 text-orange-100">AI Intelligence Override</p>
+                        <p className="text-[13px] font-black leading-tight">{apiResult?.festival_guidance || 'Directing via crowd-free pedestrian zones.'}</p>
                     </div>
                 </div>
             )}
 
             <div className="flex items-center justify-between mb-2">
                 <div>
-                    <h2 className="text-xl font-bold tracking-tight text-slate-800">Available Routes</h2>
-                    <p className="text-xs text-slate-500 font-medium">NDLS to India Gate</p>
+                    <h2 className="text-xl font-bold tracking-tight text-slate-800">Smart Recommendations</h2>
+                    <p className="text-xs text-slate-500 font-medium">NDLS to India Gate Hub</p>
                 </div>
                 <div className="bg-white px-3 py-1.5 rounded-full shadow-sm text-xs font-bold text-slate-600 border border-slate-200 flex items-center gap-1">
-                    <Clock size={12} className="text-slate-400" /> Auto-Detected
+                    <Clock size={12} className="text-slate-400" /> AI-Orchestrated
                 </div>
             </div>
 
@@ -113,18 +113,6 @@ export default function RouteResults({ onSelectRoute, apiResult, festivalMode })
                 ))}
             </div>
 
-            {festivalMode && (
-                <div className="bg-orange-500 text-white p-4 rounded-3xl mb-4 shadow-lg shadow-orange-200 border border-orange-400 animate-bounce-in flex items-center gap-4">
-                    <div className="bg-white/20 p-2.5 rounded-2xl">
-                        <RotateCw className="w-6 h-6 animate-spin-slow" />
-                    </div>
-                    <div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 mb-0.5">Festival Mode Active</p>
-                        <p className="text-sm font-bold leading-tight underline decoration-white/30 decoration-2 underline-offset-4">Avoiding 4 high-crowd zones near India Gate.</p>
-                    </div>
-                </div>
-            )}
-
             {apiResult?.reason && (
                 <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-3xl mb-4 relative overflow-hidden shadow-sm">
                     <div className="absolute top-0 right-0 w-16 h-16 bg-indigo-100 rounded-full blur-2xl -mr-4 -mt-4"></div>
@@ -133,7 +121,7 @@ export default function RouteResults({ onSelectRoute, apiResult, festivalMode })
                             <ShieldCheck className="w-5 h-5" />
                         </div>
                         <div>
-                            <h3 className="text-sm font-bold text-indigo-900 mb-1">AI Recommendation Reason</h3>
+                            <h3 className="text-sm font-bold text-indigo-900 mb-1">AI Decision Reason</h3>
                             <p className="text-xs text-indigo-700 font-medium leading-relaxed">
                                 {apiResult.reason}
                             </p>
@@ -166,7 +154,7 @@ export default function RouteResults({ onSelectRoute, apiResult, festivalMode })
                             </span>
                             {festivalMode && (
                                 <span className="text-[8px] font-black text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full mt-1 border border-orange-200">
-                                    Festival Optimized
+                                    Adaptive Choice
                                 </span>
                             )}
                         </div>
@@ -217,7 +205,7 @@ export default function RouteResults({ onSelectRoute, apiResult, festivalMode })
                     </div>
 
                     <div className="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center group">
-                        <span className="text-sm font-bold text-primary-600">View Details</span>
+                        <span className="text-sm font-bold text-primary-600">Start Navigation</span>
                         <div className="bg-primary-50 p-1.5 rounded-full text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-colors">
                             <ChevronRight className="w-4 h-4" />
                         </div>

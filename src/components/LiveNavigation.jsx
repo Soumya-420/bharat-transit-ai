@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Mic, ShieldAlert, Share2, Compass, ArrowRight, Train, Navigation, BellRing, MapPin, List, Globe } from 'lucide-react';
+import { Mic, ShieldAlert, Share2, Compass, ArrowRight, Train, Navigation, BellRing, MapPin, List, Globe, MoveUpLeft, MoveUpRight, ArrowBigRight } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Polyline, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -28,12 +28,20 @@ export default function LiveNavigation({ route, apiResult, festivalMode }) {
     const startCoords = polylineCoords.length > 0 ? polylineCoords[0] : [28.6141, 77.2185];
     const endCoords = polylineCoords.length > 0 ? polylineCoords[polylineCoords.length - 1] : [28.6139, 77.2090];
 
-    const turnByTurn = [
-        { instruction: lang === 'EN' ? "Walk 200m to Exit 3" : "निकास 3 तक 200 মিটার চলেন", distance: "200m" },
-        { instruction: lang === 'EN' ? "Board Yellow Line towards HUDA" : "হুডা কী ওর येलो लाइन पकड़েন", distance: "Board" },
-        { instruction: lang === 'EN' ? "Switch to Blue Line at Rajiv Chowk" : "রাকীব চক পর ব্লু লাইন মেঁ বদলেন", distance: "Transfer" },
-        { instruction: lang === 'EN' ? "Exit at India Gate Station" : "ইন্ডিয়া গেট স্টেশন পর উতরেন", distance: "Arrive" }
+    const detailedSteps = apiResult?.detailed_steps || [
+        { type: 'walk', instruction: "Walk 200m to Exit 3", distance: "200m", pathType: "Walking Path" },
+        { type: 'transit', instruction: "Board metro towards destination", distance: "Board", pathType: "Driving Road" }
     ];
+
+    const getStepIcon = (type) => {
+        switch (type) {
+            case 'walk': return <PersonStanding size={18} />;
+            case 'turn': return <MoveUpRight size={18} />;
+            case 'transit': return <Train size={18} />;
+            case 'arrive': return <MapPin size={18} />;
+            default: return <ArrowBigRight size={18} />;
+        }
+    };
 
     return (
         <div className="h-full flex flex-col bg-slate-50 animate-slide-up pb-20 relative overflow-hidden">
@@ -45,8 +53,8 @@ export default function LiveNavigation({ route, apiResult, festivalMode }) {
                         <Navigation className="w-4 h-4 text-slate-600" />
                     </div>
                     <div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Navigation Mode</p>
-                        <p className="text-xs font-bold text-slate-800 uppercase tracking-tighter">Turn-by-Turn Live</p>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Live Tracking</p>
+                        <p className="text-xs font-bold text-slate-800 uppercase tracking-tighter">Turn-by-Turn</p>
                     </div>
                 </div>
 
@@ -84,11 +92,11 @@ export default function LiveNavigation({ route, apiResult, festivalMode }) {
                 {/* Festival Alert Overlay */}
                 {festivalMode && (
                     <div className="absolute top-4 left-4 right-4 z-[1000] animate-bounce-in">
-                        <div className="bg-orange-500/90 backdrop-blur-md text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 border border-orange-400/50">
-                            <div className="bg-white/20 p-2 rounded-xl animate-pulse text-lg">🕉️</div>
+                        <div className="bg-orange-600/95 backdrop-blur-md text-white px-4 py-4 rounded-3xl shadow-xl flex items-center gap-3 border border-orange-400/50">
+                            <div className="bg-white/20 p-2.5 rounded-2xl animate-pulse text-xl">🕉️</div>
                             <div>
                                 <p className="text-[9px] font-black uppercase tracking-widest opacity-80 mb-0.5">AI Festival Smart-Routing</p>
-                                <p className="text-xs font-bold">AI Guided: Routing via Crowd-Free Lanes</p>
+                                <p className="text-xs font-bold leading-snug">{apiResult?.festival_reason || "Event detected in your path."}</p>
                             </div>
                         </div>
                     </div>
@@ -97,20 +105,30 @@ export default function LiveNavigation({ route, apiResult, festivalMode }) {
 
             {/* Step List Drawer */}
             {showSteps && (
-                <div className="absolute top-0 left-0 right-0 bottom-0 bg-white/95 backdrop-blur-sm z-[1005] animate-fade-in p-6 pt-20">
-                    <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-xl font-black text-slate-800">Journey Steps</h3>
-                        <button onClick={() => setShowSteps(false)} className="text-primary-600 font-bold">Close Map</button>
+                <div className="absolute top-0 left-0 right-0 bottom-0 bg-white/98 backdrop-blur-md z-[1005] animate-fade-in p-6 pt-20 overflow-y-auto">
+                    <div className="flex justify-between items-center mb-8">
+                        <div>
+                            <h3 className="text-2xl font-black text-slate-900">Journey Flow</h3>
+                            <p className="text-xs text-slate-500 font-bold uppercase tracking-widest mt-1">Detailed Path Breakdown</p>
+                        </div>
+                        <button onClick={() => setShowSteps(false)} className="bg-slate-100 p-2 rounded-full text-slate-600 hover:bg-slate-200 interactive-tap">
+                            <ArrowBigRight className="rotate-90" />
+                        </button>
                     </div>
                     <div className="space-y-4">
-                        {turnByTurn.map((step, i) => (
-                            <div key={i} className="flex gap-4 items-start p-4 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm animate-slide-up" style={{ animationDelay: `${i * 100}ms` }}>
-                                <div className="bg-slate-800 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5 shadow-md">
-                                    {i + 1}
+                        {detailedSteps.map((step, i) => (
+                            <div key={i} className="flex gap-4 items-start p-5 bg-slate-50 rounded-3xl border border-slate-100 shadow-sm animate-slide-up" style={{ animationDelay: `${i * 100}ms` }}>
+                                <div className="bg-slate-900 text-white w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transform -rotate-3">
+                                    {getStepIcon(step.type)}
                                 </div>
                                 <div className="flex-1">
-                                    <p className="font-bold text-slate-800 text-[15px] leading-snug">{step.instruction}</p>
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">{step.distance}</p>
+                                    <div className="flex justify-between items-start mb-1">
+                                        <p className="font-black text-slate-900 text-[16px] leading-tight flex-1 mr-2">{step.instruction}</p>
+                                        <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase border ${step.pathType === 'Walking Path' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-blue-50 text-blue-600 border-blue-100'}`}>
+                                            {step.pathType}
+                                        </span>
+                                    </div>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{step.distance}</p>
                                 </div>
                             </div>
                         ))}
@@ -129,8 +147,7 @@ export default function LiveNavigation({ route, apiResult, festivalMode }) {
                             {lang === 'EN' ? 'Next Instruction' : 'अगला निर्देश'}
                         </p>
                         <p className="font-bold text-lg leading-tight mb-5">
-                            {lang === 'EN' ? 'Board Metro - Blue Line' : 'ব্লু লাইন মেট্রো ধরুন'}
-                            <span className="text-slate-400 font-normal ml-1">towards India Gate</span>
+                            {detailedSteps[0]?.instruction}
                         </p>
 
                         <div className="grid grid-cols-3 gap-3">
@@ -153,3 +170,12 @@ export default function LiveNavigation({ route, apiResult, festivalMode }) {
         </div>
     );
 }
+
+const PersonStanding = ({ size }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="5" r="1" />
+        <path d="m9 20 3-6 3 6" />
+        <path d="m6 8 6 2 6-2" />
+        <path d="M12 10v4" />
+    </svg>
+);
