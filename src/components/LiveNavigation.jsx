@@ -1,9 +1,42 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Mic, ShieldAlert, Share2, Compass, ArrowRight, Train, Navigation, BellRing } from 'lucide-react';
-import Map, { Marker } from 'react-map-gl';
+import Map, { Marker, Source, Layer } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-export default function LiveNavigation({ route }) {
+export default function LiveNavigation({ route, apiResult }) {
+    // GeoJSON route feature
+    const routeGeojson = useMemo(() => {
+        if (!apiResult?.route_geojson) return null;
+        return {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+                type: 'LineString',
+                coordinates: apiResult.route_geojson
+            }
+        };
+    }, [apiResult]);
+
+    // Layer styling for the path
+    const routeLayerStyle = {
+        id: 'route-line',
+        type: 'line',
+        source: 'route',
+        layout: {
+            'line-join': 'round',
+            'line-cap': 'round'
+        },
+        paint: {
+            'line-color': '#0ea5e9', // Primary blue
+            'line-width': 6,
+            'line-opacity': 0.8
+        }
+    };
+
+    // Calculate dynamic coordinates from data if available
+    const startCoords = apiResult?.route_geojson?.[0] || [77.2185, 28.6141];
+    const endCoords = apiResult?.route_geojson?.[apiResult.route_geojson.length - 1] || [77.2090, 28.6139];
+
     return (
         <div className="h-full flex flex-col bg-slate-50 animate-slide-up pb-20">
 
@@ -28,21 +61,27 @@ export default function LiveNavigation({ route }) {
             <div className="flex-1 relative bg-slate-200 overflow-hidden">
                 <Map
                     initialViewState={{
-                        longitude: 77.2185, // Origin example
-                        latitude: 28.6141,
+                        longitude: startCoords[0],
+                        latitude: startCoords[1],
                         zoom: 13
                     }}
                     mapStyle="mapbox://styles/mapbox/streets-v12"
                     mapboxAccessToken="pk.eyJ1IjoicGxhY2Vob2xkZXIiLCJhIjoiY2xhY2Vob2xkZXIifQ.placeholder" // Replace with real token
-                    style={{width: '100%', height: '100%'}}
+                    style={{ width: '100%', height: '100%' }}
                 >
-                    <Marker longitude={77.2090} latitude={28.6139} anchor="bottom" >
+                    {routeGeojson && (
+                        <Source id="route-source" type="geojson" data={routeGeojson}>
+                            <Layer {...routeLayerStyle} />
+                        </Source>
+                    )}
+
+                    <Marker longitude={endCoords[0]} latitude={endCoords[1]} anchor="bottom">
                         <div className="bg-white p-1 rounded-full shadow-lg border-2 border-emerald-500">
                             <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
                         </div>
                     </Marker>
-                    <Marker longitude={77.2185} latitude={28.6141} anchor="bottom" >
-                         <div className="bg-primary-500 text-white p-1.5 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)] border-2 border-white">
+                    <Marker longitude={startCoords[0]} latitude={startCoords[1]} anchor="bottom">
+                        <div className="bg-primary-500 text-white p-1.5 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)] border-2 border-white">
                             <Navigation className="w-4 h-4" />
                         </div>
                     </Marker>

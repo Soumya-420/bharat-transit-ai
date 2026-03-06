@@ -59,7 +59,7 @@ function App() {
       case 'results':
         return <RouteResults onSelectRoute={handleSelectRoute} apiResult={apiResult} />;
       case 'navigation':
-        return <LiveNavigation route={selectedRoute} />;
+        return <LiveNavigation route={selectedRoute} apiResult={apiResult} />;
       case 'companion':
         return <SafeCompanion />;
       case 'scan':
