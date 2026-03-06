@@ -73,7 +73,7 @@ export default function VisionAI({ lang, onNavigate }) {
             const timer = setTimeout(() => {
                 setScanStatus('identified');
                 announceIdentification();
-            }, 5000);
+            }, 8000); // Increased from 5000 to 8000 for visibility
             return () => clearTimeout(timer);
         }
     }, [scanStatus, mode]);
@@ -171,30 +171,36 @@ export default function VisionAI({ lang, onNavigate }) {
 
             {/* Viewfinder Section */}
             <div className="flex-1 relative mx-6 mb-6 rounded-[3rem] overflow-hidden border-2 border-white/10 bg-slate-900 shadow-2xl group ring-1 ring-white/5">
-                {/* Simulated Camera Feed Background */}
-                <div className="absolute inset-0 bg-slate-900/90 flex flex-col items-center justify-center p-10 text-center z-10">
+                {/* Simulated Camera Feed Background - Making it explicitly tall */}
+                <div className="absolute inset-0 bg-slate-900/95 flex flex-col items-center justify-center p-10 text-center z-10 transition-colors duration-1000 group">
                     <div className="relative">
-                        <Camera className={`w-16 h-16 text-slate-600 mb-4 transition-all duration-700 ${scanStatus === 'scanning' ? 'scale-110 text-primary-500/50' : ''}`} />
-                        {scanStatus === 'scanning' && <Radio className="absolute -top-2 -right-2 text-primary-400 animate-ping w-6 h-6" />}
+                        {/* Glow effect for camera icon */}
+                        <div className={`absolute inset-0 bg-primary-500 rounded-full blur-2xl transition-all duration-1000 ${scanStatus === 'scanning' ? 'opacity-40 animate-pulse' : 'opacity-0'}`}></div>
+                        <Camera className={`w-20 h-20 text-slate-500 mb-6 transition-all duration-700 relative z-10 ${scanStatus === 'scanning' ? 'scale-110 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]' : ''}`} />
+                        {scanStatus === 'scanning' && <Radio className="absolute -top-3 -right-3 text-primary-300 animate-ping w-8 h-8 z-20" />}
                     </div>
 
-                    <div className="space-y-1">
-                        <p className="text-slate-300 font-bold text-sm tracking-wide">
+                    <div className="space-y-1 mt-4 relative z-10">
+                        <p className={`font-black tracking-widest uppercase transition-all duration-500 ${scanStatus === 'scanning' ? 'text-primary-400 text-lg animate-pulse' : 'text-slate-500 text-xs'}`}>
                             {scanStatus === 'waiting' ? t.waiting : scanStatus === 'scanning' ? (mode === 'detect' ? t.scanningBus : t.scanningSigns) : (mode === 'detect' ? t.busIdentified : t.signTranslated)}
                         </p>
                     </div>
                 </div>
 
-                {/* Viewfinder Overlay Frames */}
-                <div className="absolute inset-10 border-[3px] border-white/20 rounded-[2.5rem] pointer-events-none transition-all duration-500 z-20 shadow-[0_0_50px_rgba(0,0,0,0.8)_inset]">
-                    <div className={`absolute -top-3 -left-3 w-16 h-16 border-t-[8px] border-l-[8px] rounded-tl-[2.5rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[-5px_-5px_20px_rgba(56,189,248,0.5)]' : 'border-emerald-400 shadow-[-5px_-5px_20px_rgba(52,211,153,0.5)]') : 'border-slate-300'}`}></div>
-                    <div className={`absolute -top-3 -right-3 w-16 h-16 border-t-[8px] border-r-[8px] rounded-tr-[2.5rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[5px_-5px_20px_rgba(56,189,248,0.5)]' : 'border-emerald-400 shadow-[5px_-5px_20px_rgba(52,211,153,0.5)]') : 'border-slate-300'}`}></div>
-                    <div className={`absolute -bottom-3 -left-3 w-16 h-16 border-b-[8px] border-l-[8px] rounded-bl-[2.5rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[-5px_5px_20px_rgba(56,189,248,0.5)]' : 'border-emerald-400 shadow-[-5px_5px_20px_rgba(52,211,153,0.5)]') : 'border-slate-300'}`}></div>
-                    <div className={`absolute -bottom-3 -right-3 w-16 h-16 border-b-[8px] border-r-[8px] rounded-br-[2.5rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[5px_5px_20px_rgba(56,189,248,0.5)]' : 'border-emerald-400 shadow-[5px_5px_20px_rgba(52,211,153,0.5)]') : 'border-slate-300'}`}></div>
+                {/* Viewfinder Overlay Frames - Fix inset positioning */}
+                <div className="absolute inset-x-8 top-12 bottom-12 border-[4px] border-white/30 rounded-[3rem] pointer-events-none transition-all duration-500 z-30 shadow-[0_0_100px_rgba(0,0,0,0.9)_inset]">
+                    {/* Corners */}
+                    <div className={`absolute -top-4 -left-4 w-20 h-20 border-t-[10px] border-l-[10px] rounded-tl-[3rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[-10px_-10px_30px_rgba(56,189,248,0.8)]' : 'border-emerald-400 shadow-[-10px_-10px_30px_rgba(52,211,153,0.8)]') : scanStatus === 'scanning' ? 'border-white animate-pulse' : 'border-slate-500'}`}></div>
 
-                    {/* Scanning Laser Line */}
+                    <div className={`absolute -top-4 -right-4 w-20 h-20 border-t-[10px] border-r-[10px] rounded-tr-[3rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[10px_-10px_30px_rgba(56,189,248,0.8)]' : 'border-emerald-400 shadow-[10px_-10px_30px_rgba(52,211,153,0.8)]') : scanStatus === 'scanning' ? 'border-white animate-pulse' : 'border-slate-500'}`}></div>
+
+                    <div className={`absolute -bottom-4 -left-4 w-20 h-20 border-b-[10px] border-l-[10px] rounded-bl-[3rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[-10px_10px_30px_rgba(56,189,248,0.8)]' : 'border-emerald-400 shadow-[-10px_10px_30px_rgba(52,211,153,0.8)]') : scanStatus === 'scanning' ? 'border-white animate-pulse' : 'border-slate-500'}`}></div>
+
+                    <div className={`absolute -bottom-4 -right-4 w-20 h-20 border-b-[10px] border-r-[10px] rounded-br-[3rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[10px_10px_30px_rgba(56,189,248,0.8)]' : 'border-emerald-400 shadow-[10px_10px_30px_rgba(52,211,153,0.8)]') : scanStatus === 'scanning' ? 'border-white animate-pulse' : 'border-slate-500'}`}></div>
+
+                    {/* Highly visible scanning laser line */}
                     {scanStatus === 'scanning' && (
-                        <div className="absolute inset-x-0 h-[4px] bg-primary-400 shadow-[0_0_20px_rgba(56,189,248,1),0_0_10px_rgba(255,255,255,1)] animate-scan-line top-0 z-30"></div>
+                        <div className="absolute inset-x-0 h-[8px] bg-primary-400 shadow-[0_0_30px_rgba(56,189,248,1),0_0_15px_rgba(255,255,255,1)] animate-scan-line top-0 z-40 rounded-full"></div>
                     )}
                 </div>
 
