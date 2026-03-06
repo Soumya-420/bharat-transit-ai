@@ -55,6 +55,15 @@ function App() {
       };
 
       setApiResult(orchestratedResult);
+
+      // AUTO-DETECTION LOGIC (Simulated AI)
+      // If user is searching in a city with an active festival (e.g., Kolkata during Puja)
+      if (destination.toLowerCase().includes("kolkata") || destination.toLowerCase().includes("gate") || destination.toLowerCase().includes("chowk")) {
+        setFestivalMode(true);
+      } else {
+        setFestivalMode(false);
+      }
+
     } catch (error) {
       console.error("Backend Orchestration Error:", error);
       alert("Error connecting to Transit API Gateway");
@@ -72,11 +81,11 @@ function App() {
   const renderContent = () => {
     switch (currentScreen) {
       case 'home':
-        return <HomeSearch onSearch={handleSearch} isLoading={isLoading} />;
+        return <HomeSearch onSearch={handleSearch} isLoading={isLoading} festivalMode={festivalMode} setFestivalMode={setFestivalMode} />;
       case 'results':
-        return <RouteResults onSelectRoute={handleSelectRoute} apiResult={apiResult} />;
+        return <RouteResults onSelectRoute={handleSelectRoute} apiResult={apiResult} festivalMode={festivalMode} />;
       case 'navigation':
-        return <LiveNavigation route={selectedRoute} apiResult={apiResult} />;
+        return <LiveNavigation route={selectedRoute} apiResult={apiResult} festivalMode={festivalMode} />;
       case 'companion':
         return <SafeCompanion />;
       case 'scan':

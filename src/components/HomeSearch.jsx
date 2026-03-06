@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Search, MapPin, Mic, Navigation, Shield, Zap, IndianRupee, RotateCw, Loader2 } from 'lucide-react';
 
 export default function HomeSearch({ onSearch, isLoading }) {
-    const [activeTab, setActiveTab] = useState('fastest');
     const [isListening, setIsListening] = useState(false);
     const [destinationText, setDestinationText] = useState("India Gate");
 
@@ -38,13 +37,6 @@ export default function HomeSearch({ onSearch, isLoading }) {
 
         recognition.start();
     };
-
-    const tabs = [
-        { id: 'fastest', label: 'Fastest', icon: <Zap size={14} /> },
-        { id: 'safest', label: 'Safest', icon: <Shield size={14} /> },
-        { id: 'cheapest', label: 'Cheapest', icon: <IndianRupee size={14} /> },
-        { id: 'jugaad', label: 'Jugaad', icon: <RotateCw size={14} /> },
-    ];
 
     return (
         <div className="p-4 space-y-6 pb-20 animate-slide-up">
@@ -123,54 +115,15 @@ export default function HomeSearch({ onSearch, isLoading }) {
                 </button>
             </div>
 
-            {/* Quick Filters / Modes */}
-            <div>
-                <h3 className="text-sm font-bold text-slate-800 mb-3 px-1">Optimization Mode</h3>
-                {/* Optimization Filters */}
-                <div className="grid grid-cols-4 gap-2">
-                    {tabs.map((tab) => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
-                            className={`flex flex-col items-center p-3 rounded-2xl transition-all interactive-tap gap-1.5
-                ${activeTab === tab.id
-                                    ? 'bg-slate-800 text-white shadow-md'
-                                    : 'bg-white text-slate-600 border border-slate-100 hover:bg-slate-50 shadow-sm'
-                                }
-              `}
-                        >
-                            <div className={activeTab === tab.id ? 'opacity-100' : 'opacity-70'}>
-                                {tab.icon}
-                            </div>
-                            <span className="text-[10px] font-bold tracking-wide">{tab.label}</span>
-                        </button>
-                    ))}
-                </div>
+            {/* AI Optimization Insight - Replaced the tabs */}
+            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100/50">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 flex items-center gap-2">
+                    <RotateCw className="w-3 h-3 animate-spin-slow" />
+                    AI Intelligence Active
+                </p>
+                <p className="text-xs text-slate-600 font-medium">Optimization modes now available on the results page after AI analysis.</p>
             </div>
 
-            {/* Phase 2: Festival Mode Toggle */}
-            <div className="animate-fade-in">
-                <button
-                    onClick={() => {
-                        // Toggle logic simulation
-                        alert("Festival Mode Activated! Avoiding Holi/Diwali crowd zones.");
-                    }}
-                    className="w-full flex items-center justify-between bg-orange-50 border-2 border-orange-100 p-4 rounded-3xl interactive-tap group"
-                >
-                    <div className="flex items-center gap-3">
-                        <div className="bg-orange-500 p-2.5 rounded-xl text-white group-hover:rotate-12 transition-all shadow-md shadow-orange-200">
-                            <span className="text-lg">🕉️</span>
-                        </div>
-                        <div className="text-left">
-                            <p className="text-[10px] font-black text-orange-600 uppercase tracking-wider mb-0.5">Festival-Smart Routing</p>
-                            <p className="text-[13px] text-orange-800 font-bold">Avoid Holi/Diwali Crowds</p>
-                        </div>
-                    </div>
-                    <div className="w-11 h-6 bg-orange-200 rounded-full relative p-1 shadow-inner">
-                        <div className="w-4 h-4 bg-white rounded-full shadow-md"></div>
-                    </div>
-                </button>
-            </div>
             {/* SafeCompanion Promo */}
             <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-3xl p-5 border border-emerald-100/50 relative overflow-hidden">
                 <div className="absolute right-0 top-0 w-24 h-24 bg-emerald-100/50 rounded-full blur-2xl -mr-8 -mt-8"></div>

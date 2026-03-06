@@ -16,7 +16,7 @@ L.Icon.Default.mergeOptions({
     shadowUrl: markerShadow,
 });
 
-export default function LiveNavigation({ route, apiResult }) {
+export default function LiveNavigation({ route, apiResult, festivalMode }) {
     const [lang, setLang] = useState('EN');
     const [showSteps, setShowSteps] = useState(false);
 
@@ -29,10 +29,10 @@ export default function LiveNavigation({ route, apiResult }) {
     const endCoords = polylineCoords.length > 0 ? polylineCoords[polylineCoords.length - 1] : [28.6139, 77.2090];
 
     const turnByTurn = [
-        { instruction: lang === 'EN' ? "Walk 200m to Exit 3" : "निकास 3 तक 200 मीटर चलें", distance: "200m" },
-        { instruction: lang === 'EN' ? "Board Yellow Line towards HUDA" : "हुडा की ओर येलो लाइन पकड़ें", distance: "Board" },
-        { instruction: lang === 'EN' ? "Switch to Blue Line at Rajiv Chowk" : "राजीव चौक पर ब्लू लाइन में बदलें", distance: "Transfer" },
-        { instruction: lang === 'EN' ? "Exit at India Gate Station" : "इंडिया गेट स्टेशन पर उतरें", distance: "Arrive" }
+        { instruction: lang === 'EN' ? "Walk 200m to Exit 3" : "निकास 3 तक 200 মিটার চলেন", distance: "200m" },
+        { instruction: lang === 'EN' ? "Board Yellow Line towards HUDA" : "হুডা কী ওর येलो लाइन पकड़েন", distance: "Board" },
+        { instruction: lang === 'EN' ? "Switch to Blue Line at Rajiv Chowk" : "রাকীব চক পর ব্লু লাইন মেঁ বদলেন", distance: "Transfer" },
+        { instruction: lang === 'EN' ? "Exit at India Gate Station" : "ইন্ডিয়া গেট স্টেশন পর উতরেন", distance: "Arrive" }
     ];
 
     return (
@@ -82,12 +82,17 @@ export default function LiveNavigation({ route, apiResult }) {
                 </MapContainer>
 
                 {/* Festival Alert Overlay */}
-                <div className="absolute top-4 left-4 right-4 z-[1000] animate-bounce-in">
-                    <div className="bg-orange-500/90 backdrop-blur-md text-white px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-3 border border-orange-400/50">
-                        <div className="bg-white/20 p-1.5 rounded-lg animate-pulse">🕉️</div>
-                        <p className="text-xs font-bold">Festival Active: Routing via Low-Congestion Zones</p>
+                {festivalMode && (
+                    <div className="absolute top-4 left-4 right-4 z-[1000] animate-bounce-in">
+                        <div className="bg-orange-500/90 backdrop-blur-md text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 border border-orange-400/50">
+                            <div className="bg-white/20 p-2 rounded-xl animate-pulse text-lg">🕉️</div>
+                            <div>
+                                <p className="text-[9px] font-black uppercase tracking-widest opacity-80 mb-0.5">AI Festival Smart-Routing</p>
+                                <p className="text-xs font-bold">AI Guided: Routing via Crowd-Free Lanes</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
 
             {/* Step List Drawer */}
@@ -124,7 +129,7 @@ export default function LiveNavigation({ route, apiResult }) {
                             {lang === 'EN' ? 'Next Instruction' : 'अगला निर्देश'}
                         </p>
                         <p className="font-bold text-lg leading-tight mb-5">
-                            {lang === 'EN' ? 'Board Metro - Blue Line' : 'ब्लू लाइन मेट्रो पकड़ें'}
+                            {lang === 'EN' ? 'Board Metro - Blue Line' : 'ব্লু লাইন মেট্রো ধরুন'}
                             <span className="text-slate-400 font-normal ml-1">towards India Gate</span>
                         </p>
 

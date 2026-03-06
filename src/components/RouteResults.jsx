@@ -1,7 +1,15 @@
-import React from 'react';
-import { Clock, IndianRupee, ShieldCheck, ChevronRight, Train, Bus, PersonStanding, CarTaxiFront, Users } from 'lucide-react';
+import React, { useState } from 'react';
+import { Clock, IndianRupee, ShieldCheck, ChevronRight, Train, Bus, PersonStanding, CarTaxiFront, Users, Zap, Shield, RotateCw } from 'lucide-react';
 
-export default function RouteResults({ onSelectRoute, apiResult }) {
+export default function RouteResults({ onSelectRoute, apiResult, festivalMode }) {
+    const [activeTab, setActiveTab] = useState('fastest');
+
+    const tabs = [
+        { id: 'fastest', label: 'Fastest', icon: <Zap size={14} /> },
+        { id: 'safest', label: 'Safest', icon: <Shield size={14} /> },
+        { id: 'cheapest', label: 'Cheapest', icon: <IndianRupee size={14} /> },
+        { id: 'jugaad', label: 'Jugaad', icon: <RotateCw size={14} /> },
+    ];
     // Dynamic safety score or fallback
     const dynamicSafety = apiResult?.safety_score ? parseInt(apiResult.safety_score) : null;
 
@@ -64,15 +72,58 @@ export default function RouteResults({ onSelectRoute, apiResult }) {
 
     return (
         <div className="p-4 space-y-4 pb-24 animate-fade-in bg-slate-50 min-h-full">
+            {festivalMode && (
+                <div className="bg-orange-500 text-white p-5 rounded-3xl mb-2 shadow-lg shadow-orange-300 border-2 border-orange-400 animate-bounce-in flex items-center gap-4 relative z-50">
+                    <div className="bg-white/20 p-2.5 rounded-2xl">
+                        <RotateCw className="w-6 h-6 animate-spin-slow" />
+                    </div>
+                    <div>
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 mb-0.5 text-orange-100">AI Safety Override</p>
+                        <p className="text-[13px] font-black leading-tight">Avoiding 4 high-congestion zones near India Gate.</p>
+                    </div>
+                </div>
+            )}
+
             <div className="flex items-center justify-between mb-2">
                 <div>
                     <h2 className="text-xl font-bold tracking-tight text-slate-800">Available Routes</h2>
                     <p className="text-xs text-slate-500 font-medium">NDLS to India Gate</p>
                 </div>
                 <div className="bg-white px-3 py-1.5 rounded-full shadow-sm text-xs font-bold text-slate-600 border border-slate-200 flex items-center gap-1">
-                    <Clock size={12} className="text-slate-400" /> Optimize
+                    <Clock size={12} className="text-slate-400" /> Auto-Detected
                 </div>
             </div>
+
+            {/* Optimization Tabs moved from Home */}
+            <div className="bg-white p-2 rounded-2xl shadow-sm border border-slate-100 flex gap-1 mb-4">
+                {tabs.map((tab) => (
+                    <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`flex-1 flex flex-col items-center py-2.5 rounded-xl transition-all interactive-tap gap-1
+                            ${activeTab === tab.id
+                                ? 'bg-slate-800 text-white shadow-md'
+                                : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
+                            }
+                        `}
+                    >
+                        {tab.icon}
+                        <span className="text-[9px] font-bold tracking-wide">{tab.label}</span>
+                    </button>
+                ))}
+            </div>
+
+            {festivalMode && (
+                <div className="bg-orange-500 text-white p-4 rounded-3xl mb-4 shadow-lg shadow-orange-200 border border-orange-400 animate-bounce-in flex items-center gap-4">
+                    <div className="bg-white/20 p-2.5 rounded-2xl">
+                        <RotateCw className="w-6 h-6 animate-spin-slow" />
+                    </div>
+                    <div>
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 mb-0.5">Festival Mode Active</p>
+                        <p className="text-sm font-bold leading-tight underline decoration-white/30 decoration-2 underline-offset-4">Avoiding 4 high-crowd zones near India Gate.</p>
+                    </div>
+                </div>
+            )}
 
             {apiResult?.reason && (
                 <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-3xl mb-4 relative overflow-hidden shadow-sm">
@@ -109,10 +160,15 @@ export default function RouteResults({ onSelectRoute, apiResult }) {
                         <span className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg border ${route.tagColor}`}>
                             {route.type}
                         </span>
-                        <div className="text-right">
+                        <div className="text-right flex flex-col items-end">
                             <span className="font-black text-2xl text-slate-800 flex items-center justify-end">
                                 <span className="text-sm text-slate-400 mr-0.5 font-bold">₹</span>{route.cost}
                             </span>
+                            {festivalMode && (
+                                <span className="text-[8px] font-black text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full mt-1 border border-orange-200">
+                                    Festival Optimized
+                                </span>
+                            )}
                         </div>
                     </div>
 
