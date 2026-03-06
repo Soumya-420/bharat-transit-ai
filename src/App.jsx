@@ -122,7 +122,7 @@ function App() {
       case 'companion':
         return <SafeCompanion lang={lang} />;
       case 'scan':
-        return <VisionAI lang={lang} />;
+        return <VisionAI lang={lang} onNavigate={handleSelectRoute} />;
       case 'budget':
         return <BudgetMode lang={lang} />;
       default:
