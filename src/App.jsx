@@ -13,6 +13,7 @@ function App() {
   const [apiResult, setApiResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [festivalMode, setFestivalMode] = useState(false);
+  const [lang, setLang] = useState('EN');
 
   const handleSearch = async (originArg, destinationArg) => {
     setIsLoading(true);
@@ -113,17 +114,17 @@ function App() {
   const renderContent = () => {
     switch (currentScreen) {
       case 'home':
-        return <HomeSearch onSearch={handleSearch} isLoading={isLoading} />;
+        return <HomeSearch onSearch={handleSearch} isLoading={isLoading} setCurrentScreen={setCurrentScreen} lang={lang} />;
       case 'results':
-        return <RouteResults onSelectRoute={handleSelectRoute} apiResult={apiResult} festivalMode={festivalMode} />;
+        return <RouteResults onSelectRoute={handleSelectRoute} apiResult={apiResult} festivalMode={festivalMode} lang={lang} />;
       case 'navigation':
-        return <LiveNavigation route={selectedRoute} apiResult={apiResult} festivalMode={festivalMode} />;
+        return <LiveNavigation route={selectedRoute} apiResult={apiResult} festivalMode={festivalMode} lang={lang} />;
       case 'companion':
-        return <SafeCompanion />;
+        return <SafeCompanion lang={lang} />;
       case 'scan':
-        return <VisionAI />;
+        return <VisionAI lang={lang} />;
       case 'budget':
-        return <BudgetMode />;
+        return <BudgetMode lang={lang} />;
       default:
         return (
           <div className="flex-1 flex flex-col items-center justify-center p-8 text-center animate-fade-in relative z-10 h-full">
@@ -144,7 +145,7 @@ function App() {
   };
 
   return (
-    <Layout currentScreen={currentScreen} setCurrentScreen={setCurrentScreen}>
+    <Layout currentScreen={currentScreen} setCurrentScreen={setCurrentScreen} lang={lang} setLang={setLang}>
       {renderContent()}
     </Layout>
   );

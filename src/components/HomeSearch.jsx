@@ -1,9 +1,42 @@
 import React, { useState } from 'react';
 import { Search, MapPin, Mic, Navigation, Shield, Zap, IndianRupee, RotateCw, Loader2 } from 'lucide-react';
 
-export default function HomeSearch({ onSearch, isLoading }) {
+export default function HomeSearch({ onSearch, isLoading, setCurrentScreen, lang }) {
     const [isListening, setIsListening] = useState(false);
     const [destinationText, setDestinationText] = useState("India Gate");
+
+    const t = {
+        EN: {
+            originPlaceholder: "Enter Origin",
+            destinationPlaceholder: "Enter Destination",
+            voiceInput: "Voice Input",
+            listening: "Listening...",
+            tapToSpeak: "Tap to Speak",
+            useLocation: "Use Current Location",
+            findRoutes: "Find Routes",
+            analyzing: "Analyzing Routes...",
+            aiActive: "AI Intelligence Active",
+            aiDesc: "Optimization modes now available on the results page after AI analysis.",
+            companionActive: "SafeCompanion Active",
+            companionDesc: "We found 2 trusted companions sharing your likely route to India Gate.",
+            viewCompanions: "View Companions"
+        },
+        HI: {
+            originPlaceholder: "प्रारंभिक स्थान दर्ज करें",
+            destinationPlaceholder: "गंतव्य दर्ज करें",
+            voiceInput: "वॉइस इनपुट",
+            listening: "सुन रहे हैं...",
+            tapToSpeak: "बोलने के लिए टैप करें",
+            useLocation: "वर्तमान स्थान का उपयोग करें",
+            findRoutes: "रास्ते खोजें",
+            analyzing: "रास्तों का विश्लेषण...",
+            aiActive: "AI इंटेलिजेंस सक्रिय",
+            aiDesc: "AI विश्लेषण के बाद परिणाम पृष्ठ पर अनुकूलन मोड उपलब्ध हैं।",
+            companionActive: "SafeCompanion सक्रिय",
+            companionDesc: "हमें आपके संभावित रास्ते के लिए 2 विश्वसनीय साथी मिले हैं।",
+            viewCompanions: "साथी देखें"
+        }
+    }[lang || 'EN'];
 
     const handleVoiceInput = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -13,7 +46,7 @@ export default function HomeSearch({ onSearch, isLoading }) {
         }
 
         const recognition = new SpeechRecognition();
-        recognition.lang = 'en-IN';
+        recognition.lang = lang === 'EN' ? 'en-IN' : 'hi-IN';
         recognition.interimResults = false;
 
         recognition.onstart = () => {
@@ -56,7 +89,7 @@ export default function HomeSearch({ onSearch, isLoading }) {
                         <input
                             type="text"
                             className="block w-full pl-12 pr-4 py-3.5 bg-slate-50 border-0 rounded-2xl text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all shadow-inner font-medium text-[15px]"
-                            placeholder="Enter Origin"
+                            placeholder={t.originPlaceholder}
                             defaultValue="New Delhi Railway Station"
                         />
                     </div>
@@ -70,7 +103,7 @@ export default function HomeSearch({ onSearch, isLoading }) {
                         <input
                             type="text"
                             className="block w-full pl-12 pr-4 py-3.5 bg-slate-50 border-0 rounded-2xl text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all shadow-inner font-medium text-[15px]"
-                            placeholder="Enter Destination"
+                            placeholder={t.destinationPlaceholder}
                             value={destinationText}
                             onChange={(e) => setDestinationText(e.target.value)}
                         />
@@ -86,15 +119,15 @@ export default function HomeSearch({ onSearch, isLoading }) {
                         onClick={handleVoiceInput}
                     >
                         <Mic className={`h-5 w-5 ${isListening ? 'animate-bounce' : ''}`} />
-                        <span>{isListening ? 'Listening...' : 'Voice Input'}</span>
-                        {!isListening && <span className="bg-primary-200 text-primary-800 text-[10px] uppercase font-black px-2 py-0.5 rounded-full ml-1 rotate-3">Tap to Speak</span>}
+                        <span>{isListening ? t.listening : t.voiceInput}</span>
+                        {!isListening && <span className="bg-primary-200 text-primary-800 text-[10px] uppercase font-black px-2 py-0.5 rounded-full ml-1 rotate-3">{t.tapToSpeak}</span>}
                     </button>
 
                     <button
                         className="w-full bg-slate-50 hover:bg-slate-100 text-slate-700 py-3.5 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-colors interactive-tap"
                     >
                         <Navigation className="h-4 w-4" />
-                        <span>Use Current Location</span>
+                        <span>{t.useLocation}</span>
                     </button>
                 </div>
 
@@ -107,21 +140,21 @@ export default function HomeSearch({ onSearch, isLoading }) {
                     {isLoading ? (
                         <>
                             <Loader2 className="w-5 h-5 animate-spin" />
-                            Analyzing Routes...
+                            {t.analyzing}
                         </>
                     ) : (
-                        'Find Routes'
+                        t.findRoutes
                     )}
                 </button>
             </div>
 
-            {/* AI Optimization Insight - Replaced the tabs */}
+            {/* AI Optimization Insight */}
             <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100/50">
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 flex items-center gap-2">
                     <RotateCw className="w-3 h-3 animate-spin-slow" />
-                    AI Intelligence Active
+                    {t.aiActive}
                 </p>
-                <p className="text-xs text-slate-600 font-medium">Optimization modes now available on the results page after AI analysis.</p>
+                <p className="text-xs text-slate-600 font-medium">{t.aiDesc}</p>
             </div>
 
             {/* SafeCompanion Promo */}
@@ -129,13 +162,16 @@ export default function HomeSearch({ onSearch, isLoading }) {
                 <div className="absolute right-0 top-0 w-24 h-24 bg-emerald-100/50 rounded-full blur-2xl -mr-8 -mt-8"></div>
                 <h3 className="text-emerald-900 font-bold mb-1 flex items-center gap-2">
                     <Shield className="w-4 h-4 text-emerald-600" />
-                    SafeCompanion Active
+                    {t.companionActive}
                 </h3>
                 <p className="text-emerald-700/80 text-xs mb-3 font-medium leading-relaxed max-w-[85%] relative z-10">
-                    We found 2 trusted companions sharing your likely route to India Gate.
+                    {t.companionDesc}
                 </p>
-                <button className="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-sm hover:bg-emerald-700 interactive-tap">
-                    View Companions
+                <button
+                    onClick={() => setCurrentScreen('companion')}
+                    className="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-sm hover:bg-emerald-700 interactive-tap relative z-10"
+                >
+                    {t.viewCompanions}
                 </button>
             </div>
         </div>

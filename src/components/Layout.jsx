@@ -1,7 +1,7 @@
 import React from 'react';
 import { Menu, MoreVertical, Home, QrCode, Shield, IndianRupee, User } from 'lucide-react';
 
-export default function Layout({ children, currentScreen, setCurrentScreen }) {
+export default function Layout({ children, currentScreen, setCurrentScreen, lang, setLang }) {
     return (
         <div className="flex flex-col h-screen max-w-md mx-auto bg-surface-50 shadow-2xl overflow-hidden relative border-x border-slate-200">
 
@@ -15,13 +15,25 @@ export default function Layout({ children, currentScreen, setCurrentScreen }) {
                         Bharat <span className="text-accent-amber">Transit</span> AI
                     </h1>
                     <div className="flex items-center gap-1 mt-0.5 bg-slate-100 px-2 py-0.5 rounded-md">
-                        <span className="text-[9px] font-bold text-primary-600 uppercase tracking-tighter">EN</span>
+                        <span
+                            onClick={() => setLang('EN')}
+                            className={`text-[9px] font-bold uppercase tracking-tighter cursor-pointer transition-colors ${lang === 'EN' ? 'text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
+                        >
+                            EN
+                        </span>
                         <div className="w-[1px] h-2 bg-slate-300 mx-0.5"></div>
-                        <span className="text-[9px] font-medium text-slate-500 hover:text-primary-600 cursor-pointer transition-colors tracking-tighter">हिंदी</span>
+                        <span
+                            onClick={() => setLang('HI')}
+                            className={`text-[9px] font-bold uppercase tracking-tighter cursor-pointer transition-colors ${lang === 'HI' ? 'text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
+                        >
+                            हिंदी
+                        </span>
                         <div className="w-[1px] h-2 bg-slate-200 mx-0.5"></div>
                         <div className="flex items-center gap-1 ml-1 pl-1 border-l border-slate-200">
                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                            <span className="text-[8px] font-black text-emerald-600 uppercase tracking-[0.1em]">Offline Ready</span>
+                            <span className="text-[8px] font-black text-emerald-600 uppercase tracking-[0.1em]">
+                                {lang === 'EN' ? 'Offline Ready' : 'ऑफ़लाइन तैयार'}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -40,31 +52,31 @@ export default function Layout({ children, currentScreen, setCurrentScreen }) {
                 <ul className="flex justify-between items-center">
                     <NavItem
                         icon={<Home />}
-                        label="Home"
+                        label={lang === 'EN' ? 'Home' : 'होम'}
                         isActive={currentScreen === 'home'}
                         onClick={() => setCurrentScreen('home')}
                     />
                     <NavItem
                         icon={<QrCode />}
-                        label="Scan"
+                        label={lang === 'EN' ? 'Scan' : 'स्क্যান'}
                         isActive={currentScreen === 'scan'}
                         onClick={() => setCurrentScreen('scan')}
                     />
                     <NavItem
                         icon={<Shield />}
-                        label="Companion"
+                        label={lang === 'EN' ? 'Companion' : 'साथी'}
                         isActive={currentScreen === 'companion'}
                         onClick={() => setCurrentScreen('companion')}
                     />
                     <NavItem
                         icon={<IndianRupee />}
-                        label="Budget"
+                        label={lang === 'EN' ? 'Budget' : 'बजट'}
                         isActive={currentScreen === 'budget'}
                         onClick={() => setCurrentScreen('budget')}
                     />
                     <NavItem
                         icon={<User />}
-                        label="Profile"
+                        label={lang === 'EN' ? 'Profile' : 'प्रोफ़ाइल'}
                         isActive={currentScreen === 'profile'}
                         onClick={() => setCurrentScreen('profile')}
                     />
