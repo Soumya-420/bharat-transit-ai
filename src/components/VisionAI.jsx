@@ -160,10 +160,10 @@ export default function VisionAI({ lang, onNavigate }) {
             {/* Viewfinder Section */}
             <div className="flex-1 relative mx-6 mb-6 rounded-[3rem] overflow-hidden border-2 border-white/10 bg-slate-900 shadow-2xl group ring-1 ring-white/5">
                 {/* Simulated Camera Feed Background */}
-                <div className="absolute inset-0 bg-slate-800 flex flex-col items-center justify-center p-10 text-center">
+                <div className="absolute inset-0 bg-slate-900/95 flex flex-col items-center justify-center p-10 text-center z-0">
                     <div className="relative">
-                        <Camera className={`w-16 h-16 text-slate-700 mb-4 transition-all duration-700 ${scanStatus === 'scanning' ? 'scale-110 text-primary-500/50' : ''}`} />
-                        {scanStatus === 'scanning' && <Radio className="absolute -top-2 -right-2 text-primary-400 animate-ping w-6 h-6" />}
+                        <Camera className={`w-16 h-16 text-slate-700/50 mb-4 transition-all duration-700 ${scanStatus === 'scanning' ? 'scale-110 text-primary-500/30' : ''}`} />
+                        {scanStatus === 'scanning' && <Radio className="absolute -top-2 -right-2 text-primary-500/50 animate-ping w-6 h-6" />}
                     </div>
 
                     <div className="space-y-1">
@@ -174,15 +174,15 @@ export default function VisionAI({ lang, onNavigate }) {
                 </div>
 
                 {/* Viewfinder Overlay Frames */}
-                <div className="absolute inset-10 border border-white/10 rounded-[2.5rem] pointer-events-none transition-all duration-500">
-                    <div className={`absolute -top-2 -left-2 w-16 h-16 border-t-[6px] border-l-[6px] rounded-tl-3xl transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-500' : 'border-emerald-500') : 'border-slate-600'}`}></div>
-                    <div className={`absolute -top-2 -right-2 w-16 h-16 border-t-[6px] border-r-[6px] rounded-tr-3xl transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-500' : 'border-emerald-500') : 'border-slate-600'}`}></div>
-                    <div className={`absolute -bottom-2 -left-2 w-16 h-16 border-b-[6px] border-l-[6px] rounded-bl-3xl transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-500' : 'border-emerald-500') : 'border-slate-600'}`}></div>
-                    <div className={`absolute -bottom-2 -right-2 w-16 h-16 border-b-[6px] border-r-[6px] rounded-br-3xl transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-500' : 'border-emerald-500') : 'border-slate-600'}`}></div>
+                <div className="absolute inset-10 border-2 border-white/5 rounded-[2.5rem] pointer-events-none transition-all duration-500 z-10 shadow-[inset_0_0_50px_rgba(0,0,0,0.5)]">
+                    <div className={`absolute -top-2 -left-2 w-16 h-16 border-t-[6px] border-l-[6px] rounded-tl-[2.5rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[-5px_-5px_20px_rgba(56,189,248,0.3)]' : 'border-emerald-400 shadow-[-5px_-5px_20px_rgba(52,211,153,0.3)]') : 'border-slate-500'}`}></div>
+                    <div className={`absolute -top-2 -right-2 w-16 h-16 border-t-[6px] border-r-[6px] rounded-tr-[2.5rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[5px_-5px_20px_rgba(56,189,248,0.3)]' : 'border-emerald-400 shadow-[5px_-5px_20px_rgba(52,211,153,0.3)]') : 'border-slate-500'}`}></div>
+                    <div className={`absolute -bottom-2 -left-2 w-16 h-16 border-b-[6px] border-l-[6px] rounded-bl-[2.5rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[-5px_5px_20px_rgba(56,189,248,0.3)]' : 'border-emerald-400 shadow-[-5px_5px_20px_rgba(52,211,153,0.3)]') : 'border-slate-500'}`}></div>
+                    <div className={`absolute -bottom-2 -right-2 w-16 h-16 border-b-[6px] border-r-[6px] rounded-br-[2.5rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[5px_5px_20px_rgba(56,189,248,0.3)]' : 'border-emerald-400 shadow-[5px_5px_20px_rgba(52,211,153,0.3)]') : 'border-slate-500'}`}></div>
 
                     {/* Scanning Laser Line */}
                     {scanStatus === 'scanning' && (
-                        <div className="absolute inset-x-0 h-[2px] bg-primary-400 shadow-[0_0_15px_rgba(14,165,233,1)] animate-scan-line top-0"></div>
+                        <div className="absolute inset-x-0 h-[3px] bg-primary-400 shadow-[0_0_20px_rgba(56,189,248,1)] animate-scan-line top-0 z-20"></div>
                     )}
                 </div>
 

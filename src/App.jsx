@@ -88,10 +88,10 @@ function App() {
         };
 
         orchestratedResult.detailed_steps = [
-          { type: 'walk', instruction: "Walk 200m to the nearest station", distance: "200m", pathType: "Walking Path" },
-          { type: 'transit', instruction: "Board Metro Blue Line towards destination", distance: "Board", pathType: "Driving Road" },
-          { type: 'walk', instruction: "Walk 100m to exit", distance: "100m", pathType: "Walking Path" },
-          { type: 'arrive', instruction: "Arrive at destination", distance: "Arrive", pathType: "Destination" }
+          { type: 'walk', instruction: "Wait at Nehru Place Stop", distance: "0m", pathType: "Walking Path" },
+          { type: 'transit', instruction: "Board Bus 764 towards Dhaula Kuan", distance: "Board", pathType: "Driving Road" },
+          { type: 'walk', instruction: "Alight at Dhaula Kuan", distance: "0m", pathType: "Walking Path" },
+          { type: 'arrive', instruction: "Walk 200m to Destination", distance: "200m", pathType: "Destination" }
         ];
       }
 
