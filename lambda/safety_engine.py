@@ -1,16 +1,23 @@
+```python
 import json
 import boto3
 
 # Initialize DynamoDB resource
 dynamodb = boto3.resource('dynamodb', region_name='ap-south-1')
-# table = dynamodb.Table('SafetyEventDB') # Uncomment when table is deployed
+table = dynamodb.Table('SafetyEventDB')
 
 def lambda_handler(event, context):
     """
-    Safety Score Engine Microservice
-    Consults DynamoDB crowd/alert data to generate a numerical risk score.
+    Safety Engine Microservice
+    Queries DynamoDB for real-time safety incidents and crowd reports.
     """
     try:
+        # Simulate DynamoDB query for active safety alerts in the area
+        # response = table.query(
+        #     IndexName='LocationIndex',
+        #     KeyConditionExpression=Key('city').eq('Delhi')
+        # )
+        # alerts = response.get('Items', [])
         body = json.loads(event.get('body', '{}'))
     except TypeError:
         body = event

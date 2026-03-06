@@ -1,9 +1,14 @@
 import json
+import boto3
+
+# Initialize DynamoDB resource
+dynamodb = boto3.resource('dynamodb', region_name='ap-south-1')
+pref_table = dynamodb.Table('UserPreferences')
 
 def lambda_handler(event, context):
     """
     Route Engine Microservice
-    Handles multi-modal pathfinding and budget calculations.
+    Handles multi-modal pathfinding and personalizes based on DynamoDB user prefs.
     """
     try:
         body = json.loads(event.get('body', '{}'))
