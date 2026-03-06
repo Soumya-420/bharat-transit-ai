@@ -187,20 +187,66 @@ export default function VisionAI({ lang, onNavigate }) {
                     </div>
                 </div>
 
-                {/* Viewfinder Overlay Frames - Fix inset positioning */}
-                <div className="absolute inset-x-8 top-12 bottom-12 border-[4px] border-white/30 rounded-[3rem] pointer-events-none transition-all duration-500 z-30 shadow-[0_0_100px_rgba(0,0,0,0.9)_inset]">
+                {/* Viewfinder Overlay Frames - Using explicit inline styles to guarantee rendering */}
+                <div
+                    className="absolute inset-x-6 top-10 bottom-10 pointer-events-none transition-all duration-500 z-30"
+                    style={{
+                        border: '4px solid rgba(255,255,255,0.15)',
+                        borderRadius: '3rem',
+                        boxShadow: 'inset 0 0 100px rgba(0,0,0,0.9)'
+                    }}
+                >
                     {/* Corners */}
-                    <div className={`absolute -top-4 -left-4 w-20 h-20 border-t-[10px] border-l-[10px] rounded-tl-[3rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[-10px_-10px_30px_rgba(56,189,248,0.8)]' : 'border-emerald-400 shadow-[-10px_-10px_30px_rgba(52,211,153,0.8)]') : scanStatus === 'scanning' ? 'border-white animate-pulse' : 'border-slate-500'}`}></div>
+                    <div
+                        className={`absolute -top-1 -left-1 w-20 h-20 rounded-tl-[3rem] transition-colors duration-500 ${scanStatus === 'scanning' ? 'animate-pulse' : ''}`}
+                        style={{
+                            borderTop: '10px solid',
+                            borderLeft: '10px solid',
+                            borderColor: scanStatus === 'identified' ? (mode === 'detect' ? '#38bdf8' : '#34d399') : scanStatus === 'scanning' ? '#ffffff' : '#64748b',
+                            boxShadow: scanStatus === 'identified' ? (mode === 'detect' ? '-10px -10px 30px rgba(56,189,248,0.8)' : '-10px -10px 30px rgba(52,211,153,0.8)') : 'none'
+                        }}
+                    ></div>
 
-                    <div className={`absolute -top-4 -right-4 w-20 h-20 border-t-[10px] border-r-[10px] rounded-tr-[3rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[10px_-10px_30px_rgba(56,189,248,0.8)]' : 'border-emerald-400 shadow-[10px_-10px_30px_rgba(52,211,153,0.8)]') : scanStatus === 'scanning' ? 'border-white animate-pulse' : 'border-slate-500'}`}></div>
+                    <div
+                        className={`absolute -top-1 -right-1 w-20 h-20 rounded-tr-[3rem] transition-colors duration-500 ${scanStatus === 'scanning' ? 'animate-pulse' : ''}`}
+                        style={{
+                            borderTop: '10px solid',
+                            borderRight: '10px solid',
+                            borderColor: scanStatus === 'identified' ? (mode === 'detect' ? '#38bdf8' : '#34d399') : scanStatus === 'scanning' ? '#ffffff' : '#64748b',
+                            boxShadow: scanStatus === 'identified' ? (mode === 'detect' ? '10px -10px 30px rgba(56,189,248,0.8)' : '10px -10px 30px rgba(52,211,153,0.8)') : 'none'
+                        }}
+                    ></div>
 
-                    <div className={`absolute -bottom-4 -left-4 w-20 h-20 border-b-[10px] border-l-[10px] rounded-bl-[3rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[-10px_10px_30px_rgba(56,189,248,0.8)]' : 'border-emerald-400 shadow-[-10px_10px_30px_rgba(52,211,153,0.8)]') : scanStatus === 'scanning' ? 'border-white animate-pulse' : 'border-slate-500'}`}></div>
+                    <div
+                        className={`absolute -bottom-1 -left-1 w-20 h-20 rounded-bl-[3rem] transition-colors duration-500 ${scanStatus === 'scanning' ? 'animate-pulse' : ''}`}
+                        style={{
+                            borderBottom: '10px solid',
+                            borderLeft: '10px solid',
+                            borderColor: scanStatus === 'identified' ? (mode === 'detect' ? '#38bdf8' : '#34d399') : scanStatus === 'scanning' ? '#ffffff' : '#64748b',
+                            boxShadow: scanStatus === 'identified' ? (mode === 'detect' ? '-10px 10px 30px rgba(56,189,248,0.8)' : '-10px 10px 30px rgba(52,211,153,0.8)') : 'none'
+                        }}
+                    ></div>
 
-                    <div className={`absolute -bottom-4 -right-4 w-20 h-20 border-b-[10px] border-r-[10px] rounded-br-[3rem] transition-colors duration-500 ${scanStatus === 'identified' ? (mode === 'detect' ? 'border-primary-400 shadow-[10px_10px_30px_rgba(56,189,248,0.8)]' : 'border-emerald-400 shadow-[10px_10px_30px_rgba(52,211,153,0.8)]') : scanStatus === 'scanning' ? 'border-white animate-pulse' : 'border-slate-500'}`}></div>
+                    <div
+                        className={`absolute -bottom-1 -right-1 w-20 h-20 rounded-br-[3rem] transition-colors duration-500 ${scanStatus === 'scanning' ? 'animate-pulse' : ''}`}
+                        style={{
+                            borderBottom: '10px solid',
+                            borderRight: '10px solid',
+                            borderColor: scanStatus === 'identified' ? (mode === 'detect' ? '#38bdf8' : '#34d399') : scanStatus === 'scanning' ? '#ffffff' : '#64748b',
+                            boxShadow: scanStatus === 'identified' ? (mode === 'detect' ? '10px 10px 30px rgba(56,189,248,0.8)' : '10px 10px 30px rgba(52,211,153,0.8)') : 'none'
+                        }}
+                    ></div>
 
                     {/* Highly visible scanning laser line */}
                     {scanStatus === 'scanning' && (
-                        <div className="absolute inset-x-0 h-[8px] bg-primary-400 shadow-[0_0_30px_rgba(56,189,248,1),0_0_15px_rgba(255,255,255,1)] animate-scan-line top-0 z-40 rounded-full"></div>
+                        <div
+                            className="absolute inset-x-0 animate-scan-line top-0 z-40 rounded-full"
+                            style={{
+                                height: '8px',
+                                backgroundColor: '#38bdf8',
+                                boxShadow: '0 0 30px rgba(56,189,248,1), 0 0 15px rgba(255,255,255,1)'
+                            }}
+                        ></div>
                     )}
                 </div>
 
