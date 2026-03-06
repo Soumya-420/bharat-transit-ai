@@ -114,7 +114,19 @@ export default function VisionAI({ lang, onNavigate }) {
                 type: "bus",
                 duration: "25 min",
                 price: "₹10",
-                path: "DTC Route 764"
+                path: "DTC Route 764",
+                detailed_steps: [
+                    { type: 'walk', instruction: lang === 'HI' ? "नेहरू प्लेस स्टॉप पर प्रतीक्षा करें" : "Wait at Nehru Place Stop", distance: "0m", pathType: "Walking Path" },
+                    { type: 'transit', instruction: lang === 'HI' ? "धौला कुआं की ओर बस 764 पर चढ़ें" : "Board Bus 764 towards Dhaula Kuan", distance: "Board", pathType: "Driving Road" },
+                    { type: 'walk', instruction: lang === 'HI' ? "धौला कुआं पर उतरें" : "Alight at Dhaula Kuan", distance: "0m", pathType: "Walking Path" },
+                    { type: 'arrive', instruction: lang === 'HI' ? "गंतव्य की ओर थोड़ा चलें" : "Walk short distance to Destination", distance: "50m", pathType: "Destination" }
+                ],
+                route_geojson: [
+                    [77.2519, 28.5494], // Nehru Place
+                    [77.1950, 28.5445], // IIT Gate
+                    [77.1726, 28.5562], // Munirka
+                    [77.1607, 28.5910]  // Dhaula Kuan
+                ]
             });
         }
     };

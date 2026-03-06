@@ -21,14 +21,15 @@ export default function LiveNavigation({ route, apiResult, festivalMode }) {
     const [showSteps, setShowSteps] = useState(false);
 
     const polylineCoords = useMemo(() => {
-        if (!apiResult?.route_geojson) return [];
-        return apiResult.route_geojson.map(coord => [coord[1], coord[0]]);
-    }, [apiResult]);
+        const geojson = apiResult?.route_geojson || route?.route_geojson;
+        if (!geojson) return [];
+        return geojson.map(coord => [coord[1], coord[0]]);
+    }, [apiResult, route]);
 
     const startCoords = polylineCoords.length > 0 ? polylineCoords[0] : [28.6141, 77.2185];
     const endCoords = polylineCoords.length > 0 ? polylineCoords[polylineCoords.length - 1] : [28.6139, 77.2090];
 
-    const detailedSteps = apiResult?.detailed_steps || [
+    const detailedSteps = apiResult?.detailed_steps || route?.detailed_steps || [
         { type: 'walk', instruction: "Walk 200m to Exit 3", distance: "200m", pathType: "Walking Path" },
         { type: 'transit', instruction: "Board metro towards destination", distance: "Board", pathType: "Driving Road" }
     ];
