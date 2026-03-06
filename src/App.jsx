@@ -13,8 +13,13 @@ function App() {
   const [apiResult, setApiResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSearch = async (origin, destination) => {
+  const handleSearch = async (originArg, destinationArg) => {
     setIsLoading(true);
+
+    // Safety check: if originArg is a React event object, ignore it
+    const origin = typeof originArg === 'string' ? originArg : "New Delhi Railway Station";
+    const destination = typeof destinationArg === 'string' ? destinationArg : "India Gate";
+
     try {
       const response = await fetch("https://ow6sg43ydy2sumvnfcylkakw240qqudq.lambda-url.ap-south-1.on.aws/", {
         method: "POST",
@@ -22,8 +27,8 @@ function App() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          origin: origin || "New Delhi Railway Station",
-          destination: destination || "India Gate"
+          origin: origin,
+          destination: destination
         })
       });
 
