@@ -16,7 +16,7 @@ function App() {
   const handleSearch = async (origin, destination) => {
     setIsLoading(true);
     try {
-      const response = await fetch("https://6bgj5h4ds5ijnd5ja52riuars40khvxt.lambda-url.ap-south-1.on.aws/", {
+      const response = await fetch("https://ow6sg43ydy2sumvnfcylkakw240qqudq.lambda-url.ap-south-1.on.aws/https://6bgj5h4ds5ijnd5ja52riuars40khvxt.lambda-url.ap-south-1.on.aws/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
