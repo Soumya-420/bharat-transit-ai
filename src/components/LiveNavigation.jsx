@@ -25,6 +25,42 @@ export default function LiveNavigation({ route, apiResult, festivalMode }) {
         return geojson.map(coord => [coord[1], coord[0]]);
     }, [apiResult, route]);
 
+    const getDynamicAIExplanation = () => {
+        if (!route) return {
+            en: "This is the optimal option based on real-time data, avoiding major traffic.",
+            hi: "यह रियल-टाइम डेटा के आधार पर सबसे इष्टतम मार्ग है, जो मुख्य ट्रैफ़िक से बचाता है।"
+        };
+
+        const isFastest = route.type?.toLowerCase().includes('fastest');
+        const modes = route.modes?.map(m => m.label).join(' and ') || 'Transit';
+        const hasMetro = route.modes?.some(m => m.label.toLowerCase() === 'metro');
+        const hasBus = route.modes?.some(m => m.label.toLowerCase() === 'bus');
+
+        if (hasMetro && hasBus) {
+            return {
+                en: `This ${isFastest ? 'is the fastest' : 'is the safest'} option based on real-time data. You'll take the Metro to bypass surface traffic, then connect via Bus to reach your destination smoothly.`,
+                hi: `रीयल-टाइम डेटा के आधार पर यह ${isFastest ? 'सबसे तेज़' : 'सबसे सुरक्षित'} विकल्प है। आप बाहरी ट्रैफ़िक से बचने के लिए मेट्रो लेंगे, फिर आसानी से अपनी मंजिल तक पहुँचने के लिए बस से जुड़ेंगे।`
+            };
+        } else if (hasMetro) {
+            return {
+                en: `This ${isFastest ? 'is the fastest' : 'is the safest'} option. You'll take the Metro which completely bypasses all surface-level traffic junctions for a highly predictable arrival time.`,
+                hi: `यह ${isFastest ? 'सबसे तेज़' : 'सबसे सुरक्षित'} विकल्प है। आप मेट्रो लेंगे जो पूरी तरह से सभी जमीनी स्तर के ट्रैफ़िक जंक्शनों से बचती है जिससे आप समय पर पहुँचेंगे।`
+            };
+        } else if (hasBus) {
+            return {
+                en: `This ${isFastest ? 'is the fastest' : 'is the safest'} option based on live AI tracking. You'll board the Bus which provides a direct ground connection while dynamically avoiding congested choke points.`,
+                hi: `लाइव AI ट्रैकिंग के आधार पर यह ${isFastest ? 'सबसे तेज़' : 'सबसे सुरक्षित'} विकल्प है। आप बस पर चढ़ेंगे जो सीधे संपर्क प्रदान करती है और भीड़भाड़ वाले स्थानों से बचाती है।`
+            };
+        } else {
+            return {
+                en: `This ${isFastest ? 'is the fastest' : 'is the safest'} option based on real-time data. Your journey via ${modes} avoids major traffic junctions to reach your destination smoothly.`,
+                hi: `रीयल-टाइम डेटा के आधार पर यह ${isFastest ? 'सबसे तेज़' : 'सबसे सुरक्षित'} विकल्प है। ${modes} के माध्यम से आपकी यात्रा प्रमुख ट्रैफ़िक जंक्शनों से बचती है।`
+            };
+        }
+    };
+
+    const aiExplanation = getDynamicAIExplanation();
+
     const startCoords = polylineCoords.length > 0 ? polylineCoords[0] : [28.6141, 77.2185];
     const endCoords = polylineCoords.length > 0 ? polylineCoords[polylineCoords.length - 1] : [28.6139, 77.2090];
 
@@ -142,9 +178,7 @@ export default function LiveNavigation({ route, apiResult, festivalMode }) {
                                             <span className="w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></span>
                                         </p>
                                         <p className="text-xs text-slate-300 font-medium leading-relaxed">
-                                            {lang === 'EN'
-                                                ? "This is the safest and least crowded option based on real-time data. You'll board Bus 764 which avoids major traffic junctions, then walk a short distance to reach your destination smoothly."
-                                                : "रीयल-टाइम डेटा के आधार पर यह सबसे सुरक्षित और कम भीड़-भाड़ वाला मार्ग है। आप बस 764 पर चढ़ेंगे जो प्रमुख ट्रैफ़िक जंक्शनों से बचती है, फिर छोटी दूरी चलकर अपनी मंजिल तक आसानी से पहुंच जाएंगे।"}
+                                            {lang === 'EN' ? aiExplanation.en : aiExplanation.hi}
                                         </p>
                                     </div>
                                 </div>

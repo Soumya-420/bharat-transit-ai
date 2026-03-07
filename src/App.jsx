@@ -60,6 +60,8 @@ function App() {
       const isFestival = destination.toLowerCase().includes("kolkata") || destination.toLowerCase().includes("gate") || destination.toLowerCase().includes("chowk");
       setFestivalMode(isFestival);
 
+      const destClean = destination.split(',')[0] || destination;
+
       if (isFestival) {
         orchestratedResult.festival_reason = "Major Carnival/Event in progress";
         orchestratedResult.festival_guidance = "AI is routing via crowd-free secondary lanes and pedestrian-friendly paths to avoid heavy event congestion.";
@@ -76,7 +78,7 @@ function App() {
         orchestratedResult.detailed_steps = [
           { type: 'walk', instruction: "Walk 150m towards the northern exit to avoid main gate crowds", distance: "150m", pathType: "Walking Path" },
           { type: 'turn', instruction: "Turn Right at the police kiosk", distance: "Turn", pathType: "Walking Path" },
-          { type: 'transit', instruction: "Board Special Festival Shuttle (Route S-1) towards Park Street", distance: "Board", pathType: "Driving Road" },
+          { type: 'transit', instruction: `Board Special Festival Shuttle (Route S-1) towards ${destClean}`, distance: "Board", pathType: "Driving Road" },
           { type: 'walk', instruction: "Walk 200m through the illuminated pedestrian lane", distance: "200m", pathType: "Walking Path" },
           { type: 'arrive', instruction: "Arrive safely at your destination", distance: "Arrive", pathType: "Destination" }
         ];
