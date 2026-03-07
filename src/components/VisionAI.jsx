@@ -178,13 +178,13 @@ export default function VisionAI({ lang, onNavigate }) {
                         <div className={`absolute inset-0 bg-primary-500 rounded-full blur-2xl transition-all duration-1000 ${scanStatus === 'scanning' ? 'opacity-20 animate-pulse' : 'opacity-0'}`}></div>
 
                         {scanStatus === 'scanning' ? (
-                            <div className="w-24 h-24 bg-amber-500 rounded-2xl flex items-center justify-center mb-6 relative shadow-[0_0_30px_rgba(245,158,11,0.6)] animate-pulse z-10">
-                                {/* White Scan Corners */}
-                                <div className="absolute top-4 left-4 w-5 h-5 border-t-4 border-l-4 border-white rounded-tl-md"></div>
-                                <div className="absolute top-4 right-4 w-5 h-5 border-t-4 border-r-4 border-white rounded-tr-md"></div>
-                                <div className="absolute bottom-4 left-4 w-5 h-5 border-b-4 border-l-4 border-white rounded-bl-md"></div>
-                                <div className="absolute bottom-4 right-4 w-5 h-5 border-b-4 border-r-4 border-white rounded-br-md"></div>
+                            <div className="bg-amber-500 p-5 rounded-[2rem] flex items-center justify-center mb-6 relative shadow-[0_0_50px_rgba(245,158,11,0.8)] animate-bounce-in z-10 transition-all duration-300">
+                                <Scan className="text-white w-14 h-14 animate-pulse" />
                                 <Radio className="absolute -top-3 -right-3 text-amber-300 animate-ping w-8 h-8 z-20" />
+                            </div>
+                        ) : scanStatus === 'identified' ? (
+                            <div className="bg-emerald-500 p-5 rounded-[2rem] flex items-center justify-center mb-6 relative shadow-[0_0_50px_rgba(16,185,129,0.8)] animate-bounce-in z-10">
+                                <Check className="text-white w-14 h-14" />
                             </div>
                         ) : (
                             <Camera className="w-20 h-20 text-slate-500 mb-6 transition-all duration-700 relative z-10" />
@@ -288,8 +288,8 @@ export default function VisionAI({ lang, onNavigate }) {
                 )}
             </div>
 
-            {/* AI Result Bottom Card */}
-            <div className={`mx-6 bg-white/95 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl relative z-20 border border-white/50 transition-all duration-700 ${scanStatus === 'identified' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20 pointer-events-none'}`}>
+            {/* AI Result Bottom Card - Absolute positioning prevents squashing the Viewfinder layout */}
+            <div className={`absolute bottom-24 left-6 right-6 bg-white/95 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl z-20 border border-white/50 transition-all duration-700 ${scanStatus === 'identified' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20 pointer-events-none'}`}>
                 {mode === 'detect' ? (
                     <>
                         <div className="flex items-start justify-between mb-5">
