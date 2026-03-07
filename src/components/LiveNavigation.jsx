@@ -18,7 +18,6 @@ L.Icon.Default.mergeOptions({
 
 export default function LiveNavigation({ route, apiResult, festivalMode }) {
     const [lang, setLang] = useState('EN');
-    const [showSteps, setShowSteps] = useState(false);
 
     const polylineCoords = useMemo(() => {
         const geojson = apiResult?.route_geojson || route?.route_geojson;
@@ -45,10 +44,9 @@ export default function LiveNavigation({ route, apiResult, festivalMode }) {
     };
 
     return (
-        <div className="h-full flex flex-col bg-slate-50 animate-slide-up pb-20 relative overflow-hidden">
-
+        <div className="h-full flex flex-col bg-slate-50 animate-slide-up relative overflow-hidden">
             {/* Sub-Header: Multilingual & Controls */}
-            <div className="bg-white px-4 py-3 shadow-md z-[1001] flex items-center justify-between border-b border-slate-100">
+            <div className="shrink-0 bg-white px-4 py-3 shadow-md z-[1001] flex items-center justify-between border-b border-slate-100">
                 <div className="flex items-center gap-2">
                     <div className="bg-slate-100 p-2 rounded-lg">
                         <Navigation className="w-4 h-4 text-slate-600" />
@@ -58,7 +56,6 @@ export default function LiveNavigation({ route, apiResult, festivalMode }) {
                         <p className="text-xs font-bold text-slate-800 uppercase tracking-tighter">Turn-by-Turn</p>
                     </div>
                 </div>
-
                 <div className="flex items-center gap-2">
                     <button
                         onClick={() => setLang(lang === 'EN' ? 'HI' : 'EN')}
@@ -67,121 +64,119 @@ export default function LiveNavigation({ route, apiResult, festivalMode }) {
                         <Globe size={14} />
                         {lang === 'EN' ? 'English' : 'हिंदी'}
                     </button>
-                    <button
-                        onClick={() => setShowSteps(!showSteps)}
-                        className={`p-2 rounded-xl transition-colors interactive-tap ${showSteps ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600'}`}
+                </div>
+            </div>
+
+            {/* Scrollable Container */}
+            <div className="flex-1 overflow-y-auto relative z-0 pb-24 scroll-smooth">
+                {/* Map Area - Sticky at top */}
+                <div className="h-[55vh] w-full sticky top-0 z-0">
+                    <MapContainer
+                        center={startCoords}
+                        zoom={15}
+                        zoomControl={false}
+                        style={{ height: '100%', width: '100%' }}
                     >
-                        <List size={18} />
-                    </button>
-                </div>
-            </div>
+                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                        {polylineCoords.length > 0 && <Polyline positions={polylineCoords} pathOptions={{ color: '#0ea5e9', weight: 6 }} />}
+                        <Marker position={startCoords} />
+                        <Marker position={endCoords} />
+                    </MapContainer>
 
-            {/* Map Area */}
-            <div className="flex-1 relative bg-slate-200 z-0">
-                <MapContainer
-                    center={startCoords}
-                    zoom={15}
-                    zoomControl={false}
-                    style={{ height: '100%', width: '100%' }}
-                >
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                    {polylineCoords.length > 0 && <Polyline positions={polylineCoords} pathOptions={{ color: '#0ea5e9', weight: 6 }} />}
-                    <Marker position={startCoords} />
-                    <Marker position={endCoords} />
-                </MapContainer>
-
-                {/* Festival Alert Overlay */}
-                {festivalMode && (
-                    <div className="absolute top-4 left-4 right-4 z-[1000] animate-bounce-in">
-                        <div className="bg-orange-600/95 backdrop-blur-md text-white px-4 py-4 rounded-3xl shadow-xl flex items-center gap-3 border border-orange-400/50">
-                            <div className="bg-white/20 p-2.5 rounded-2xl animate-pulse text-xl">🕉️</div>
-                            <div>
-                                <p className="text-[9px] font-black uppercase tracking-widest opacity-80 mb-0.5">AI Festival Smart-Routing</p>
-                                <p className="text-xs font-bold leading-snug">{apiResult?.festival_reason || "Event detected in your path."}</p>
+                    {/* Festival Alert Overlay - top of map */}
+                    {festivalMode && (
+                        <div className="absolute top-4 left-4 right-4 z-[1000] animate-bounce-in">
+                            <div className="bg-orange-600/95 backdrop-blur-md text-white px-4 py-4 rounded-3xl shadow-xl flex items-center gap-3 border border-orange-400/50">
+                                <div className="bg-white/20 p-2.5 rounded-2xl animate-pulse text-xl">🕉️</div>
+                                <div>
+                                    <p className="text-[9px] font-black uppercase tracking-widest opacity-80 mb-0.5">AI Festival Smart-Routing</p>
+                                    <p className="text-xs font-bold leading-snug">{apiResult?.festival_reason || "Event detected in your path."}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
 
-            {/* Step List Drawer */}
-            {showSteps && (
-                <div className="absolute top-0 left-0 right-0 bottom-0 bg-white/98 backdrop-blur-md z-[1005] animate-fade-in p-6 pt-20 overflow-y-auto">
-                    <div className="flex justify-between items-center mb-8">
-                        <div>
-                            <h3 className="text-2xl font-black text-slate-900">Journey Flow</h3>
-                            <p className="text-xs text-slate-500 font-bold uppercase tracking-widest mt-1">Detailed Path Breakdown</p>
-                        </div>
-                        <button onClick={() => setShowSteps(false)} className="bg-slate-100 p-2 rounded-full text-slate-600 hover:bg-slate-200 interactive-tap">
-                            <ArrowBigRight className="rotate-90" />
-                        </button>
-                    </div>
-                    <div className="space-y-4">
-                        {detailedSteps.map((step, i) => (
-                            <div key={i} className="flex gap-4 items-start p-5 bg-slate-50 rounded-3xl border border-slate-100 shadow-sm animate-slide-up" style={{ animationDelay: `${i * 100}ms` }}>
-                                <div className="bg-slate-900 text-white w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transform -rotate-3">
-                                    {getStepIcon(step.type)}
+                {/* Content Below Map (Scrolls over map) */}
+                <div className="relative z-10 bg-slate-50 min-h-[60vh] rounded-t-[2.5rem] mt-[-2rem] pt-6 px-4 shadow-[0_-15px_40px_rgba(0,0,0,0.12)]">
+                    {/* Visual drag handle */}
+                    <div className="w-12 h-1.5 bg-slate-300 rounded-full mx-auto mb-6"></div>
+
+                    {/* Dark Navigation Card */}
+                    <div className="bg-slate-900 text-white rounded-[2.5rem] p-6 shadow-2xl mb-8 border border-slate-800">
+                        <div className="flex gap-4">
+                            <div className="bg-primary-500/20 p-4 rounded-[1.5rem] h-fit border border-primary-500/30 shadow-inner">
+                                <ArrowRight className="w-8 h-8 text-primary-400" />
+                            </div>
+                            <div className="flex-1">
+                                <p className="text-primary-400 text-[10px] font-black tracking-[0.2em] uppercase mb-1">
+                                    {lang === 'EN' ? 'Next Instruction' : 'अगला निर्देश'}
+                                </p>
+                                <p className="font-bold text-lg leading-tight mb-5">
+                                    {detailedSteps[0]?.instruction}
+                                </p>
+
+                                <div className="grid grid-cols-3 gap-3">
+                                    <button className="flex flex-col items-center justify-center bg-white/5 py-3 rounded-2xl interactive-tap gap-1">
+                                        <Mic className="w-4 h-4 text-slate-300" />
+                                        <span className="text-[9px] font-black text-slate-400 uppercase">Voice AI</span>
+                                    </button>
+                                    <button className="flex flex-col items-center justify-center bg-rose-500/20 border border-rose-500/30 py-3 rounded-2xl interactive-tap gap-1">
+                                        <ShieldAlert className="w-4 h-4 text-rose-400" />
+                                        <span className="text-[9px] font-black text-rose-400 uppercase">SOS</span>
+                                    </button>
+                                    <button className="flex flex-col items-center justify-center bg-white/5 py-3 rounded-2xl interactive-tap gap-1">
+                                        <Share2 className="w-4 h-4 text-slate-300" />
+                                        <span className="text-[9px] font-black text-slate-400 uppercase">Share</span>
+                                    </button>
                                 </div>
-                                <div className="flex-1">
-                                    <div className="flex justify-between items-start mb-1">
-                                        <p className="font-black text-slate-900 text-[16px] leading-tight flex-1 mr-2">{step.instruction}</p>
-                                        <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase border ${step.pathType === 'Walking Path' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-blue-50 text-blue-600 border-blue-100'}`}>
-                                            {step.pathType}
-                                        </span>
+
+                                {/* AI Explanation Box */}
+                                <div className="mt-5 bg-primary-950/60 border border-primary-500/30 rounded-2xl p-4 flex gap-3 items-start shadow-inner">
+                                    <div className="bg-primary-500/20 p-2 rounded-xl border border-primary-500/40">
+                                        <span className="text-xl leading-none">✨</span>
                                     </div>
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{step.distance}</p>
+                                    <div>
+                                        <p className="text-[10px] font-black text-primary-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                                            {lang === 'EN' ? 'AI Route Analysis' : 'AI रूट विश्लेषण'}
+                                            <span className="w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></span>
+                                        </p>
+                                        <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                                            {lang === 'EN'
+                                                ? "This is the safest and least crowded option based on real-time data. You'll board Bus 764 which avoids major traffic junctions, then walk a short distance to reach your destination smoothly."
+                                                : "रीयल-टाइम डेटा के आधार पर यह सबसे सुरक्षित और कम भीड़-भाड़ वाला मार्ग है। आप बस 764 पर चढ़ेंगे जो प्रमुख ट्रैफ़िक जंक्शनों से बचती है, फिर छोटी दूरी चलकर अपनी मंजिल तक आसानी से पहुंच जाएंगे।"}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {/* Floating Navigation Card */}
-            <div className="absolute bottom-24 left-4 right-4 bg-slate-900 text-white rounded-[2.5rem] p-6 shadow-2xl z-[1002] border border-white/10 glass-panel-dark">
-                <div className="flex gap-4">
-                    <div className="bg-primary-500/20 p-4 rounded-[1.5rem] h-fit border border-primary-500/30 shadow-inner">
-                        <ArrowRight className="w-8 h-8 text-primary-400" />
-                    </div>
-                    <div className="flex-1">
-                        <p className="text-primary-400 text-[10px] font-black tracking-[0.2em] uppercase mb-1">
-                            {lang === 'EN' ? 'Next Instruction' : 'अगला निर्देश'}
-                        </p>
-                        <p className="font-bold text-lg leading-tight mb-5">
-                            {detailedSteps[0]?.instruction}
-                        </p>
-
-                        <div className="grid grid-cols-3 gap-3">
-                            <button className="flex flex-col items-center justify-center bg-white/5 py-3 rounded-2xl interactive-tap gap-1">
-                                <Mic className="w-4 h-4 text-slate-300" />
-                                <span className="text-[9px] font-black text-slate-400 uppercase">Voice AI</span>
-                            </button>
-                            <button className="flex flex-col items-center justify-center bg-rose-500/20 border border-rose-500/30 py-3 rounded-2xl interactive-tap gap-1">
-                                <ShieldAlert className="w-4 h-4 text-rose-400" />
-                                <span className="text-[9px] font-black text-rose-400 uppercase">SOS</span>
-                            </button>
-                            <button className="flex flex-col items-center justify-center bg-white/5 py-3 rounded-2xl interactive-tap gap-1">
-                                <Share2 className="w-4 h-4 text-slate-300" />
-                                <span className="text-[9px] font-black text-slate-400 uppercase">Share</span>
-                            </button>
                         </div>
+                    </div>
 
-                        {/* AI Explanation Box */}
-                        <div className="mt-5 bg-primary-950/60 border border-primary-500/30 rounded-2xl p-4 flex gap-3 items-start animate-fade-in shadow-inner">
-                            <div className="bg-primary-500/20 p-2 rounded-xl border border-primary-500/40">
-                                <span className="text-xl leading-none">✨</span>
-                            </div>
+                    {/* Journey Flow List */}
+                    <div className="px-2">
+                        <div className="flex justify-between items-center mb-5">
                             <div>
-                                <p className="text-[10px] font-black text-primary-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
-                                    {lang === 'EN' ? 'AI Route Analysis' : 'AI रूट विश्लेषण'}
-                                    <span className="w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></span>
-                                </p>
-                                <p className="text-xs text-slate-300 font-medium leading-relaxed">
-                                    {lang === 'EN'
-                                        ? "This is the safest and least crowded option based on real-time data. You'll board Bus 764 which avoids major traffic junctions, then walk a short distance to reach your destination smoothly."
-                                        : "रीयल-टाइम डेटा के आधार पर यह सबसे सुरक्षित और कम भीड़-भाड़ वाला मार्ग है। आप बस 764 पर चढ़ेंगे जो प्रमुख ट्रैफ़िक जंक्शनों से बचती है, फिर छोटी दूरी चलकर अपनी मंजिल तक आसानी से पहुंच जाएंगे।"}
-                                </p>
+                                <h3 className="text-xl font-black text-slate-900">Journey Flow</h3>
+                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Detailed Path Breakdown</p>
                             </div>
+                        </div>
+                        <div className="space-y-3">
+                            {detailedSteps.map((step, i) => (
+                                <div key={i} className="flex gap-4 items-start p-4 bg-white rounded-3xl border border-slate-100 shadow-sm">
+                                    <div className="bg-slate-900 text-white w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transform -rotate-3 shrink-0">
+                                        {getStepIcon(step.type)}
+                                    </div>
+                                    <div className="flex-1">
+                                        <div className="flex justify-between items-start mb-1 gap-2">
+                                            <p className="font-black text-slate-800 text-[15px] leading-tight flex-1">{step.instruction}</p>
+                                            <span className={`shrink-0 text-[8px] font-black px-2 py-0.5 rounded-full uppercase border ${step.pathType === 'Walking Path' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-blue-50 text-blue-600 border-blue-100'}`}>
+                                                {step.pathType}
+                                            </span>
+                                        </div>
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{step.distance}</p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
