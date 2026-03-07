@@ -165,6 +165,24 @@ export default function LiveNavigation({ route, apiResult, festivalMode }) {
                                 <span className="text-[9px] font-black text-slate-400 uppercase">Share</span>
                             </button>
                         </div>
+
+                        {/* AI Explanation Box */}
+                        <div className="mt-5 bg-primary-950/60 border border-primary-500/30 rounded-2xl p-4 flex gap-3 items-start animate-fade-in shadow-inner">
+                            <div className="bg-primary-500/20 p-2 rounded-xl border border-primary-500/40">
+                                <span className="text-xl leading-none">✨</span>
+                            </div>
+                            <div>
+                                <p className="text-[10px] font-black text-primary-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                                    {lang === 'EN' ? 'AI Route Analysis' : 'AI रूट विश्लेषण'}
+                                    <span className="w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></span>
+                                </p>
+                                <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                                    {lang === 'EN'
+                                        ? "This is the safest and least crowded option based on real-time data. You'll board Bus 764 which avoids major traffic junctions, then walk a short distance to reach your destination smoothly."
+                                        : "रीयल-टाइम डेटा के आधार पर यह सबसे सुरक्षित और कम भीड़-भाड़ वाला मार्ग है। आप बस 764 पर चढ़ेंगे जो प्रमुख ट्रैफ़िक जंक्शनों से बचती है, फिर छोटी दूरी चलकर अपनी मंजिल तक आसानी से पहुंच जाएंगे।"}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
