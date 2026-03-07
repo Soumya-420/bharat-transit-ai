@@ -198,68 +198,66 @@ export default function VisionAI({ lang, onNavigate }) {
                     </div>
                 </div>
 
-                {/* Viewfinder Overlay Frames - Using explicit inline styles to guarantee rendering */}
-                <div
-                    className={`absolute inset-x-6 top-10 bottom-10 pointer-events-none transition-all duration-500 z-30 ${scanStatus === 'identified' ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
-                    style={{
-                        border: '4px solid rgba(255,255,255,0.15)',
-                        borderRadius: '3rem',
-                        boxShadow: 'inset 0 0 100px rgba(0,0,0,0.9)'
-                    }}
-                >
-                    {/* Corners */}
+                {/* Viewfinder Overlay Frames - Conditionally mounted to completely remove when Identified */}
+                {scanStatus !== 'identified' && (
                     <div
-                        className={`absolute -top-1 -left-1 w-20 h-20 rounded-tl-[3rem] transition-colors duration-500 ${scanStatus === 'scanning' ? 'animate-pulse' : ''}`}
+                        className="absolute inset-x-6 top-10 bottom-10 pointer-events-none transition-all duration-500 z-30"
                         style={{
-                            borderTop: '10px solid',
-                            borderLeft: '10px solid',
-                            borderColor: scanStatus === 'identified' ? (mode === 'detect' ? '#38bdf8' : '#34d399') : scanStatus === 'scanning' ? '#ffffff' : '#64748b',
-                            boxShadow: scanStatus === 'identified' ? (mode === 'detect' ? '-10px -10px 30px rgba(56,189,248,0.8)' : '-10px -10px 30px rgba(52,211,153,0.8)') : 'none'
+                            border: '4px solid rgba(255,255,255,0.15)',
+                            borderRadius: '3rem',
+                            boxShadow: 'inset 0 0 100px rgba(0,0,0,0.9)'
                         }}
-                    ></div>
-
-                    <div
-                        className={`absolute -top-1 -right-1 w-20 h-20 rounded-tr-[3rem] transition-colors duration-500 ${scanStatus === 'scanning' ? 'animate-pulse' : ''}`}
-                        style={{
-                            borderTop: '10px solid',
-                            borderRight: '10px solid',
-                            borderColor: scanStatus === 'identified' ? (mode === 'detect' ? '#38bdf8' : '#34d399') : scanStatus === 'scanning' ? '#ffffff' : '#64748b',
-                            boxShadow: scanStatus === 'identified' ? (mode === 'detect' ? '10px -10px 30px rgba(56,189,248,0.8)' : '10px -10px 30px rgba(52,211,153,0.8)') : 'none'
-                        }}
-                    ></div>
-
-                    <div
-                        className={`absolute -bottom-1 -left-1 w-20 h-20 rounded-bl-[3rem] transition-colors duration-500 ${scanStatus === 'scanning' ? 'animate-pulse' : ''}`}
-                        style={{
-                            borderBottom: '10px solid',
-                            borderLeft: '10px solid',
-                            borderColor: scanStatus === 'identified' ? (mode === 'detect' ? '#38bdf8' : '#34d399') : scanStatus === 'scanning' ? '#ffffff' : '#64748b',
-                            boxShadow: scanStatus === 'identified' ? (mode === 'detect' ? '-10px 10px 30px rgba(56,189,248,0.8)' : '-10px 10px 30px rgba(52,211,153,0.8)') : 'none'
-                        }}
-                    ></div>
-
-                    <div
-                        className={`absolute -bottom-1 -right-1 w-20 h-20 rounded-br-[3rem] transition-colors duration-500 ${scanStatus === 'scanning' ? 'animate-pulse' : ''}`}
-                        style={{
-                            borderBottom: '10px solid',
-                            borderRight: '10px solid',
-                            borderColor: scanStatus === 'identified' ? (mode === 'detect' ? '#38bdf8' : '#34d399') : scanStatus === 'scanning' ? '#ffffff' : '#64748b',
-                            boxShadow: scanStatus === 'identified' ? (mode === 'detect' ? '10px 10px 30px rgba(56,189,248,0.8)' : '10px 10px 30px rgba(52,211,153,0.8)') : 'none'
-                        }}
-                    ></div>
-
-                    {/* Highly visible scanning laser line */}
-                    {scanStatus === 'scanning' && (
+                    >
+                        {/* Corners */}
                         <div
-                            className="absolute inset-x-0 animate-scan-line top-0 z-40 rounded-full"
+                            className={`absolute -top-1 -left-1 w-20 h-20 rounded-tl-[3rem] transition-colors duration-500 ${scanStatus === 'scanning' ? 'animate-pulse' : ''}`}
                             style={{
-                                height: '8px',
-                                backgroundColor: '#38bdf8',
-                                boxShadow: '0 0 30px rgba(56,189,248,1), 0 0 15px rgba(255,255,255,1)'
+                                borderTop: '10px solid',
+                                borderLeft: '10px solid',
+                                borderColor: scanStatus === 'scanning' ? '#ffffff' : '#64748b',
                             }}
                         ></div>
-                    )}
-                </div>
+
+                        <div
+                            className={`absolute -top-1 -right-1 w-20 h-20 rounded-tr-[3rem] transition-colors duration-500 ${scanStatus === 'scanning' ? 'animate-pulse' : ''}`}
+                            style={{
+                                borderTop: '10px solid',
+                                borderRight: '10px solid',
+                                borderColor: scanStatus === 'scanning' ? '#ffffff' : '#64748b',
+                            }}
+                        ></div>
+
+                        <div
+                            className={`absolute -bottom-1 -left-1 w-20 h-20 rounded-bl-[3rem] transition-colors duration-500 ${scanStatus === 'scanning' ? 'animate-pulse' : ''}`}
+                            style={{
+                                borderBottom: '10px solid',
+                                borderLeft: '10px solid',
+                                borderColor: scanStatus === 'scanning' ? '#ffffff' : '#64748b',
+                            }}
+                        ></div>
+
+                        <div
+                            className={`absolute -bottom-1 -right-1 w-20 h-20 rounded-br-[3rem] transition-colors duration-500 ${scanStatus === 'scanning' ? 'animate-pulse' : ''}`}
+                            style={{
+                                borderBottom: '10px solid',
+                                borderRight: '10px solid',
+                                borderColor: scanStatus === 'scanning' ? '#ffffff' : '#64748b',
+                            }}
+                        ></div>
+
+                        {/* Highly visible scanning laser line */}
+                        {scanStatus === 'scanning' && (
+                            <div
+                                className="absolute inset-x-0 animate-scan-line top-0 z-40 rounded-full"
+                                style={{
+                                    height: '8px',
+                                    backgroundColor: '#38bdf8',
+                                    boxShadow: '0 0 30px rgba(56,189,248,1), 0 0 15px rgba(255,255,255,1)'
+                                }}
+                            ></div>
+                        )}
+                    </div>
+                )}
 
                 {/* Translation Simulation Overlay (INDIA GATE) */}
                 {mode === 'translate' && scanStatus === 'identified' && (
