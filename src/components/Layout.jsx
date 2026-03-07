@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
 import { Menu, MoreVertical, Home, QrCode, Shield, IndianRupee, User, X, Globe, Check } from 'lucide-react';
 
-// 22+ Indian Languages
+// 22+ Indian Languages with Google Translate BCP47 codes
 const LANGUAGES = [
-    { code: 'EN', label: 'English', native: 'English' },
-    { code: 'HI', label: 'Hindi', native: 'हिंदी' },
-    { code: 'BN', label: 'Bengali', native: 'বাংলা' },
-    { code: 'TE', label: 'Telugu', native: 'తెలుగు' },
-    { code: 'MR', label: 'Marathi', native: 'मराठी' },
-    { code: 'TA', label: 'Tamil', native: 'தமிழ்' },
-    { code: 'GU', label: 'Gujarati', native: 'ગુજરાતી' },
-    { code: 'KN', label: 'Kannada', native: 'ಕನ್ನಡ' },
-    { code: 'ML', label: 'Malayalam', native: 'മലയാളം' },
-    { code: 'PA', label: 'Punjabi', native: 'ਪੰਜਾਬੀ' },
-    { code: 'UR', label: 'Urdu', native: 'اردو' },
-    { code: 'OD', label: 'Odia', native: 'ଓଡ଼ିଆ' },
-    { code: 'AS', label: 'Assamese', native: 'অসমীয়া' },
-    { code: 'MN', label: 'Maithili', native: 'मैथिली' },
-    { code: 'SA', label: 'Sanskrit', native: 'संस्कृत' },
-    { code: 'SD', label: 'Sindhi', native: 'سنڌي' },
-    { code: 'KS', label: 'Kashmiri', native: 'کشمیری' },
-    { code: 'KO', label: 'Konkani', native: 'कोंकणी' },
-    { code: 'MZ', label: 'Mizo', native: 'Mizo' },
-    { code: 'NT', label: 'Nepali', native: 'नेपाली' },
-    { code: 'BP', label: 'Bhojpuri', native: 'भोजपुरी' },
-    { code: 'TL', label: 'Tulu', native: 'ತುಳು' },
+    { code: 'EN', label: 'English', native: 'English', googleCode: 'en' },
+    { code: 'HI', label: 'Hindi', native: 'हिंदी', googleCode: 'hi' },
+    { code: 'BN', label: 'Bengali', native: 'বাংলা', googleCode: 'bn' },
+    { code: 'TE', label: 'Telugu', native: 'తెలుగు', googleCode: 'te' },
+    { code: 'MR', label: 'Marathi', native: 'मराठी', googleCode: 'mr' },
+    { code: 'TA', label: 'Tamil', native: 'தமிழ்', googleCode: 'ta' },
+    { code: 'GU', label: 'Gujarati', native: 'ગુજરાતી', googleCode: 'gu' },
+    { code: 'KN', label: 'Kannada', native: 'ಕನ್ನಡ', googleCode: 'kn' },
+    { code: 'ML', label: 'Malayalam', native: 'മലയാളം', googleCode: 'ml' },
+    { code: 'PA', label: 'Punjabi', native: 'ਪੰਜਾਬੀ', googleCode: 'pa' },
+    { code: 'UR', label: 'Urdu', native: 'اردو', googleCode: 'ur' },
+    { code: 'OD', label: 'Odia', native: 'ଓଡ଼ିଆ', googleCode: 'or' },
+    { code: 'AS', label: 'Assamese', native: 'অসমীয়া', googleCode: 'as' },
+    { code: 'MN', label: 'Maithili', native: 'मैथिली', googleCode: 'mai' },
+    { code: 'SA', label: 'Sanskrit', native: 'संस्कृत', googleCode: 'sa' },
+    { code: 'SD', label: 'Sindhi', native: 'سنڌي', googleCode: 'sd' },
+    { code: 'KS', label: 'Kashmiri', native: 'کشمیری', googleCode: 'ks' },
+    { code: 'KO', label: 'Konkani', native: 'कोंकणी', googleCode: 'gom' },
+    { code: 'MZ', label: 'Mizo', native: 'Mizo ṭawng', googleCode: 'lus' },
+    { code: 'NT', label: 'Nepali', native: 'नेपाली', googleCode: 'ne' },
+    { code: 'BP', label: 'Bhojpuri', native: 'भोजपुरी', googleCode: 'bho' },
+    { code: 'TL', label: 'Tulu', native: 'ತುಳು', googleCode: 'tcy' },
 ];
 
 // Global translations map (key → language code → translated string)
@@ -149,7 +149,14 @@ export default function Layout({ children, currentScreen, setCurrentScreen, lang
                                 {LANGUAGES.map(lng => (
                                     <button
                                         key={lng.code}
-                                        onClick={() => { setLang(lng.code); setShowMenu(false); }}
+                                        onClick={() => {
+                                            setLang(lng.code);
+                                            setShowMenu(false);
+                                            // Trigger Google Translate engine
+                                            if (typeof window.changeAppLanguage === 'function') {
+                                                window.changeAppLanguage(lng.googleCode);
+                                            }
+                                        }}
                                         className={`flex items-center justify-between px-4 py-3 rounded-2xl border-2 transition-all text-left group ${lang === lng.code ? 'bg-primary-50 border-primary-400 shadow-md' : 'bg-slate-50 border-slate-100 hover:border-primary-200 hover:bg-primary-50/50'}`}
                                     >
                                         <div>
