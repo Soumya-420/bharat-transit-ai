@@ -200,7 +200,7 @@ export default function VisionAI({ lang, onNavigate }) {
 
                 {/* Viewfinder Overlay Frames - Using explicit inline styles to guarantee rendering */}
                 <div
-                    className="absolute inset-x-6 top-10 bottom-10 pointer-events-none transition-all duration-500 z-30"
+                    className={`absolute inset-x-6 top-10 bottom-10 pointer-events-none transition-all duration-500 z-30 ${scanStatus === 'identified' ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
                     style={{
                         border: '4px solid rgba(255,255,255,0.15)',
                         borderRadius: '3rem',
@@ -289,84 +289,86 @@ export default function VisionAI({ lang, onNavigate }) {
             </div>
 
             {/* AI Result Bottom Card - Absolute positioning prevents squashing the Viewfinder layout */}
-            <div className={`absolute bottom-24 left-6 right-6 bg-white/95 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl z-20 border border-white/50 transition-all duration-700 ${scanStatus === 'identified' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20 pointer-events-none'}`}>
-                {mode === 'detect' ? (
-                    <>
-                        <div className="flex items-start justify-between mb-5">
-                            <div className="flex items-center gap-4">
-                                <div className="bg-slate-900 p-4 rounded-2xl relative shadow-xl shadow-slate-200">
-                                    <Bus className="w-8 h-8 text-primary-400" />
-                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-[3px] border-white animate-pulse"></div>
-                                </div>
-                                <div>
-                                    <h3 className="font-black text-2xl text-slate-900 leading-tight">Bus 764</h3>
-                                    <div className="flex items-center gap-1.5 text-[10px] font-black mt-1 text-slate-500 uppercase tracking-tighter">
-                                        <span className="text-primary-600 px-1.5 py-0.5 bg-primary-50 rounded-md border border-primary-100">DTC Route</span>
-                                        <span className="flex items-center gap-1 leading-none"><MapPin size={10} className="text-primary-500" /> Nehru Place → Dhaula Kuan</span>
+            <div className={`absolute bottom-24 left-6 right-6 max-h-[55vh] flex flex-col bg-white/95 backdrop-blur-xl rounded-[2.5rem] shadow-2xl z-20 border border-white/50 transition-all duration-700 ${scanStatus === 'identified' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20 pointer-events-none'}`}>
+                <div className="p-6 overflow-y-auto hide-scrollbar flex-1 relative">
+                    {mode === 'detect' ? (
+                        <>
+                            <div className="flex items-start justify-between mb-5">
+                                <div className="flex items-center gap-4">
+                                    <div className="bg-slate-900 p-4 rounded-2xl relative shadow-xl shadow-slate-200">
+                                        <Bus className="w-8 h-8 text-primary-400" />
+                                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-[3px] border-white animate-pulse"></div>
+                                    </div>
+                                    <div>
+                                        <h3 className="font-black text-2xl text-slate-900 leading-tight">Bus 764</h3>
+                                        <div className="flex items-center gap-1.5 text-[10px] font-black mt-1 text-slate-500 uppercase tracking-tighter">
+                                            <span className="text-primary-600 px-1.5 py-0.5 bg-primary-50 rounded-md border border-primary-100">DTC Route</span>
+                                            <span className="flex items-center gap-1 leading-none"><MapPin size={10} className="text-primary-500" /> Nehru Place → Dhaula Kuan</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Mock Live Movement Display */}
-                        <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 mb-5 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="bg-white p-2.5 rounded-xl shadow-sm border border-slate-100">
-                                    <Navigation2 size={16} className="text-primary-500 animate-pulse" />
+                            {/* Mock Live Movement Display */}
+                            <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 mb-5 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-white p-2.5 rounded-xl shadow-sm border border-slate-100">
+                                        <Navigation2 size={16} className="text-primary-500 animate-pulse" />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.currentLoc} {mockLocation.near}</p>
+                                        <p className="text-xs font-bold text-slate-700 leading-tight">{mockLocation.status}</p>
+                                    </div>
+                                </div>
+                                <p className="text-xs font-black text-primary-600 bg-primary-50 px-3 py-1.5 rounded-xl border border-primary-100">4m</p>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3 mb-3">
+                                <button
+                                    onClick={() => setShowLiveData(true)}
+                                    className="bg-slate-900 text-white font-black py-4 rounded-2xl text-xs transition-all flex items-center justify-center gap-2 interactive-tap shadow-lg"
+                                >
+                                    <Radio size={16} className="text-primary-400" /> {t.liveData}
+                                </button>
+                                <button className="bg-slate-100 text-slate-700 font-black py-4 rounded-2xl text-xs flex items-center justify-center gap-2 border border-slate-200/50">
+                                    <Compass size={16} className="text-slate-500" /> {t.compare}
+                                </button>
+                            </div>
+
+                            <button
+                                onClick={handleStartNav}
+                                className="w-full bg-primary-600 text-white font-black py-5 rounded-[1.5rem] text-sm flex items-center justify-center gap-3 interactive-tap shadow-xl shadow-primary-500/20"
+                            >
+                                <Navigation size={20} className="fill-white" /> {t.navigate}
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="bg-emerald-600 p-4 rounded-2xl shadow-lg shadow-emerald-200">
+                                    <Check className="text-white w-8 h-8" />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.currentLoc} {mockLocation.near}</p>
-                                    <p className="text-xs font-bold text-slate-700 leading-tight">{mockLocation.status}</p>
+                                    <h3 className="font-black text-2xl text-slate-900 leading-tight">{t.signResult}</h3>
+                                    <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest">{t.signType}</p>
                                 </div>
                             </div>
-                            <p className="text-xs font-black text-primary-600 bg-primary-50 px-3 py-1.5 rounded-xl border border-primary-100">4m</p>
-                        </div>
 
-                        <div className="grid grid-cols-2 gap-3 mb-3">
+                            <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 mb-6">
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Translated Content</p>
+                                <p className="text-slate-700 font-bold leading-relaxed italic">"Symbol of India, formerly known as All India War Memorial, located at the heart of Delhi."</p>
+                            </div>
+
                             <button
-                                onClick={() => setShowLiveData(true)}
-                                className="bg-slate-900 text-white font-black py-4 rounded-2xl text-xs transition-all flex items-center justify-center gap-2 interactive-tap shadow-lg"
+                                onClick={() => setIsSaved(true)}
+                                className={`w-full font-black py-5 rounded-[1.5rem] text-sm flex items-center justify-center gap-3 transition-all interactive-tap shadow-xl ${isSaved ? 'bg-emerald-100 text-emerald-700 border-2 border-emerald-500' : 'bg-slate-900 text-white shadow-slate-200'}`}
                             >
-                                <Radio size={16} className="text-primary-400" /> {t.liveData}
+                                {isSaved ? <Check size={20} /> : <Save size={20} />}
+                                {isSaved ? t.saved : t.save}
                             </button>
-                            <button className="bg-slate-100 text-slate-700 font-black py-4 rounded-2xl text-xs flex items-center justify-center gap-2 border border-slate-200/50">
-                                <Compass size={16} className="text-slate-500" /> {t.compare}
-                            </button>
-                        </div>
-
-                        <button
-                            onClick={handleStartNav}
-                            className="w-full bg-primary-600 text-white font-black py-5 rounded-[1.5rem] text-sm flex items-center justify-center gap-3 interactive-tap shadow-xl shadow-primary-500/20"
-                        >
-                            <Navigation size={20} className="fill-white" /> {t.navigate}
-                        </button>
-                    </>
-                ) : (
-                    <>
-                        <div className="flex items-center gap-4 mb-6">
-                            <div className="bg-emerald-600 p-4 rounded-2xl shadow-lg shadow-emerald-200">
-                                <Check className="text-white w-8 h-8" />
-                            </div>
-                            <div>
-                                <h3 className="font-black text-2xl text-slate-900 leading-tight">{t.signResult}</h3>
-                                <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest">{t.signType}</p>
-                            </div>
-                        </div>
-
-                        <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 mb-6">
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Translated Content</p>
-                            <p className="text-slate-700 font-bold leading-relaxed italic">"Symbol of India, formerly known as All India War Memorial, located at the heart of Delhi."</p>
-                        </div>
-
-                        <button
-                            onClick={() => setIsSaved(true)}
-                            className={`w-full font-black py-5 rounded-[1.5rem] text-sm flex items-center justify-center gap-3 transition-all interactive-tap shadow-xl ${isSaved ? 'bg-emerald-100 text-emerald-700 border-2 border-emerald-500' : 'bg-slate-900 text-white shadow-slate-200'}`}
-                        >
-                            {isSaved ? <Check size={20} /> : <Save size={20} />}
-                            {isSaved ? t.saved : t.save}
-                        </button>
-                    </>
-                )}
+                        </>
+                    )}
+                </div>
             </div>
 
             {/* Live Data Dashboard Overlay */}
