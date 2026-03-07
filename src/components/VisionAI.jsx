@@ -73,7 +73,7 @@ export default function VisionAI({ lang, onNavigate }) {
             const timer = setTimeout(() => {
                 setScanStatus('identified');
                 announceIdentification();
-            }, 8000); // Increased from 5000 to 8000 for visibility
+            }, 5000); // Set strictly to 5 seconds as requested
             return () => clearTimeout(timer);
         }
     }, [scanStatus, mode]);
@@ -173,11 +173,22 @@ export default function VisionAI({ lang, onNavigate }) {
             <div className="flex-1 relative mx-6 mb-6 rounded-[3rem] overflow-hidden border-2 border-white/10 bg-slate-900 shadow-2xl group ring-1 ring-white/5">
                 {/* Simulated Camera Feed Background - Making it explicitly tall */}
                 <div className="absolute inset-0 bg-slate-900/95 flex flex-col items-center justify-center p-10 text-center z-10 transition-colors duration-1000 group">
-                    <div className="relative">
+                    <div className="relative w-full flex justify-center">
                         {/* Glow effect for camera icon */}
-                        <div className={`absolute inset-0 bg-primary-500 rounded-full blur-2xl transition-all duration-1000 ${scanStatus === 'scanning' ? 'opacity-40 animate-pulse' : 'opacity-0'}`}></div>
-                        <Camera className={`w-20 h-20 text-slate-500 mb-6 transition-all duration-700 relative z-10 ${scanStatus === 'scanning' ? 'scale-110 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]' : ''}`} />
-                        {scanStatus === 'scanning' && <Radio className="absolute -top-3 -right-3 text-primary-300 animate-ping w-8 h-8 z-20" />}
+                        <div className={`absolute inset-0 bg-primary-500 rounded-full blur-2xl transition-all duration-1000 ${scanStatus === 'scanning' ? 'opacity-20 animate-pulse' : 'opacity-0'}`}></div>
+
+                        {scanStatus === 'scanning' ? (
+                            <div className="w-24 h-24 bg-amber-500 rounded-2xl flex items-center justify-center mb-6 relative shadow-[0_0_30px_rgba(245,158,11,0.6)] animate-pulse z-10">
+                                {/* White Scan Corners */}
+                                <div className="absolute top-4 left-4 w-5 h-5 border-t-4 border-l-4 border-white rounded-tl-md"></div>
+                                <div className="absolute top-4 right-4 w-5 h-5 border-t-4 border-r-4 border-white rounded-tr-md"></div>
+                                <div className="absolute bottom-4 left-4 w-5 h-5 border-b-4 border-l-4 border-white rounded-bl-md"></div>
+                                <div className="absolute bottom-4 right-4 w-5 h-5 border-b-4 border-r-4 border-white rounded-br-md"></div>
+                                <Radio className="absolute -top-3 -right-3 text-amber-300 animate-ping w-8 h-8 z-20" />
+                            </div>
+                        ) : (
+                            <Camera className="w-20 h-20 text-slate-500 mb-6 transition-all duration-700 relative z-10" />
+                        )}
                     </div>
 
                     <div className="space-y-1 mt-4 relative z-10">
