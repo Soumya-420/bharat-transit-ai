@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="worker_dash_title">কর্মী ড্যাশবোর্ড - কাজের লোক</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="manifest" href="manifest.webmanifest">
+</head>
+
+<body>
+    <!-- BACKGROUND -->
+    <div class="page-bg"></div>
+    <div class="page-bg-overlay"></div>
+    <!-- LANG BAR -->
+    <div class="lang-bar">
+        <span class="lang-msg" id="langMsg" data-i18n="lang_selection_title">🌐 ভাষা নির্বাচন করুন / Select Language /
+            भाषा चुनें</span>
+        <div class="lang-options">
+            <button class="lang-btn active" id="lang-bn" onclick="setLang('bn')">বাংলা</button>
+            <button class="lang-btn" id="lang-en" onclick="setLang('en')">English</button>
+            <button class="lang-btn" id="lang-hi" onclick="setLang('hi')">হিন্দি</button>
+        </div>
+    </div>
+    <div class="dashboard-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <a href="index.html" class="sidebar-logo">
+                <span class="sl-icon"></span>
+                <div><span class="sl-text" data-i18n="nav_brand">কাজের লোক</span><span class="sl-sub"
+                        data-i18n="worker_sidebar_sub">কর্মী পোর্টাল</span></div>
+            </a>
+            <nav class="sidebar-nav">
+                <span class="nav-section-title" data-i18n="nav_section_dash">ড্যাশবোর্ড</span>
+                <button class="nav-item active" data-page="pw-home"><span class="nav-icon"></span><span
+                        class="nav-label" data-i18n="nav_overview">ওভারভিউ</span></button>
+                <button class="nav-item" data-page="pw-jobs"><span class="nav-icon"></span><span class="nav-label"
+                        data-i18n="nav_my_jobs">আমার কাজসমূহ</span></button>
+                <button class="nav-item" data-page="pw-earnings"><span class="nav-icon"></span><span class="nav-label"
+                        data-i18n="nav_earnings">আয় ও পেমেন্ট</span></button>
+                <button class="nav-item" data-page="pw-profile"><span class="nav-icon"></span><span class="nav-label"
+                        data-i18n="nav_my_profile">আমার প্রোফাইল</span></button>
+                <span class="nav-section-title" data-i18n="nav_section_settings">সেটিংস</span>
+                <button class="nav-item" data-page="pw-update"><span class="nav-icon"></span><span class="nav-label"
+                        data-i18n="nav_update_status">অ্যাভেইল্যাবিলিটি আপডেট</span></button>
+                <button class="nav-item" data-page="pw-schedule"><span class="nav-icon"></span><span class="nav-label"
+                        data-i18n="nav_schedule">কাজের সময়সূচী</span></button>
+            </nav>
+            <div class="sidebar-user">
+                <div class="su-avatar" id="wSideAvatar"></div>
+                <div>
+                    <div class="su-name" id="wSideName">লোড হচ্ছে...</div>
+                    <div class="su-role" id="wSideRole"></div>
+                </div>
+                <button class="su-logout" onclick="logout('worker','login-worker.html')" title="লগ আউট"></button>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="dashboard-main">
+            <div class="dash-topbar">
+                <h1 id="dashPageTitle"></h1>
+                <div class="topbar-actions">
+                    <button class="notification-btn" id="wNotifBtn" onclick="toggleWorkerNotifs()"><span
+                            class="notif-dot" id="wNotifDot" style="display:none"></span></button>
+                    <button class="btn btn-sm btn-outline" onclick="logout('worker','login-worker.html')"></button>
+                </div>
+            </div>
+            <!-- Notification Dropdown -->
+            <div id="wNotifPanel"
+                style="display:none;position:fixed;top:62px;right:24px;z-index:200;width:320px;background:#fff;border:1.5px solid var(--border);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);max-height:360px;overflow-y:auto">
+                <div
+                    style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+                    <strong style="font-size:14px" data-i18n="notif_title">নোটিফিকেশন</strong>
+                    <button onclick="markAllRead();renderWorkerNotifs()"
+                        style="font-size:12px;color:var(--primary);background:none;border:none;cursor:pointer"
+                        data-i18n="btn_mark_all_read">সব পড়া হয়েছে</button>
+                </div>
+                <div id="wNotifList" style="padding:8px"></div>
+            </div>
+
+            <div class="dash-content">
+
+                <!-- HOME -->
+                <div class="dash-page active" id="pw-home">
+                    <!-- Monthly Limit Bar -->
+                    <div class="limit-bar">
+                        <div class="limit-bar-label">
+                            <span data-i18n="label_monthly_limit">এই মাসের কাজের সীমা</span>
+                            <span id="limitText">০ / ৩০ দিন বুকিং</span>
+                        </div>
+                        <div class="limit-progress">
+                            <div class="limit-fill" id="limitFill" style="width:60%"></div>
+                        </div>
+                        <p style="font-size:12px;color:var(--text-muted);margin-top:6px" data-i18n="desc_monthly_limit">
+                            আপনি প্রতি মাসে সর্বোচ্চ ৩০ দিন কাজ করতে পারেন। অতিরিক্ত কাজের জন্য ওভারটাইম ফি প্রযোজ্য হতে
+                            পারে।</p>
+                    </div>
+
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="sc-icon" style="background:rgba(59,130,246,0.1);color:#3b82f6">💼</div>
+                            <div class="sc-value" id="statActiveJobs">0</div>
+                            <div class="sc-label" data-i18n="stat_active_jobs">সক্রিয় কাজ</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="sc-icon" style="background:rgba(16,185,129,0.1);color:#10b981">✅</div>
+                            <div class="sc-value" id="statCompletedJobs">0</div>
+                            <div class="sc-label" data-i18n="stat_completed_jobs">সম্পন্ন কাজ</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="sc-icon" style="background:rgba(245,158,11,0.1);color:#f59e0b">৳</div>
+                            <div class="sc-value" id="statTotalEarnings">৳০</div>
+                            <div class="sc-label" data-i18n="stat_total_earnings">সর্বমোট আয়</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="sc-icon" style="background:rgba(139,92,246,0.1);color:#8b5cf6">⭐</div>
+                            <div class="sc-value" id="statAvgRating">0.0</div>
+                            <div class="sc-label" data-i18n="stat_avg_rating">গড় রেটিং</div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Jobs -->
+                    <div class="card">
+                        <div class="card-header"><span class="card-title" data-i18n="card_pending_jobs">নতুন কাজের
+                                প্রস্তাব</span></div>
+                        <div id="pendingJobsArea">
+                            <p style="text-align:center;color:var(--text-muted);padding:20px"
+                                data-i18n="msg_no_pending_jobs">লোড হচ্ছে...</p>
+                        </div>
+                    </div>
+
+                    <!-- Active Jobs -->
+                    <div class="card">
+                        <div class="card-header"><span class="card-title" data-i18n="card_active_jobs">আমার বর্তমান
+                                কাজ</span></div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="table_customer">গ্রাহক</th>
+                                        <th data-i18n="table_plan">প্ল্যান</th>
+                                        <th data-i18n="table_date">তারিখ</th>
+                                        <th data-i18n="table_amount">পরিমাণ</th>
+                                        <th data-i18n="table_status">অবস্থা</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="activeJobsArea">
+                                    <!-- Dynamic Content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- JOBS LIST -->
+                <div class="dash-page" id="pw-jobs">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title" data-i18n="card_all_jobs">আমার সব কাজের
+                                তালিকা</span></div>
+                        <div class="admin-tabs">
+                            <button class="admin-tab active" onclick="filterJobs('all',this)"
+                                data-i18n="tab_all">সব</button>
+                            <button class="admin-tab" onclick="filterJobs('active',this)"
+                                data-i18n="tab_active">সক্রিয়</button>
+                            <button class="admin-tab" onclick="filterJobs('completed',this)"
+                                data-i18n="tab_completed">সম্পন্ন</button>
+                        </div>
+                        <div class="table-wrap">
+                            <table id="jobsTable">
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="table_customer">গ্রাহক</th>
+                                        <th data-i18n="table_plan">প্ল্যান</th>
+                                        <th data-i18n="table_date">তারিখ</th>
+                                        <th data-i18n="table_amount">পরিমাণ</th>
+                                        <th data-i18n="table_status">অবস্থা</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic Content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EARNINGS -->
+                <div class="dash-page" id="pw-earnings">
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="sc-icon" style="background:rgba(59,130,246,0.1);color:#3b82f6">৳</div>
+                            <div class="sc-value" id="statMonthEarn">৳০</div>
+                            <div class="sc-label" data-i18n="stat_earnings_this_month">এই মাসের আয়</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="sc-icon" style="background:rgba(16,185,129,0.1);color:#10b981">💰</div>
+                            <div class="sc-value" id="statTotalEarn">৳০</div>
+                            <div class="sc-label" data-i18n="stat_total_earnings_all">সর্বমোট আয় (আজ পর্যন্ত)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="sc-icon" style="background:rgba(245,158,11,0.1);color:#f59e0b">📊</div>
+                            <div class="sc-value" id="statActiveJobsCount">০</div>
+                            <div class="sc-label" data-i18n="stat_active_jobs_count">চলতি সক্রিয় কাজের সংখ্যা</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title" data-i18n="card_payment_history">পেমেন্ট
+                                ইতিহাস</span></div>
+                        <div class="table-wrap">
+                            <table id="earningsTable">
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="table_date">তারিখ</th>
+                                        <th data-i18n="table_customer">গ্রাহক</th>
+                                        <th data-i18n="table_amount">পরিমাণ</th>
+                                        <th data-i18n="table_status">অবস্থা</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic Content -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="alert alert-info" style="margin-top:16px">আপনার পেমেন্ট সরাসরি আপনার ব্যাংক
+                            অ্যাকাউন্ট বা UPI আইডিতে পাঠানো হবে। কোনো প্রশ্ন থাকলে অ্যাডমিনের সাথে যোগাযোগ করুন।</div>
+                    </div>
+                </div>
+
+                <!-- PROFILE -->
+                <div class="dash-page" id="pw-profile">
+                    <div class="card">
+                        <div class="profile-header">
+                            <div class="profile-avatar-lg" id="profAvatar"></div>
+                            <div>
+                                <div class="profile-name" id="profName">নাম নেই</div>
+                                <div class="profile-meta" id="profMetaTypeID"></div>
+                                <div class="profile-meta" id="profMetaPhone"></div>
+                                <div class="profile-stars" id="profStars"></div>
+                            </div>
+                        </div>
+                        <div class="trust-bar" style="max-width:400px;margin-bottom:24px">
+                            <div class="trust-bar-label"><span data-i18n="label_trust_score">ট্রাস্ট স্কোর</span><span
+                                    id="profTrustPct" style="color:var(--accent)">0%</span></div>
+                            <div class="trust-bar-track">
+                                <div class="trust-bar-fill" id="profTrustFill" style="width:0%"></div>
+                            </div>
+                        </div>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="ii-label" data-i18n="label_full_name">নাম</div>
+                                <div class="ii-value" id="profFullName">—</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="ii-label" data-i18n="label_phone">ফোন</div>
+                                <div class="ii-value" id="profPhone">—</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="ii-label" data-i18n="label_work_type">কাজের ধরন</div>
+                                <div class="ii-value" id="profWorkType">—</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="ii-label" data-i18n="label_address">ঠিকানা</div>
+                                <div class="ii-value" id="profAddress">—</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="ii-label" data-i18n="label_experience">অভিজ্ঞতা</div>
+                                <div class="ii-value" id="profExp">—</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="ii-label" data-i18n="label_id_type">পরিচয়পত্র</div>
+                                <div class="ii-value" id="profIDType">—</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROFILE UPDATE REQUEST -->
+                <div class="dash-page" id="pw-update">
+                    <div class="card" style="opacity:0.6; pointer-events:none">
+                        <div class="card-header"><span class="card-title"
+                                data-i18n="card_update_status">অ্যাভেইল্যাবিলিটি আপডেট</span></div>
+                        <div class="alert alert-warning" data-i18n="msg_feature_coming_soon">এই ফিচারটি শীগগিরই আসছে!
+                            বর্তমানে আপনার স্থিতি পরিবর্তন করতে অ্যাডমিনের সাথে যোগাযোগ করুন।</div>
+                    </div>
+                </div>
+
+                <!-- SCHEDULE -->
+                <div class="dash-page" id="pw-schedule">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title" data-i18n="nav_schedule">কাজের সময়সূচী</span>
+                        </div>
+                        <div class="table-wrap">
+                            <table id="scheduleTable">
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="table_date">তারিখ</th>
+                                        <th data-i18n="table_customer">গ্রাহক</th>
+                                        <th data-i18n="table_plan">প্ল্যান</th>
+                                        <th data-i18n="table_status">অবস্থা</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic Content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/worker-dashboard.js"></script>
+
+    <!-- PW MODAL -->
+    <div class="modal-overlay" id="pwdModal">
+        <div class="modal-card" style="max-width:400px">
+            <div class="modal-header">
+                <span class="modal-title" data-i18n="modal_change_pwd">পাসওয়ার্ড পরিবর্তন</span>
+                <button class="modal-close" onclick="closeModal('pwdModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label data-i18n="label_old_pwd">বর্তমান পাসওয়ার্ড</label>
+                <input type="password" class="form-control" id="oldPwd">
+            </div>
+            <div class="form-group">
+                <label data-i18n="label_new_pwd">নতুন পাসওয়ার্ড</label>
+                <input type="password" class="form-control" id="newPwd">
+            </div>
+            <button class="btn btn-primary btn-full" onclick="doChangePwd('worker')" data-i18n="btn_change_pwd">পরিবর্তন
+                করুন</button>
+        </div>
+    </div>
+    <!-- The doChangePwd function is now globally available via js/worker-dashboard.js -->
+</body>
+
+</html>

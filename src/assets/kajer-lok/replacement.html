@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="repl_title">Replacement Policy – কাজের লোক</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <!-- BACKGROUND -->
+    <div class="page-bg"></div>
+    <div class="page-bg-overlay"></div>
+    <!-- LANG BAR -->
+    <div class="lang-bar">
+        <span class="lang-msg" id="langMsg">🌐 ভাষা নির্বাচন করুন / Select Language / ভাষা चुनें</span>
+        <div class="lang-options">
+            <button class="lang-btn active" id="lang-bn" onclick="setLang('bn')">বাংলা</button>
+            <button class="lang-btn" id="lang-en" onclick="setLang('en')">English</button>
+            <button class="lang-btn" id="lang-hi" onclick="setLang('hi')">हिन्दी</button>
+        </div>
+    </div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand"><img src="images/logo.png" alt="কাজের লোক Logo"
+                    style="height: 48px; border-radius: 8px; margin-right: 12px;" />
+                <div><span class="brand-name" data-i18n="nav_brand">কাজের লোক</span><span class="brand-tagline"
+                        data-i18n="brand_tagline">Where Trust Meets
+                        Responsibility</span></div>
+            </a>
+            <div class="nav-links"><a href="index.html" class="btn btn-outline" data-i18n="nav_back_home">← হোম</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="policy-page">
+        <h1 data-i18n="repl_h1">Replacement Policy</h1>
+        <p class="policy-date" data-i18n="repl_date">সর্বশেষ আপডেট: মার্চ ২০২৬</p>
+
+        <h2 data-i18n="repl_h2_1">১. কখন Replacement পাওয়া যাবে?</h2>
+        <ul>
+            <li data-i18n="repl_li_1_1">কর্মী নিজে থেকে কাজ ছেড়ে দিলে</li>
+            <li data-i18n="repl_li_1_2">কর্মী অনুপস্থিত থাকলে বা পুনরায় যোগাযোগ না করলে</li>
+            <li data-i18n="repl_li_1_3">কর্মীর বিরুদ্ধে গুরুতর অসদাচরণের অভিযোগ প্রমাণিত হলে</li>
+            <li data-i18n="repl_li_1_4">কর্মী চুক্তি অনুযায়ী কাজ সম্পাদন করতে অক্ষম হলে</li>
+            <li data-i18n="repl_li_1_5">স্বাস্থ্যজনিত কারণে কর্মী কাজে অনুপস্থিত ৭ দিনের বেশি থাকলে</li>
+        </ul>
+
+        <h2 data-i18n="repl_h2_2">২. Replacement প্রক্রিয়া</h2>
+        <ol>
+            <li data-i18n="repl_li_2_1">গ্রাহক প্ল্যাটফর্মে Replacement অনুরোধ দাখিল করবেন</li>
+            <li data-i18n="repl_li_2_2">অ্যাডমিন ২৪ ঘণ্টার মধ্যে বিষয়টি যাচাই করবেন</li>
+            <li data-i18n="repl_li_2_3">যাচাই সম্পন্ন হলে ৪৮–৭২ ঘণ্টার মধ্যে বিকল্প কর্মী প্রস্তাব করা হবে</li>
+            <li data-i18n="repl_li_2_4">গ্রাহক প্রস্তাবিত কর্মীর প্রোফাইল দেখে সিদ্ধান্ত নিতে পারবেন</li>
+        </ol>
+
+        <h2 data-i18n="repl_h2_3">৩. Replacement-এর শর্তাবলী</h2>
+        <ul>
+            <li data-i18n="repl_li_3_1">একই বুকিং মেয়াদে সর্বোচ্চ ২ বার Replacement পাওয়া যাবে</li>
+            <li data-i18n="repl_li_3_2">Replacement কর্মীর রেট একই থাকবে বা পার্থক্য হলে Adjustment হবে</li>
+            <li data-i18n="repl_li_3_3">কর্মী পরিবর্তনের কারণে যদি গ্রাহক অতিরিক্ত পেমেন্ট দিতে অনিচ্ছুক থাকেন, তাহলে
+                Refund Policy প্রযোজ্য হবে
+            </li>
+        </ul>
+
+        <h2 data-i18n="repl_h2_4">৪. গ্রাহকের দায়িত্ব</h2>
+        <ul>
+            <li data-i18n="repl_li_4_1">কর্মী পরিবর্তনের কারণ সুস্পষ্টভাবে জানাতে হবে</li>
+            <li data-i18n="repl_li_4_2">মিথ্যা কারণে Replacement অনুরোধ করলে অ্যাকাউন্ট সতর্ক করা হবে</li>
+        </ul>
+
+        <h2 data-i18n="repl_h2_5">৫. পরিস্থিতি যেখানে Replacement দেওয়া সম্ভব নয়</h2>
+        <ul>
+            <li data-i18n="repl_li_5_1">বুকিং সম্পন্ন হওয়ার পরে</li>
+            <li data-i18n="repl_li_5_2">গ্রাহকের নিজের কারণে কর্মী পরিবর্তন (ব্যক্তিগত পছন্দ ছাড়া উপযুক্ত কারণ না
+                থাকলে)</li>
+            <li data-i18n="repl_li_5_3">প্ল্যাটফর্মে একই পরিষেবার বিকল্প কর্মী না থাকলে (এ ক্ষেত্রে Refund প্রযোজ্য)
+            </li>
+        </ul>
+
+        <h2 data-i18n="repl_h2_6">৬. জরুরি Replacement</h2>
+        <p data-i18n="repl_p_6">চিকিৎসা জরুরি অবস্থা বা নিরাপত্তা ঝুঁকির ক্ষেত্রে ২৪ ঘণ্টার মধ্যে Replacement দেওয়ার
+            চেষ্টা করা হবে। জরুরি
+            লাইন: +৯১ ৯৮৭৬৫ ০০০০০</p>
+
+        <h2 data-i18n="repl_h2_7">৭. যোগাযোগ</h2>
+        <p data-i18n="repl_p_7">Replacement সংক্রান্ত যেকোনো প্রশ্নে: <strong>support@kajerlok.com</strong></p>
+
+        <div class="alert alert-success" style="margin-top:32px" data-i18n="repl_alert_success">✅ আমাদের লক্ষ্য আপনাকে
+            সর্বোত্তম পরিষেবা প্রদান করা।
+            আমরা গ্রাহক সন্তুষ্টিকে সর্বোচ্চ অগ্রাধিকার দিই।</div>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+{
+    "name": "Kajer Lok - Smart Home Services",
+    "short_name": "Kajer Lok",
+    "description": "Your trusted platform for household help, aya, and babysitting services in Kolkata.",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#e31e24",
+    "icons": [
+        {
+            "src": "images/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "images/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

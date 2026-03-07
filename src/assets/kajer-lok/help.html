@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সাহায্য ও সাপোর্ট - কাজের লোক</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .help-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .faq-item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .faq-q {
+            padding: 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+
+        .faq-a {
+            padding: 0 16px 16px;
+            color: var(--text-muted);
+            font-size: 14px;
+            display: none;
+        }
+
+        .bot-box {
+            background: var(--primary-low);
+            border: 1px solid var(--primary);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 40px;
+        }
+
+        .bot-msg {
+            background: var(--card);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="help-container">
+        <header style="margin-bottom:32px; text-align:center">
+            <h1 style="color:var(--primary-light)">আপনি কি কোনো সমস্যায় পড়েছেন?</h1>
+            <p style="color:var(--text-muted)">আমরা আপনাকে সাহায্য করার জন্য এখানে আছি।</p>
+        </header>
+
+        <section>
+            <h2 style="margin-bottom:20px">সাধারণ জিজ্ঞাসা (FAQ)</h2>
+            <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">কীভাবে বুকিং করবেন? <span>+</span></div>
+                <div class="faq-a">ড্যাশবোর্ডে গিয়ে 'সার্ভিস খুঁজুন' বাটনে ক্লিক করুন এবং আপনার পছন্দমতো কর্মী বেছে নিন।
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">পেমেন্ট কীভাবে করবেন? <span>+</span></div>
+                <div class="faq-a">বর্তমানে আমরা ক্যাশ-অন-সার্ভিস সাপোর্ট করছি। শীঘ্রই অনলাইন পেমেন্ট যুক্ত করা হবে।
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">কর্মী না আসলে কী করবেন? <span>+</span></div>
+                <div class="faq-a">যদি কর্মী যথাসময়ে না পৌঁছান, তবে আপনার ড্যাশবোর্ড থেকে 'রিপোর্ট' করুন অথবা আমাদের
+                    সাপোর্ট বটকে জানান।</div>
+            </div>
+        </section>
+
+        <div class="bot-box">
+            <h3 style="margin-bottom:16px; display:flex; align-items:center; gap:8px">🤖 স্মার্ট সাপোর্ট বট (Beta)</h3>
+            <div id="botChat" style="min-height:100px; margin-bottom:16px">
+                <div class="bot-msg">নমস্কার! আমি আপনাকে কীভাবে সাহায্য করতে পারি? (পেমেন্ট, বুকিং, বা সমস্যা লিখে
+                    পাঠান)</div>
+            </div>
+            <div style="display:flex; gap:8px">
+                <input type="text" id="botInput" class="form-control" placeholder="এখানে লিখুন..." style="flex:1">
+                <button class="btn btn-primary" onclick="askBot()">পাঠান</button>
+            </div>
+        </div>
+
+        <section style="margin-top:40px; text-align:center">
+            <h3>এখনো সমাধান পাননি?</h3>
+            <p style="margin-bottom:16px">আমাদের অ্যাডমিনকে সরাসরি জানান।</p>
+            <button class="btn btn-outline" onclick="location.href='mailto:support@kajerlok.com'">ইমেইল করুন</button>
+        </section>
+
+        <div style="margin-top:40px; text-align:center">
+            <a href="index.html" style="color:var(--primary-light); text-decoration:none">← মূল পাতায় ফিরে যান</a>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        function toggleFaq(el) {
+            const ans = el.nextElementSibling;
+            const span = el.querySelector('span');
+            if (ans.style.display === 'block') {
+                ans.style.display = 'none';
+                span.textContent = '+';
+            } else {
+                ans.style.display = 'block';
+                span.textContent = '-';
+            }
+        }
+
+        function askBot() {
+            const input = document.getElementById('botInput');
+            const chat = document.getElementById('botChat');
+            const val = input.value.toLowerCase();
+            if (!val.trim()) return;
+
+            // User message
+            const uMsg = document.createElement('div');
+            uMsg.className = 'bot-msg';
+            uMsg.style.background = 'rgba(255,255,255,0.05)';
+            uMsg.style.textAlign = 'right';
+            uMsg.textContent = input.value;
+            chat.appendChild(uMsg);
+
+            // Bot response
+            let reply = "দুঃখিত, আমি আপনার প্রশ্নটি বুঝতে পারছি না। দয়া করে 'পেমেন্ট' বা 'বুকিং' লিখে পাঠান।";
+            if (val.includes('পেমেন্ট')) reply = "পেমেন্ট বর্তমানে সরাসরি কর্মীকে নগদ দিতে হবে।";
+            if (val.includes('বুকিং')) reply = "বুকিং করার জন্য আপনার কাস্টমার ড্যাশবোর্ডে লগইন করুন।";
+            if (val.includes('সমস্যা') || val.includes('অভিযোগ')) reply = "আপনার যদি কোনো বড় সমস্যা থাকে, তবে অ্যাডমিনকে জানাতে 'dispute' লিখে পাঠান।";
+
+            setTimeout(() => {
+                const bMsg = document.createElement('div');
+                bMsg.className = 'bot-msg';
+                bMsg.textContent = reply;
+                chat.appendChild(bMsg);
+                chat.scrollTop = chat.scrollHeight;
+            }, 600);
+
+            input.value = '';
+        }
+    </script>
+</body>
+
+</html>

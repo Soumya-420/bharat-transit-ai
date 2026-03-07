@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="login_worker_title">কর্মী লগইন – কাজের লোক</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <!-- BACKGROUND -->
+    <div class="page-bg"></div>
+    <div class="page-bg-overlay"></div>
+    <!-- LANG BAR -->
+    <div class="lang-bar">
+        <span class="lang-msg" id="langMsg" data-i18n="lang_selection_title">🌐 ভাষা নির্বাচন করুন / Select Language /
+            ভাষা चुनें</span>
+        <div class="lang-options">
+            <button class="lang-btn active" id="lang-bn" onclick="setLang('bn')">বাংলা</button>
+            <button class="lang-btn" id="lang-en" onclick="setLang('en')">English</button>
+            <button class="lang-btn" id="lang-hi" onclick="setLang('hi')">हिन्दी</button>
+        </div>
+    </div>
+    <div class="hero-bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand"><img src="images/logo.png" alt="কাজের লোক Logo"
+                    style="height: 48px; border-radius: 8px; margin-right: 12px;" />
+                <div><span class="brand-name" data-i18n="nav_brand">কাজের লোক</span><span class="brand-tagline"
+                        data-i18n="brand_tagline">Where Trust Meets
+                        Responsibility</span></div>
+            </a>
+            <div class="nav-links"><a href="register-worker.html" class="btn btn-primary" data-i18n="btn_reg_now">কর্মী
+                    নিবন্ধন</a></div>
+        </div>
+    </nav>
+
+    <div class="auth-page">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-logo">
+                    <div class="logo-icon">👷</div>
+                    <h2 data-i18n="auth_worker_h2">কর্মী লগইন</h2>
+                    <p style="font-size:13px;color:var(--text-muted)" data-i18n="auth_worker_p">অ্যাডমিন প্রদত্ত Worker
+                        ID ও Password দিয়ে লগইন
+                        করুন</p>
+                </div>
+                <form id="workerLoginForm" onsubmit="handleWorkerLogin(event)">
+                    <div class="form-group">
+                        <label data-i18n="label_worker_id">ওয়ার্কার আইডি <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="wLoginId" data-i18n-placeholder="placeholder_wid"
+                            placeholder="যেমন: KL-W-1001" required style="text-transform:uppercase" />
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_login_pwd">পাসওয়ার্ড <span class="required">*</span></label>
+                        <input type="password" class="form-control" id="wLoginPwd" placeholder="••••••••" required />
+                    </div>
+                    <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+                        <a href="#" style="font-size:13px;color:var(--primary-light);text-decoration:none"
+                            data-i18n="link_forgot_pwd">পাসওয়ার্ড ভুলে গেছেন?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full" data-i18n="btn_login_now">লগইন করুন</button>
+                </form>
+                <div style="margin-top:14px;padding:12px;background:rgba(255,193,7,0.1);border:1px solid rgba(255,193,7,0.3);border-radius:8px;font-size:12px;color:var(--text-muted);text-align:center"
+                    data-i18n="msg_wait_approval_hint_worker">
+                    ⏳ <strong>নিবন্ধন করেছেন?</strong> অ্যাডমিন অনুমোদনের পর আপনার Worker ID ও Password পাবেন।
+                </div>
+                <div class="auth-footer" style="margin-top:16px"><span data-i18n="link_new_worker">নতুন কর্মী?</span> <a
+                        href="register-worker.html" data-i18n="link_reg_now">নিবন্ধন করুন</a></div>
+                <div class="auth-footer" style="margin-top:8px"><span data-i18n="link_is_customer">গ্রাহক?</span> <a
+                        href="login-customer.html" data-i18n="link_customer_login">গ্রাহক লগইন</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        function handleWorkerLogin(e) {
+            e.preventDefault();
+            const wid = document.getElementById('wLoginId')?.value?.trim().toUpperCase();
+            const pwd = document.getElementById('wLoginPwd')?.value?.trim();
+
+            if (!wid || !pwd) {
+                showToast(getTranslation('toast_fill_all'), 'error');
+                return;
+            }
+
+            // Check against admin-approved credentials
+            const approved = JSON.parse(localStorage.getItem('approvedWorkers') || '[]');
+            const user = approved.find(u => u.workerId === wid && u.password === pwd);
+            if (!user) {
+                showToast('❌ ' + getTranslation('toast_invalid_credentials'), 'error');
+                return;
+            }
+
+            localStorage.setItem('currentWorker', JSON.stringify(user));
+            showToast('✅ ' + getTranslation('toast_login_success') + ' ' + user.name, 'success');
+            setTimeout(() => window.location.href = 'dashboard-worker.html', 1200);
+        }
+    </script>
+</body>
+
+</html>

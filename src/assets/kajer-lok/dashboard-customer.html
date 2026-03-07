@@ -1,0 +1,522 @@
+﻿<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>গ্রাহক ড্যাশবোর্ড – কাজের লোক</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body>
+    <!-- BACKGROUND -->
+    <div class="page-bg"></div>
+    <div class="page-bg-overlay"></div>
+    <!-- LANG BAR -->
+    <div class="lang-bar">
+        <span class="lang-msg" id="langMsg">🌐 ভাষা নির্বাচন করুন / Select Language / भाषा चुनें</span>
+        <div class="lang-options">
+            <button class="lang-btn active" id="lang-bn" onclick="setLang('bn')">বাংলা</button>
+            <button class="lang-btn" id="lang-en" onclick="setLang('en')">English</button>
+            <button class="lang-btn" id="lang-hi" onclick="setLang('hi')">हिन्दी</button>
+        </div>
+    </div>
+    <div class="dashboard-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <a href="index.html" class="sidebar-logo">
+                <span class="sl-icon">🏠</span>
+                <div><span class="sl-text" data-i18n="nav_brand">কাজের লোক</span><span class="sl-sub"
+                        data-i18n="footer_customer">গ্রাহক পোর্টাল</span></div>
+            </a>
+            <nav class="sidebar-nav">
+                <span class="nav-section-title" data-i18n="nav_sec_main">মূল মেনু</span>
+                <a href="#" class="nav-item active" onclick="switchTab('pg-home')" data-i18n="nav_dashboard">📊
+                    ড্যাশবোর্ড</a>
+                <a href="#" class="nav-item" onclick="switchTab('pg-search')" data-i18n="nav_find_worker">🔍 কর্মী
+                    খুঁজুন</a>
+                <a href="#" class="nav-item" onclick="switchTab('pg-bookings')" data-i18n="nav_my_bookings">📅 আমার
+                    বুকিং</a>
+                <a href="#" class="nav-item" onclick="switchTab('pg-payments')" data-i18n="nav_payment_history">💳
+                    পেমেন্ট ইতিহাস</a>
+                <span class="nav-section-title" data-i18n="nav_sec_account">অ্যাকাউন্ট</span>
+                <a href="#" class="nav-item" onclick="switchTab('pg-profile')" data-i18n="nav_my_profile">👤
+                    প্রোফাইল</a>
+                <a href="#" class="nav-item" onclick="switchTab('pg-complaint')" data-i18n="nav_complaint">⚠️ অভিযোগ</a>
+            </nav>
+            <div class="sidebar-user">
+                <div class="su-avatar" id="sidebarAvatar">গ</div>
+                <div>
+                    <div class="su-name" id="sidebarName">গ্রাহক</div>
+                    <div class="su-role" id="sidebarRole">ID: —</div>
+                    <div id="walletBadge"
+                        style="background:rgba(255,255,255,0.1);padding:4px 8px;border-radius:6px;font-size:12px;margin-top:6px;color:#fff;cursor:pointer"
+                        onclick="switchTab('pg-payments')"><span data-i18n="label_wallet">ওয়ালেট</span>: ৳০</div>
+                </div>
+                <button class="su-logout" onclick="logout('customer','login-customer.html')"
+                    data-i18n-title="nav_logout">⏻</button>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="dashboard-main">
+            <div class="dash-topbar">
+                <h1 id="dashPageTitle" data-i18n="nav_dashboard">ড্যাশবোর্ড</h1>
+                <div class="topbar-actions">
+                    <button class="notification-btn" id="cNotifBtn" onclick="toggleCustomerNotifs()">🔔<span
+                            class="notif-dot" id="cNotifDot" style="display:none"></span></button>
+                    <button class="btn btn-sm btn-outline" data-i18n="nav_logout"
+                        onclick="logout('customer','login-customer.html')">লগআউট</button>
+                </div>
+            </div>
+            <!-- Notification Dropdown -->
+            <div id="cNotifPanel"
+                style="display:none;position:fixed;top:62px;right:24px;z-index:200;width:320px;background:#fff;border:1.5px solid var(--border);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);max-height:360px;overflow-y:auto">
+                <div
+                    style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+                    <strong style="font-size:14px" data-i18n="title_notifs">🔔 বিজ্ঞপ্তি</strong>
+                    <button onclick="markAllRead();renderCustomerNotifs()"
+                        style="font-size:12px;color:var(--primary);background:none;border:none;cursor:pointer"
+                        data-i18n="btn_mark_read">সব পড়া
+                        যায়</button>
+                </div>
+                <div id="cNotifList" style="padding:8px"></div>
+            </div>
+
+            <div class="dash-content">
+
+                <!-- HOME PAGE -->
+                <div class="dash-page active" id="pg-home">
+                    <div class="stat-grid">
+                        <div class="stat-card">
+                            <div class="sc-icon">📋</div>
+                            <div class="sc-value" id="statActiveBookings">০</div>
+                            <div class="sc-label" data-i18n="stat_active_bookings">সক্রিয় বুকিং</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="sc-icon">✅</div>
+                            <div class="sc-value" id="statCompletedBookings">০</div>
+                            <div class="sc-label" data-i18n="stat_completed_bookings">সম্পূর্ণ বুকিং</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="sc-icon">💳</div>
+                            <div class="sc-value" id="statTotalPayments">৳০</div>
+                            <div class="sc-label" data-i18n="stat_total_payments">মোট পেমেন্ট</div>
+                        </div>
+                        <div class="stat-card" style="cursor:pointer" onclick="openAddFundsModal()">
+                            <div class="sc-icon">💰</div>
+                            <div class="sc-value" id="statWalletBalance">৳০</div>
+                            <div class="sc-label" data-i18n="stat_wallet_balance">ওয়ালেট ব্যালেন্স</div>
+                            <div class="sc-change" style="color:var(--primary)" data-i18n="btn_add_funds">+ টাকা যোগ
+                                করুন</div>
+                        </div>
+
+                    </div>
+
+                    <div class="card" style="margin-top:24px">
+                        <div class="card-header">
+                            <span class="card-title" data-i18n="card_recent_bookings">সাম্প্রতিক বুকিং</span>
+                            <div style="display:flex;gap:8px">
+                                <button class="btn btn-sm btn-outline" onclick="openEditProfileModal()"
+                                    data-i18n="btn_edit_profile">প্রোফাইল
+                                    এডিট</button>
+                                <button class="btn btn-sm btn-primary" onclick="switchTab('pg-search')"
+                                    data-i18n="btn_new_booking">নতুন বুকিং
+                                    +</button>
+                            </div>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="th_worker">কর্মী</th>
+                                        <th data-i18n="th_service">সেবা</th>
+                                        <th data-i18n="th_plan">প্ল্যান</th>
+                                        <th data-i18n="th_date">তারিখ</th>
+                                        <th data-i18n="th_payment">পেমেন্ট</th>
+                                        <th data-i18n="th_status">অবস্থা</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentBookingsTable">
+                                    <tr>
+                                        <td colspan="6" style="text-align:center;padding:20px;color:var(--text-muted)"
+                                            data-i18n="msg_loading">
+                                            বুকিং
+                                            হিস্টোরি লোড হচ্ছে...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- SEARCH PAGE -->
+                <div class="dash-page" id="pg-search">
+                    <div class="card" style="margin-bottom:24px">
+                        <div class="card-header"><span class="card-title" data-i18n="nav_find_worker">🔍 কর্মী
+                                খুঁজুন</span></div>
+                        <div class="form-row" style="margin-bottom:16px">
+                            <div class="form-group" style="margin-bottom:0">
+                                <label data-i18n="label_service_type">সেবার ধরন</label>
+                                <select class="form-control" id="searchType" onchange="filterWorkers()">
+                                    <option value="all" data-i18n="opt_all_types">সব ধরন</option>
+                                    <option value="household" data-i18n="opt_household">কাজের লোক</option>
+                                    <option value="aya" data-i18n="opt_aya">আয়া</option>
+                                    <option value="babysitter" data-i18n="opt_babysitter">বেবিসিটার</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0">
+                                <label data-i18n="label_rating_filter">রেটিং ফিল্টার</label>
+                                <select class="form-control" id="searchRating">
+                                    <option value="all" data-i18n="opt_all_ratings">সব রেটিং</option>
+                                    <option value="5" data-i18n="opt_rating_5">৫ স্টার</option>
+                                    <option value="4" data-i18n="opt_rating_4">৪+ স্টার</option>
+                                    <option value="3" data-i18n="opt_rating_3">৩+ স্টার</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="worker-grid" id="workerGrid"></div>
+                </div>
+
+                <!-- BOOKINGS PAGE -->
+                <div class="dash-page" id="pg-bookings">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title" data-i18n="nav_my_bookings">📅 আমার সব
+                                বুকিং</span></div>
+                        <div class="admin-tabs">
+                            <button class="admin-tab active" onclick="filterBookings('all',this)"
+                                data-i18n="tab_all">সব</button>
+                            <button class="admin-tab" onclick="filterBookings('active',this)"
+                                data-i18n="tab_active">সক্রিয়</button>
+                            <button class="admin-tab" onclick="filterBookings('pending',this)"
+                                data-i18n="tab_pending">অপেক্ষমাণ</button>
+                            <button class="admin-tab" onclick="filterBookings('completed',this)"
+                                data-i18n="tab_completed">সম্পূর্ণ</button>
+                        </div>
+                        <div class="table-wrap">
+                            <table id="bookingsTable">
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="th_worker">কর্মী</th>
+                                        <th data-i18n="th_service">সেবা</th>
+                                        <th data-i18n="th_plan">প্ল্যান</th>
+                                        <th data-i18n="th_time">সময়</th>
+                                        <th data-i18n="th_payment">পেমেন্ট</th>
+                                        <th data-i18n="th_status">অবস্থা</th>
+                                        <th data-i18n="th_action">অ্যাকশন</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="7" style="text-align:center;padding:20px;color:var(--text-muted)"
+                                            data-i18n="msg_loading">
+                                            লোড হচ্ছে...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- PAYMENTS PAGE -->
+                <div class="dash-page" id="pg-payments">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title" data-i18n="nav_payment_history">💳 পেমেন্ট
+                                ইতিহাস</span></div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="th_date">তারিখ</th>
+                                        <th data-i18n="th_worker">কর্মী</th>
+                                        <th data-i18n="th_plan">প্ল্যান</th>
+                                        <th data-i18n="th_amount">পরিমাণ</th>
+                                        <th data-i18n="th_method">পদ্ধতি</th>
+                                        <th data-i18n="th_status">স্ট্যাটাস</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="paymentHistoryTable">
+                                    <tr>
+                                        <td colspan="6" style="text-align:center;padding:20px;color:var(--text-muted)"
+                                            data-i18n="msg_loading_payments">
+                                            পেমেন্ট ইতিহাস লোড হচ্ছে...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- PROFILE PAGE -->
+                <div class="dash-page" id="pg-profile">
+                    <div class="card">
+                        <div class="profile-header">
+                            <div class="profile-avatar" id="profileAvatar">গ</div>
+                            <div class="profile-main-info">
+                                <h2 id="profileName" data-i18n="label_loading">গ্রাহকের নাম</h2>
+                                <p id="profileAddress" data-i18n="msg_loading">📍 লোড হচ্ছে...</p>
+                                <p id="profileContact" style="font-size:14px;color:var(--text-muted);margin-top:4px">📱
+                                    — | ✉️ —</p>
+                                <span class="badge badge-blue" style="margin-top:12px"
+                                    data-i18n="badge_verified_customer">যাচাইকৃত গ্রাহক</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="openEditProfileModal()"
+                                data-i18n="btn_edit_profile">এডিট প্রোফাইল</button>
+                        </div>
+
+
+                        <div class="card" style="margin-top:24px">
+                            <div class="grid-2" style="padding:10px">
+                                <div class="info-item">
+                                    <div class="ii-label" data-i18n="label_full_name">নাম</div>
+                                    <div class="ii-value" id="profileInfoName">—</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="ii-label" data-i18n="label_address">ঠিকানা</div>
+                                    <div class="ii-value" id="profileInfoAddress">—</div>
+                                </div>
+
+                                <div class="info-item">
+                                    <div class="ii-label" data-i18n="label_phone">মোবাইল</div>
+                                    <div class="ii-value" id="profileInfoPhone">—</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="ii-label" data-i18n="label_whatsapp">হোয়াটসঅ্যাপ</div>
+                                    <div class="ii-value" id="profileInfoWA">—</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="ii-label" data-i18n="label_email">ইমেইল</div>
+                                    <div class="ii-value" id="profileInfoEmail">—</div>
+                                </div>
+
+                                <div class="info-item">
+                                    <div class="ii-label" data-i18n="label_member_since">সদস্যতা থেকে</div>
+                                    <div class="ii-value" data-i18n="label_join_date">জানুয়ারি ২০২৬</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="ii-label" data-i18n="label_id_doc">পরিচয়পত্র</div>
+                                    <div class="ii-value" data-i18n="label_aadhaar_verified">আধার কার্ড ✓</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="ii-label" data-i18n="label_status">অবস্থা</div>
+                                    <div class="ii-value"><span class="badge badge-green"
+                                            data-i18n="status_active">সক্রিয়</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COMPLAINT PAGE -->
+                <div class="dash-page" id="pg-complaint">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title" data-i18n="nav_complaint_title">⚠️ অভিযোগ
+                                দায়ের করুন</span></div>
+                        <div class="alert alert-info" style="margin-bottom:20px" data-i18n="complaint_info">
+                            ℹ️ আপনার অভিযোগ অ্যাডমিন পর্যালোচনা করবেন। সাধারণত ২৪-৪৮ ঘণ্টার মধ্যে উত্তর দেওয়া হবে।
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="label_complaint_worker">সংশ্লিষ্ট কর্মী (যদি থাকে)</label>
+                            <select class="form-control" id="compWorker">
+                                <option value="" data-i18n="opt_no_worker">কোনো নির্দিষ্ট কর্মী নয়</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="label_complaint_type">অভিযোগের ধরন</label>
+                            <select class="form-control" id="compType">
+                                <option value="" data-i18n="opt_select_type">নির্বাচন করুন</option>
+                                <option value="behavior" data-i18n="dispute_behavior">আচরণ সংক্রান্ত</option>
+                                <option value="quality" data-i18n="dispute_quality">কাজের মান</option>
+                                <option value="attendance" data-i18n="dispute_attendance">অনুপস্থিতি</option>
+                                <option value="payment" data-i18n="dispute_payment">পেমেন্ট সংক্রান্ত</option>
+                                <option value="other" data-i18n="opt_other">অন্যান্য</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="label_complaint_desc">বিস্তারিত বিবরণ</label>
+                            <textarea class="form-control" rows="4" placeholder="আপনার অভিযোগ বিস্তারিত লিখুন..."
+                                data-i18n-placeholder="placeholder_complaint_desc"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="label_complaint_proof">প্রমাণ আপলোড (ছবি/ডকুমেন্ট)</label>
+                            <input type="file" id="compFile" class="form-control">
+                        </div>
+                        <button class="btn btn-primary" onclick="submitComplaint()"
+                            data-i18n="btn_submit_complaint">অভিযোগ দাখিল করুন</button>
+                    </div>
+                </div>
+            </div>
+            <div id="bookingAlert" style="display:none"></div>
+        </main>
+    </div>
+
+    <!-- Add Funds Modal -->
+    <div id="addFundsModal" class="modal">
+        <div class="modal-content" style="max-width:500px">
+            <div class="modal-header">
+                <h3 class="modal-title" data-i18n="modal_add_funds">💰 ওয়ালেটে টাকা যোগ করুন</h3>
+                <button class="modal-close" onclick="closeModal('addFundsModal')">✕</button>
+            </div>
+            <p style="color:var(--text-muted);margin:10px 0 20px" data-i18n="msg_add_funds_desc">নিরাপদ পেমেন্ট গেটওয়ের
+                (Razorpay) মাধ্যমে টাকা যোগ করুন।</p>
+            <div class="form-group">
+                <label data-i18n="label_amount">পরিমাণ (টাকা)</label>
+                <input type="number" id="addAmount" class="form-control" placeholder="৫০০"
+                    data-i18n-placeholder="placeholder_limit_amt" min="100">
+            </div>
+            <div style="display:flex;gap:12px;margin-top:24px">
+                <button class="btn btn-outline" style="flex:1" onclick="closeModal('addFundsModal')"
+                    data-i18n="btn_cancel">বাতিল</button>
+                <button class="btn btn-primary" style="flex:1" onclick="handleAddFunds()"
+                    data-i18n="btn_pay_now">পেমেন্ট করুন</button>
+            </div>
+        </div>
+    </div> <!-- end addFundsModal -->
+
+    <!-- BOOKING MODAL -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="bmTitle" data-i18n="modal_booking_title">কর্মী বুক করুন</h3>
+                <button class="modal-close" onclick="closeModal('bookingModal')">✕</button>
+            </div>
+            <div id="bmWorkerInfo"
+                style="display:flex;align-items:center;gap:14px;margin-bottom:24px;background:var(--bg2);border-radius:10px;padding:14px">
+            </div>
+
+            <div id="bmServiceOptions"></div>
+
+            <div class="form-group">
+                <label data-i18n="label_pref_date">পছন্দের শুরুর তারিখ</label>
+                <input type="date" class="form-control" id="bmDate" />
+            </div>
+            <div class="form-group">
+                <label data-i18n="label_special_notes">কোনো বিশেষ নির্দেশনা</label>
+                <textarea class="form-control" rows="2" id="bmNote" placeholder="ঐচ্ছিক বার্তা..."
+                    data-i18n="placeholder_note"></textarea>
+            </div>
+            <div style="background:var(--bg2);border-radius:10px;padding:14px;margin-bottom:20px">
+                <div
+                    style="display:flex;justify-content:space-between;font-size:14px;color:var(--text-muted);margin-bottom:8px">
+                    <span data-i18n="label_selected_plan">নির্বাচিত প্ল্যান:</span><span id="bmSelectedPlan"
+                        style="color:var(--text);font-weight:700">—</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--text-muted)"><span
+                        data-i18n="label_total_payment">মোট পেমেন্ট:</span><span id="bmTotalAmt"
+                        style="color:var(--accent);font-weight:700;font-size:18px">—</span></div>
+            </div>
+            <button class="btn btn-primary btn-full" onclick="confirmBooking()" data-i18n="btn_confirm_pay">✅ কনফার্ম
+                করুন ও পেমেন্ট করুন</button>
+        </div>
+    </div>
+
+
+    <!-- RATING MODAL -->
+    <div class="modal-overlay" id="rateModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">⭐ <span id="rateWorkerTitle" data-i18n="modal_rating_title">রেটিং ও রিভিউ
+                        দিন</span></h3>
+                <button class="modal-close" onclick="closeModal('rateModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label data-i18n="label_give_rating">রেটিং দিন</label>
+                <div style="display:flex;gap:12px;font-size:32px;cursor:pointer" id="starRating">
+                    <span onclick="setRating(1)">☆</span><span onclick="setRating(2)">☆</span><span
+                        onclick="setRating(3)">☆</span><span onclick="setRating(4)">☆</span><span
+                        onclick="setRating(5)">☆</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label data-i18n="label_comments">মন্তব্য</label>
+                <textarea class="form-control" rows="3" id="reviewText" placeholder="আপনার অভিজ্ঞতা শেয়ার করুন..."
+                    data-i18n="placeholder_experience"></textarea>
+            </div>
+            <button class="btn btn-primary btn-full" onclick="submitRating()" data-i18n="btn_submit_review">রিভিউ জমা
+                দিন</button>
+        </div>
+    </div>
+
+
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/customer-dashboard.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/wallet.js"></script>
+
+    <!-- EDIT PROFILE MODAL -->
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content" style="max-width:500px">
+            <div class="modal-header">
+                <h3 class="modal-title" data-i18n="modal_edit_profile">📝 প্রোফাইল এডিট করুন</h3>
+                <button class="modal-close" onclick="closeModal('editProfileModal')">✕</button>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label data-i18n="label_full_name">নাম</label>
+                    <input type="text" id="editName" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="label_phone">ফোন নম্বর</label>
+                    <input type="text" id="editPhone" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label data-i18n="label_email">ইমেইল</label>
+                <input type="email" id="editEmail" class="form-control" readonly style="background:var(--bg2)">
+            </div>
+            <div class="form-group">
+                <label data-i18n="label_address">ঠিকানা</label>
+                <textarea id="editAddress" class="form-control" rows="3"></textarea>
+            </div>
+            <div style="display:flex;gap:12px;margin-top:24px">
+                <button class="btn btn-outline" style="flex:1" onclick="closeModal('editProfileModal')"
+                    data-i18n="btn_cancel">বাতিল</button>
+                <button class="btn btn-primary" style="flex:1" onclick="saveProfile()"
+                    data-i18n="btn_save_changes">পরিবর্তন সংরক্ষণ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PW MODAL -->
+    <div class="modal-overlay" id="pwdModal">
+        <div class="modal-card" style="max-width:400px">
+            <div class="modal-header">
+                <span class="modal-title" data-i18n="modal_change_pwd">পাসওয়ার্ড পরিবর্তন</span>
+                <button class="modal-close" onclick="closeModal('pwdModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label data-i18n="label_old_pwd">বর্তমান পাসওয়ার্ড</label>
+                <input type="password" class="form-control" id="oldPwd">
+            </div>
+            <div class="form-group">
+                <label data-i18n="label_new_pwd">নতুন পাসওয়ার্ড</label>
+                <input type="password" class="form-control" id="newPwd">
+            </div>
+            <button class="btn btn-primary btn-full" onclick="doChangePwd('customer')"
+                data-i18n="btn_change_pwd">পরিবর্তন করুন</button>
+        </div>
+    </div>
+
+    <script>
+        // Use global doChangePwd from js/customer-dashboard.js or js/main.js if centralized
+    </script>
+
+</body>
+
+</html>

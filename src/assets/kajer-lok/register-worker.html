@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="reg_worker_title">কর্মী নিবন্ধন – কাজের লোক</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <!-- BACKGROUND -->
+    <div class="page-bg"></div>
+    <div class="page-bg-overlay"></div>
+    <!-- LANG BAR -->
+    <div class="lang-bar">
+        <span class="lang-msg" id="langMsg" data-i18n="lang_selection_title">🌐 ভাষা নির্বাচন করুন / Select Language /
+            भाषा चुनें</span>
+        <div class="lang-options">
+            <button class="lang-btn active" id="lang-bn" onclick="setLang('bn')">বাংলা</button>
+            <button class="lang-btn" id="lang-en" onclick="setLang('en')">English</button>
+            <button class="lang-btn" id="lang-hi" onclick="setLang('hi')">হিন্দি</button>
+        </div>
+    </div>
+    <div class="hero-bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand"><img src="images/logo.png" alt="কাজের লোক Logo"
+                    style="height: 48px; border-radius: 8px; margin-right: 12px;" />
+                <div><span class="brand-name" data-i18n="nav_brand">কাজের লোক</span><span class="brand-tagline"
+                        data-i18n="brand_tagline">Where Trust Meets Responsibility</span></div>
+            </a>
+            <div class="nav-links"><a href="login-worker.html" class="btn btn-outline"
+                    data-i18n="link_login_direct"></a></div>
+        </div>
+    </nav>
+
+    <div class="reg-page">
+        <div class="reg-container">
+            <div style="text-align:center;margin-bottom:32px;padding:0 8px">
+                <h1 style="font-size:28px;font-weight:800;color:var(--text);margin-bottom:8px"
+                    data-i18n="reg_worker_h1">কর্মী নিবন্ধন ফর্ম</h1>
+                <p style="color:var(--text-muted);font-size:15px" data-i18n="reg_worker_p">আপনার তথ্য পূরণ করুন এবং
+                    প্ল্যাটফর্মে যোগ দিন</p>
+            </div>
+
+            <!-- Step Indicators -->
+            <div class="reg-steps" id="regSteps">
+                <div class="reg-step active" id="si0">
+                    <div class="reg-step-num" data-i18n="num_1">১</div>
+                    <span class="reg-step-label" data-i18n="step_personal">ব্যক্তিগত তথ্য</span>
+                    <div class="reg-step-line"></div>
+                </div>
+                <div class="reg-step" id="si1">
+                    <div class="reg-step-num" data-i18n="num_2">২</div>
+                    <span class="reg-step-label" data-i18n="step_work_details">কাজের বিবরণ</span>
+                    <div class="reg-step-line"></div>
+                </div>
+                <div class="reg-step" id="si2">
+                    <div class="reg-step-num" data-i18n="num_3">৩</div>
+                    <span class="reg-step-label" data-i18n="step_contact_docs">যোগাযোগ ও নথি</span>
+                    <div class="reg-step-line"></div>
+                </div>
+                <div class="reg-step" id="si3">
+                    <div class="reg-step-num" data-i18n="num_4">৪</div>
+                    <span class="reg-step-label" data-i18n="step_legal">আইনি সম্মতি</span>
+                </div>
+            </div>
+
+            <div class="reg-card">
+
+                <!-- STEP 1: Personal Info -->
+                <div class="step-form active" id="sform0">
+                    <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:24px"><span
+                            data-i18n="num_1">১</span>. <span data-i18n="step_personal">ব্যক্তিগত তথ্য</span>
+                    </h3>
+                    <div class="form-group">
+                        <label data-i18n="label_full_name">পুরো নাম <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="wName" data-i18n-placeholder="placeholder_name"
+                            placeholder="আপনার পুরো নাম" required />
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label data-i18n="label_age"><span class="required">*</span></label>
+                            <input type="number" class="form-control" id="wAge" data-i18n-placeholder="placeholder_age"
+                                placeholder="বয়স (বছর)" min="18" max="65" required />
+                            <p class="form-hint" data-i18n="hint_min_age">সর্বনিম্ন বয়স: ১৮ বছর</p>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="label_gender"><span class="required">*</span></label>
+                            <select class="form-control" id="wGender" required>
+                                <option value="" data-i18n="opt_select_gender">লিঙ্গ নির্বাচন করুন</option>
+                                <option data-i18n="opt_male">পুরুষ</option>
+                                <option data-i18n="opt_female">মহিলা</option>
+                                <option data-i18n="opt_other">অন্যান্য</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_address_permanent">স্থায়ী ঠিকানা <span
+                                class="required">*</span></label>
+                        <textarea class="form-control" id="wAddress" rows="3"
+                            data-i18n-placeholder="placeholder_address_worker_permanent"
+                            placeholder="ঠিকানা (বাড়ি, রাস্তা, এলাকা)" required></textarea>
+                    </div>
+                    <div style="display:flex;justify-content:flex-end;margin-top:8px">
+                        <button class="btn btn-primary" data-next data-i18n="btn_next_step">Next Step →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Work Details -->
+                <div class="step-form" id="sform1">
+                    <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:24px"><span
+                            data-i18n="num_2">২</span>. <span data-i18n="step_work_details">কাজের বিবরণ</span></h3>
+                    <div class="form-group">
+                        <label data-i18n="label_work_type">কাজের ধরন <span class="required">*</span></label>
+                        <select class="form-control" id="wWorkType" required>
+                            <option value="" data-i18n="opt_select_type">কাজের ধরন নির্বাচন করুন</option>
+                            <option value="household" data-i18n="opt_household">কাজের লোক (গৃহস্থালি)</option>
+                            <option value="aya" data-i18n="opt_aya">আয়া</option>
+                            <option value="babysitter" data-i18n="opt_babysitter">বেবিসিটার</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_salary">প্রত্যাশিত বেতন (প্রতি মাসে) <span
+                                class="required">*</span></label>
+                        <input type="text" class="form-control" id="wSalary" data-i18n-placeholder="placeholder_salary"
+                            placeholder="যেমন: ১৫,০০০/মাস" required />
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_experience">অভিজ্ঞতা (বছর) <span class="required">*</span></label>
+                        <select class="form-control" id="wExp" required>
+                            <option value="" data-i18n="opt_select_exp">অভিজ্ঞতা নির্বাচন করুন</option>
+                            <option value="0" data-i18n="opt_exp_0">নতুন (কোনো অভিজ্ঞতা নেই)</option>
+                            <option value="1" data-i18n="opt_exp_1">১ বছর</option>
+                            <option value="2" data-i18n="opt_exp_2">২ বছর</option>
+                            <option value="3" data-i18n="opt_exp_3">৩ বছর</option>
+                            <option value="5" data-i18n="opt_exp_5">৫+ বছর</option>
+                            <option value="10" data-i18n="opt_exp_10">১০+ বছর</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_duration">কত দিনের জন্য কাজ করতে চান? <span
+                                class="required">*</span></label>
+                        <select class="form-control" id="wDuration" required>
+                            <option value="" data-i18n="opt_select_dur">মেয়াদ নির্বাচন করুন</option>
+                            <option value="3m" data-i18n="opt_dur_3m">৩ মাস</option>
+                            <option value="6m" data-i18n="opt_dur_6m">৬ মাস</option>
+                            <option value="1y" data-i18n="opt_dur_1y">১ বছর</option>
+                            <option value="2y" data-i18n="opt_dur_2y">২ বছর</option>
+                            <option value="indefinite" data-i18n="opt_dur_indefinite">অনির্দিষ্টকাল</option>
+                        </select>
+                        <p class="form-hint" data-i18n="hint_duration">মেয়াদ শেষ হলে Renew করার সুযোগ থাকবে</p>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-top:8px">
+                        <button class="btn btn-secondary" data-prev data-i18n="btn_prev_step">← Previous Step</button>
+                        <button class="btn btn-primary" data-next data-i18n="btn_next_step">Next Step →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Contact & Documents -->
+                <div class="step-form" id="sform2">
+                    <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:24px"><span
+                            data-i18n="num_3">৩</span>. <span data-i18n="step_contact_docs">যোগাযোগ ও নথি</span></h3>
+                    <div class="form-group">
+                        <label data-i18n="label_phone_otp">মোবাইল নম্বর (OTP যাচাইকরণের জন্য) <span
+                                class="required">*</span></label>
+                        <div class="input-group">
+                            <input type="tel" class="form-control" id="wPhone" data-i18n-placeholder="placeholder_phone"
+                                placeholder="+91 98XXX XXXXX" required />
+                            <button type="button" class="btn btn-outline btn-sm" onclick="sendOTP('wPhone')"
+                                data-i18n="btn_get_otp">OTP পান</button>
+                        </div>
+                        <div class="otp-sent" id="wPhone_otp_sent" data-i18n="toast_otp_sent">✅ OTP পাঠানো হয়েছে</div>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_otp">মোবাইল OTP <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="wOTP" data-i18n-placeholder="placeholder_otp"
+                            placeholder="৬ সংখ্যার OTP" maxlength="6" />
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_whatsapp">WhatsApp নম্বর</label>
+                        <input type="tel" class="form-control" id="wWhatsapp" data-i18n-placeholder="placeholder_phone"
+                            placeholder="+91 98XXX XXXXX (ঐচ্ছিক)" />
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_id_upload">পরিচয়পত্র আপলোড (Aadhaar/Voter/PAN) <span
+                                class="required">*</span></label>
+                        <!-- Document type selector -->
+                        <select class="form-control" id="wDocType" required
+                            style="margin-bottom:10px;border:2px solid var(--primary-low);">
+                            <option value="">ডকুমেন্টের ধরন নির্বাচন করুন *</option>
+                            <option value="aadhaar">আধার কার্ড (Aadhaar Card)</option>
+                            <option value="voter">ভোটার আইডি (Voter ID Card)</option>
+                            <option value="pan">প্যান কার্ড (PAN Card)</option>
+                        </select>
+                        <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px">JPG, PNG বা PDF ফরম্যাট।
+                            সর্বোচ্চ
+                            <strong style="color:var(--secondary)">10MB</strong>
+                        </p>
+                        <div class="file-upload-area" id="wIdArea">
+                            <div class="upload-icon"></div>
+                            <p data-i18n="upload_area_p">ক্লিক করুন বা ফাইল টেনে আনুন</p>
+                            <p style="font-size:11px;color:var(--text-dim);margin-top:4px">JPG, PNG বা PDF ফরম্যাট।
+                                সর্বোচ্চ
+                                10MB</p>
+                            <input type="file" id="wIdFile"
+                                accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" />
+                        </div>
+                        <div class="file-name" id="wIdFileName"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-top:8px">
+                        <button class="btn btn-secondary" data-prev data-i18n="btn_prev_step">← Previous Step</button>
+                        <button class="btn btn-primary" data-next data-i18n="btn_next_step">Next Step →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 4: Legal Declaration -->
+                <div class="step-form" id="sform3">
+                    <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px"><span
+                            data-i18n="num_4">৪</span>. <span data-i18n="step_legal">আইনি সম্মতি</span></h3>
+                    <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px" data-i18n="legal_p">অনুগ্রহ করে
+                        নিচের সব শর্তাবলী পড়ুন এবং সম্মতি দিন।</p>
+                    <p style="font-size:12px;color:var(--primary-light);margin-bottom:12px"><span
+                            data-i18n="legal_links_prefix">নীতিমালা পড়ুন:</span> <a href="terms.html" target="_blank"
+                            style="color:var(--primary-light)" data-i18n="link_terms">Terms & Conditions</a>
+                        | <a href="privacy.html" target="_blank" style="color:var(--primary-light)"
+                            data-i18n="link_privacy">Privacy Policy</a> |
+                        <a href="refund.html" target="_blank" style="color:var(--primary-light)"
+                            data-i18n="link_refund">Refund Policy</a> | <a href="replacement.html" target="_blank"
+                            style="color:var(--primary-light)" data-i18n="link_replacement">Replacement Policy</a>
+                    </p>
+
+                    <div class="legal-section" id="workerLegal">
+                        <h4 data-i18n="legal_work_h4">স্বাক্ষরকারী কর্মীর আইনি ঘোষণা ও সম্মতি</h4>
+                        <button type="button" class="select-all-btn" onclick="selectAll('workerLegal')"
+                            data-i18n="btn_select_all">সব সিলেক্ট করুন / বাতিল করুন</button>
+
+                        <div class="checkbox-item"><input type="checkbox" id="wc1" /><label for="wc1"
+                                data-i18n="legal_work_1">আমি নিশ্চিত করছি যে আমার দেওয়া সমস্ত তথ্য সত্য ও সঠিক।</label>
+                        </div>
+                        <div class="checkbox-item"><input type="checkbox" id="wc2" /><label for="wc2"
+                                data-i18n="legal_work_2">আমি বৈধ সরকারি আইডি জমা দিচ্ছি এবং ভুয়া তথ্য দিলে আমার
+                                বিরুদ্ধে আইনানুগ ব্যবস্থা নেওয়া হতে পারে — আমি সম্মত।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="wc3" /><label for="wc3"
+                                data-i18n="legal_work_3">আমি গ্রাহকের সাথে পেশাদার আচরণ করব।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="wc4" /><label for="wc4"
+                                data-i18n="legal_work_4">আমি কোনো অবৈধ কার্যকলাপে জড়াব না।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="wc5" /><label for="wc5"
+                                data-i18n="legal_work_5">আমি বুঝেছি যে ৩০ দিন পূর্ণ হওয়ার পর আমার কাজ অনুযায়ী পেমেন্ট
+                                হবে।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="wc6" /><label for="wc6"
+                                data-i18n="legal_work_6">আমি বুঝেছি যে আমার নির্ধারিত মাসিক পারিশ্রমিক অনুযায়ী কাজ
+                                সীমাবদ্ধ থাকতে পারে।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="wc7" /><label for="wc7"
+                                data-i18n="legal_work_7">আমি জানি যে প্রোফাইল আপডেট অ্যাডমিন অনুমোদন ছাড়া সম্ভব
+                                নয়।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="wc8" /><label for="wc8"
+                                data-i18n="legal_work_8">কোনো বিরোধ হলে প্ল্যাটফর্ম তদন্ত করতে পারবে — আমি
+                                সম্মত।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="wc9" /><label for="wc9"
+                                data-i18n="legal_work_9">আমি জানি যে প্ল্যাটফর্ম শুধুমাত্র সংযোগকারী, সরাসরি নিয়োগকর্তা
+                                নয়।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="wc10" /><label for="wc10"
+                                data-i18n="legal_work_10">আমার বিরুদ্ধে গুরুতর অভিযোগ প্রমাণিত হলে আমার অ্যাকাউন্ট
+                                স্থায়ীভাবে বাতিল হতে পারে।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="wc11" /><label for="wc11"
+                                data-i18n="legal_work_11">আমি সম্মতি দিচ্ছি যে আমার তথ্য Digital Personal Data
+                                Protection Act অনুযায়ী সংরক্ষণ করা হবে।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="wc12" /><label for="wc12"
+                                data-i18n="legal_work_12">আমি জানি যে আমার তথ্য কেবল পরিষেবা প্রদানের উদ্দেশ্যে ব্যবহার
+                                হবে।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="wc13" /><label for="wc13"
+                                data-i18n="legal_work_13">প্রয়োজনে আইন প্রয়োগকারী সংস্থাকে তথ্য প্রদান করা হতে
+                                পারে।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="wc14" /><label for="wc14"
+                                data-i18n="legal_work_14">আমি চাইলে ভবিষ্যতে আমার ডেটা ডিলিট করার অনুরোধ করতে
+                                পারি।</label></div>
+                    </div>
+
+                    <div class="consent-declaration" data-i18n="legal_consent_final">এই ফর্মটি জমা দেওয়ার মাধ্যমে, আমি
+                        উপরের সমস্ত আইনিভাবে বাধ্যতামূলক শর্তাবলী এবং কাজের লোক প্ল্যাটফর্মের শর্তাবলী, গোপনীয়তা নীতি,
+                        রিফান্ড নীতি এবং প্রতিস্থাপন নীতিতে সম্মত হচ্ছি।</div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:8px">
+                        <button class="btn btn-secondary" data-prev data-i18n="btn_prev_step">← Previous Step</button>
+                        <button class="btn btn-primary btn-full" onclick="submitWorkerReg()" style="max-width:200px"
+                            data-i18n="btn_reg_complete">✅ Complete Registration</button>
+                    </div>
+                </div>
+
+            </div><!-- reg-card -->
+
+            <div class="auth-footer" style="text-align:center;margin-top:16px"><span
+                    data-i18n="msg_reg_worker_footer">ইতিমধ্যে অ্যাকাউন্ট আছে?</span> <a href="login-worker.html"
+                    style="color:var(--primary-light);text-decoration:none" data-i18n="link_login">লগইন করুন</a></div>
+        </div>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initWizard();
+            initFileUpload('wIdArea', 'wIdFile', 'wIdFileName');
+        });
+
+        function submitWorkerReg() {
+            // Mandatory field validation
+            const name = document.getElementById('wName')?.value?.trim();
+            const address = document.getElementById('wAddress')?.value?.trim();
+            const wtype = document.getElementById('wWorkType')?.value;
+            const phone = document.getElementById('wPhone')?.value?.trim();
+            const docType = document.getElementById('wDocType')?.value;
+            const idFile = document.getElementById('wIdFile')?.files?.[0];
+
+            if (!name) { showToast(getTranslation('toast_fill_all'), 'error'); return; }
+            if (!address) { showToast(getTranslation('toast_fill_all'), 'error'); return; }
+            if (!wtype) { showToast(getTranslation('opt_select_type'), 'error'); return; }
+            if (!phone) { showToast(getTranslation('label_phone_otp'), 'error'); return; }
+
+            const mobileRegex = /^(?:\+91|91)?[6-9]\d{9}$/;
+            if (!mobileRegex.test(phone)) { showToast('Invalid mobile number', 'error'); return; }
+            if (!docType) { showToast(getTranslation('opt_doc_select'), 'error'); return; }
+            if (!idFile) { showToast(getTranslation('label_id_upload'), 'error'); return; }
+
+            const checks = document.querySelectorAll('#workerLegal input[type=checkbox]');
+            const allChecked = Array.from(checks).every(c => c.checked);
+            if (!allChecked) { showToast(getTranslation('toast_legal_error'), 'error'); return; }
+
+            // Convert file to base64, then save
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const pending = JSON.parse(localStorage.getItem('pendingWorkers') || '[]');
+                const regId = 'WREG-' + Date.now();
+                const salary = document.getElementById('wSalary')?.value?.trim() || '';
+                const exp = document.getElementById('wExp')?.value || '';
+                pending.push({
+                    regId, name, address, workType: wtype, phone, salary, exp,
+                    docType, docBase64: e.target.result, docFileName: idFile.name,
+                    regDate: new Date().toLocaleDateString('bn-IN'),
+                    status: 'pending'
+                });
+                localStorage.setItem('pendingWorkers', JSON.stringify(pending));
+
+                document.querySelector('.reg-card').innerHTML = `
+                  <div style="text-align:center;padding:40px 20px">
+                    <div style="font-size:64px;margin-bottom:16px">✅</div>
+                    <h2 style="color:var(--text);font-size:22px;margin-bottom:12px" data-i18n="toast_reg_success">নিবন্ধন সফল হয়েছে!</h2>
+                    <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px">
+                      <span data-i18n="msg_wait_admin_worker">আপনার আবেদনটি পর্যালোচনার জন্য পাঠানো হয়েছে।</span><br/>
+                      <span data-i18n="msg_get_credentials_worker">অ্যাডমিন অনুমোদন করলে আপনাকে SMS এর মাধ্যমে Worker ID ও পাসওয়ার্ড জানানো হবে।</span><br/>
+                      <strong style="color:var(--secondary)">Registration ID: ${regId}</strong>
+                    </p>
+                     <p style="font-size:13px;color:var(--text-dim)" data-i18n="msg_reg_wait_time">সাধারণত ২৪ থেকে ৪৮ ঘন্টার মধ্যে ভেরিফিকেশন সম্পন্ন হয় এবং আপনাকে SMS এর মাধ্যমে জানানো হবে।</p>
+                    <a href="login-worker.html" class="btn btn-primary" style="margin-top:20px" data-i18n="link_login">লগইন করুন</a>
+                  </div>`;
+                applyTranslations();
+            };
+            reader.readAsDataURL(idFile);
+        }
+    </script>
+</body>
+
+</html>

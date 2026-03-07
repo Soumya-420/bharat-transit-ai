@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="admin_login_title">অ্যাডমিন লগইন - কাজের লোক</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <!-- BACKGROUND -->
+    <div class="page-bg"></div>
+    <div class="page-bg-overlay"></div>
+
+    <!-- LANG BAR -->
+    <div class="lang-bar" id="langBar">
+        <span class="lang-msg" id="langMsg" data-i18n="lang_selection_title">🌐 ভাষা নির্বাচন করুন / Select Language /
+            ভাষা चुनें</span>
+        <div class="lang-options">
+            <button class="lang-btn active" id="lang-bn" onclick="setLang('bn')">বাংলা</button>
+            <button class="lang-btn" id="lang-en" onclick="setLang('en')">English</button>
+            <button class="lang-btn" id="lang-hi" onclick="setLang('hi')">हिन्दी</button>
+        </div>
+    </div>
+
+    <div class="hero-bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <img src="images/logo.png" alt="কাজের লোক Logo"
+                    style="height: 48px; border-radius: 8px; margin-bottom: 12px;" />
+                <div>
+                    <span class="brand-name" data-i18n="nav_brand">কাজের লোক</span>
+                    <span class="brand-tagline" data-i18n="brand_tagline">Where Trust Meets Responsibility</span>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <div class="auth-page">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-logo">
+                    <div class="logo-icon">🔐</div>
+                    <h2 data-i18n="admin_login_header">অ্যাডমিন লগইন</h2>
+                    <p data-i18n="admin_login_subtext">প্রশাসক পোর্টালে প্রবেশ করুন</p>
+                </div>
+                <div class="alert alert-warning">
+                    <span>⚠️</span> <span data-i18n="admin_login_warn">এটি সুরক্ষিত অ্যাডমিন পোর্টাল। শুধুমাত্র অনুমোদিত
+                        ব্যক্তি প্রবেশ করতে পারবেন।</span>
+                </div>
+                <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+                    <div class="form-group">
+                        <label><span data-i18n="admin_form_user">অ্যাডমিন ইউজারনেম</span> <span
+                                class="required">*</span></label>
+                        <input type="text" class="form-control" id="adminUser" placeholder="admin@kajerlok.com"
+                            required />
+                    </div>
+                    <div class="form-group">
+                        <label><span data-i18n="admin_form_pass">পাসওয়ার্ড</span> <span
+                                class="required">*</span></label>
+                        <input type="password" class="form-control" id="adminPass" placeholder="••••••••••" required />
+                    </div>
+                    <div class="form-group">
+                        <label><span data-i18n="admin_form_2fa">2FA কোড (Google Authenticator)</span> <span
+                                class="required">*</span></label>
+                        <input type="text" class="form-control" id="admin2fa"
+                            data-i18n-placeholder="admin_form_2fa_placeholder" placeholder="6 সংখ্যার কোড" maxlength="6"
+                            required />
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full" data-i18n="admin_enter">অ্যাডমিন পোর্টালে
+                        প্রবেশ করুন</button>
+                </form>
+                <div class="auth-footer" style="margin-top:20px">
+                    <a href="index.html" data-i18n="admin_back_home">← হোমে ফিরে যান</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('adminUser').value.trim();
+            const p = document.getElementById('adminPass').value;
+            const code = document.getElementById('admin2fa').value.trim();
+
+            if (u === 'admin@kajerlok.com' && p === 'Admin@123') {
+                if (code.length !== 6 || isNaN(code)) {
+                    showToast('⚠️ 6 সংখ্যার 2FA কোড দিন', 'error');
+                    return;
+                }
+                // Save admin session so auth guard on dashboard passes
+                setSession('admin', {
+                    username: u,
+                    name: 'Super Admin',
+                    role: 'admin',
+                    loginAt: new Date().toISOString()
+                });
+                showToast(getTranslation('msg_login_success') || 'লগইন সফল!', 'success');
+                setTimeout(() => window.location.href = 'dashboard-admin.html', 1000);
+            } else {
+                showToast(getTranslation('msg_login_error') || 'ব্যবহারকারী নাম / পাসওয়ার্ড সঠিক নয়!', 'error');
+            }
+        }
+    </script>
+</body>
+
+</html>

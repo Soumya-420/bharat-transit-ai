@@ -1,0 +1,55 @@
+﻿import json
+import re
+
+with open('c:/Users/soumy/.gemini/antigravity/scratch/kajer-lok/js/i18n.js', 'r', encoding='utf8') as f:
+    text = f.read()
+
+bn_block = re.search(r'bn:\s*\{([\s\S]*?)\}\s*,\s*en:', text)
+bn_dict = {}
+
+if bn_block:
+    lines = bn_block.group(1).split('\n')
+    for line in lines:
+        match = re.search(r"^\s*([a-zA-Z0-9_]+)\s*:\s*['\"](.*?)['\"]\s*,?", line)
+        if match:
+            # handle keys that might have html like \n or bold tags
+            bn_dict[match.group(1)] = match.group(2)
+else:
+    print('Failed to find bn block')
+
+print(f'Found {len(bn_dict)} translations in i18n.js')
+
+files = [
+    'c:/Users/soumy/.gemini/antigravity/scratch/kajer-lok/dashboard-admin.html',
+    'c:/Users/soumy/.gemini/antigravity/scratch/kajer-lok/dashboard-worker.html',
+    'c:/Users/soumy/.gemini/antigravity/scratch/kajer-lok/register-customer.html',
+    'c:/Users/soumy/.gemini/antigravity/scratch/kajer-lok/register-worker.html',
+    'c:/Users/soumy/.gemini/antigravity/scratch/kajer-lok/js/customer-dashboard.js'
+]
+
+def replace_translation(match):
+    key = match.group(1)
+    if key in bn_dict:
+        return f'data-i18n="{key}">{bn_dict[key]}</'
+    return match.group(0)
+
+def replace_buttons(text):
+    text = re.sub(r'>\?\?+ / Select Language / \?\?+<', '>ভাষা নির্বাচন করুন / Select Language / भाषा चुनें<', text)
+    text = re.sub(r"onclick=\"setLang\('bn'\)\">[^<]*\?\?[^<]*</", "onclick=\"setLang('bn')\">বাংলা</", text)
+    text = re.sub(r"onclick=\"setLang\('hi'\)\">[^<]*\?\?[^<]*</", "onclick=\"setLang('hi')\">হিন্দি</", text)
+    text = re.sub(r"onclick=\"setLang\('en'\)\">[^<]*\?\?[^<]*</", "onclick=\"setLang('en')\">English</", text)
+    # Generic replace for any tag containing only question marks and spaces
+    text = re.sub(r'>\s*\?+\s*<', '><', text)
+    return text
+
+for filepath in files:
+    with open(filepath, 'r', encoding='utf8', errors='ignore') as f:
+        html = f.read()
+    
+    updated_html = re.sub(r'data-i18n="([^"]+)">[^<]*\??[^<]*</', replace_translation, html)
+    updated_html = replace_buttons(updated_html)
+    
+    with open(filepath, 'w', encoding='utf8') as f:
+        f.write(updated_html)
+
+print('Files processed successfully.')

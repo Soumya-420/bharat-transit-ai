@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="reg_customer_title">গ্রাহক নিবন্ধন – কাজের লোক</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <!-- BACKGROUND -->
+    <div class="page-bg"></div>
+    <div class="page-bg-overlay"></div>
+    <!-- LANG BAR -->
+    <div class="lang-bar">
+        <span class="lang-msg" id="langMsg" data-i18n="lang_selection_title">🌐 ভাষা নির্বাচন করুন / Select Language /
+            भाषा चुनें</span>
+        <div class="lang-options">
+            <button class="lang-btn active" id="lang-bn" onclick="setLang('bn')">বাংলা</button>
+            <button class="lang-btn" id="lang-en" onclick="setLang('en')">English</button>
+            <button class="lang-btn" id="lang-hi" onclick="setLang('hi')">হিন্দি</button>
+        </div>
+    </div>
+    <div class="hero-bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand"><img src="images/logo.png" alt="কাজের লোক Logo"
+                    style="height: 48px; border-radius: 8px; margin-right: 12px;" />
+                <div><span class="brand-name" data-i18n="nav_brand">কাজের লোক</span><span class="brand-tagline"
+                        data-i18n="brand_tagline">Where Trust Meets Responsibility</span></div>
+            </a>
+            <div class="nav-links"><a href="login-customer.html" class="btn btn-outline" data-i18n="link_login">লগইন
+                    করুন</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="reg-page">
+        <div class="reg-container">
+            <div style="text-align:center;margin-bottom:32px;padding:0 8px">
+                <h1 style="font-size:28px;font-weight:800;color:var(--text);margin-bottom:8px"
+                    data-i18n="reg_customer_h1">গ্রাহক নিবন্ধন ফর্ম</h1>
+                <p style="color:var(--text-muted);font-size:15px" data-i18n="reg_customer_p">আপনার তথ্য পূরণ করুন এবং
+                    সেরা কর্মী খুঁজুন</p>
+            </div>
+
+            <!-- Step Indicators -->
+            <div class="reg-steps">
+                <div class="reg-step active" id="csi0">
+                    <div class="reg-step-num" data-i18n="num_1">১</div>
+                    <span class="reg-step-label" data-i18n="step_personal">ব্যক্তিগত তথ্য</span>
+                    <div class="reg-step-line"></div>
+                </div>
+                <div class="reg-step" id="csi1">
+                    <div class="reg-step-num" data-i18n="num_2">২</div>
+                    <span class="reg-step-label" data-i18n="step_contact_docs">যোগাযোগ ও নথি</span>
+                    <div class="reg-step-line"></div>
+                </div>
+                <div class="reg-step" id="csi2">
+                    <div class="reg-step-num" data-i18n="num_3">৩</div>
+                    <span class="reg-step-label" data-i18n="step_legal">আইনি সম্মতি</span>
+                </div>
+            </div>
+
+            <div class="reg-card">
+
+                <!-- STEP 1 -->
+                <div class="step-form active" id="csform0">
+                    <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:24px"><span
+                            data-i18n="num_1">১</span>. <span data-i18n="step_personal">ব্যক্তিগত তথ্য</span>
+                    </h3>
+                    <div class="form-group">
+                        <label data-i18n="label_full_name">পুরো নাম <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="cName" data-i18n-placeholder="placeholder_name"
+                            placeholder="আপনার পুরো নাম" required />
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_address"><span class="required">*</span></label>
+                        <textarea class="form-control" id="cAddress" rows="3"
+                            data-i18n-placeholder="placeholder_address" placeholder="?????, ??????, ?????, ???, ??? ???"
+                            required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_work_type">আপনি কী ধরনের কর্মী খুঁজছেন? <span
+                                class="required">*</span></label>
+                        <select class="form-control" id="cWorkType" required>
+                            <option value="" data-i18n="opt_select_type">কাজের ধরন নির্বাচন করুন</option>
+                            <option value="household" data-i18n="opt_household">কাজের লোক (গৃহস্থালি)</option>
+                            <option value="aya" data-i18n="opt_aya">আয়া</option>
+                            <option value="babysitter" data-i18n="opt_babysitter">বেবিসিটার</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;justify-content:flex-end;margin-top:8px">
+                        <button class="btn btn-primary" data-next data-i18n="btn_next_step">Next Step →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 2 -->
+                <div class="step-form" id="csform1">
+                    <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:24px"><span
+                            data-i18n="num_2">২</span>. <span data-i18n="step_contact_docs">যোগাযোগ ও নথি</span></h3>
+                    <div class="form-group">
+                        <label data-i18n="label_phone_otp">মোবাইল নম্বর (OTP যাচাইকরণের জন্য) <span
+                                class="required">*</span></label>
+                        <div class="input-group">
+                            <input type="tel" class="form-control" id="cPhone" data-i18n-placeholder="placeholder_phone"
+                                placeholder="+91 98XXX XXXXX" required />
+                            <button type="button" class="btn btn-outline btn-sm" onclick="sendOTP('cPhone')"
+                                data-i18n="btn_get_otp">OTP পান</button>
+                        </div>
+                        <div class="otp-sent" id="cPhone_otp_sent" data-i18n="toast_otp_sent">✅ OTP পাঠানো হয়েছে</div>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_otp_mobile">মোবাইল OTP <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="cPhoneOTP" data-i18n-placeholder="placeholder_otp"
+                            placeholder="৬ সংখ্যার OTP" maxlength="6" />
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_whatsapp">WhatsApp নম্বর</label>
+                        <input type="tel" class="form-control" id="cWhatsapp" data-i18n-placeholder="placeholder_phone"
+                            placeholder="+91 98XXX XXXXX" />
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_email_otp">ইমেইল আইডি (OTP যাচাইকরণের জন্য) <span
+                                class="required">*</span></label>
+                        <div class="input-group">
+                            <input type="email" class="form-control" id="cEmail"
+                                data-i18n-placeholder="placeholder_email" placeholder="yourname@example.com" required />
+                            <button type="button" class="btn btn-outline btn-sm" onclick="sendOTP('cEmail')"
+                                data-i18n="btn_get_otp">OTP পান</button>
+                        </div>
+                        <div class="otp-sent" id="cEmail_otp_sent" data-i18n="toast_email_otp_sent">✅ ইমেইল OTP পাঠানো
+                            হয়েছে</div>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_otp_email">ইমেইল OTP <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="cEmailOTP" data-i18n-placeholder="placeholder_otp"
+                            placeholder="৬ সংখ্যার OTP" maxlength="6" />
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="label_id_upload">পরিচয়পত্র আপলোড (Aadhaar/Voter/PAN) <span
+                                class="required">*</span></label>
+                        <!-- Document type selector -->
+                        <select class="form-control" id="cDocType" required
+                            style="margin-bottom:10px;border:2px solid var(--primary-low);">
+                            <option value="">ডকুমেন্টের ধরন নির্বাচন করুন *</option>
+                            <option value="aadhaar">আধার কার্ড (Aadhaar Card)</option>
+                            <option value="voter">ভোটার আইডি (Voter ID Card)</option>
+                            <option value="pan">প্যান কার্ড (PAN Card)</option>
+                        </select>
+                        <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px">JPG, PNG বা PDF ফরম্যাট।
+                            সর্বোচ্চ
+                            <strong style="color:var(--secondary)">10MB</strong>
+                        </p>
+                        <div class="file-upload-area" id="cIdArea">
+                            <div class="upload-icon"></div>
+                            <p data-i18n="upload_area_p">ক্লিক করুন বা ফাইল টেনে আনুন</p>
+                            <p style="font-size:11px;color:var(--text-dim);margin-top:4px">JPG, PNG বা PDF ফরম্যাট।
+                                সর্বোচ্চ
+                                10MB</p>
+                            <input type="file" id="cIdFile"
+                                accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" />
+                        </div>
+                        <div class="file-name" id="cIdFileName"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-top:8px">
+                        <button class="btn btn-secondary" data-prev data-i18n="btn_prev_step">← Previous Step</button>
+                        <button class="btn btn-primary" data-next data-i18n="btn_next_step">Next Step →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Legal -->
+                <div class="step-form" id="csform2">
+                    <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px"><span
+                            data-i18n="num_3">৩</span>. <span data-i18n="step_legal">আইনি সম্মতি</span></h3>
+                    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px" data-i18n="legal_p">নিচে দেওয়া
+                        সব শর্তগুলো ভালো করে পড়ুন এবং সম্মতি দিন</p>
+                    <p style="font-size:12px;color:var(--primary-light);margin-bottom:12px"><span
+                            data-i18n="legal_links_prefix">নীতিমালা পড়ুন:</span> <a href="terms.html" target="_blank"
+                            style="color:var(--primary-light)" data-i18n="link_terms">Terms & Conditions</a>
+                        | <a href="privacy.html" target="_blank" style="color:var(--primary-light)"
+                            data-i18n="link_privacy">Privacy Policy</a> |
+                        <a href="refund.html" target="_blank" style="color:var(--primary-light)"
+                            data-i18n="link_refund">Refund Policy</a> | <a href="replacement.html" target="_blank"
+                            style="color:var(--primary-light)" data-i18n="link_replacement">Replacement
+                            Policy</a>
+                    </p>
+
+                    <div class="legal-section" id="customerLegal">
+                        <h4 data-i18n="legal_cus_h4">গ্রাহকের আইনি চুক্তি ও সম্মতি</h4>
+                        <button type="button" class="select-all-btn" onclick="selectAll('customerLegal')"
+                            data-i18n="btn_select_all">সব সিলেক্ট করুন / বাতিল করুন</button>
+
+                        <div class="checkbox-item"><input type="checkbox" id="cc1" /><label for="cc1"
+                                data-i18n="legal_cus_1">আমি নিশ্চিত করছি যে আমি প্রদত্ত তথ্য সঠিক ও সম্পূর্ণ।</label>
+                        </div>
+                        <div class="checkbox-item"><input type="checkbox" id="cc2" /><label for="cc2"
+                                data-i18n="legal_cus_2">আমি বুঝেছি যে এই প্ল্যাটফর্ম শুধুমাত্র একটি ডিজিটাল সংযোগকারী
+                                (Connecting Platform), এটি সরাসরি কোনো কর্মী নিয়োগ করে না।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="cc3" /><label for="cc3"
+                                data-i18n="legal_cus_3">আমি কর্মীকে নিজ দায়িত্বে যাচাই (Police Verification /
+                                Background Check) করার দায়িত্ব নিচ্ছি।</label>
+                        </div>
+                        <div class="checkbox-item"><input type="checkbox" id="cc4" /><label for="cc4"
+                                data-i18n="legal_cus_4">কর্মীর কোনো ব্যক্তিগত আচরণ, দুর্ঘটনা বা অপরাধের ক্ষেত্রে
+                                প্ল্যাটফর্ম দায়ী থাকবে না — আমি এটি মেনে নিচ্ছি।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="cc5" /><label for="cc5"
+                                data-i18n="legal_cus_5">আমি কর্মীর সাথে সম্মানজনক আচরণ করব এবং কোনো প্রকার মানসিক,
+                                শারীরিক বা যৌন হয়রানি করব না।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="cc6" /><label for="cc6"
+                                data-i18n="legal_cus_6">আমি বুঝেছি যে পেমেন্ট সম্পূর্ণ ওয়েবসাইটের মাধ্যমে হবে।</label>
+                        </div>
+                        <div class="checkbox-item"><input type="checkbox" id="cc7" /><label for="cc7">
+                                <a href="refund_replacement.html" target="_blank" data-i18n="link_refund_replacement"
+                                    style="color:var(--primary-light)">Refund & Replacement Policy</a>
+                                <span data-i18n="legal_cus_7_suffix">মেনে চলব।</span></label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="cc8" /><label for="cc8">
+                                <a href="privacy_data.html" target="_blank" data-i18n="link_privacy_data"
+                                    style="color:var(--primary-light)">Privacy Policy ও Data Usage Policy</a>
+                                <span data-i18n="legal_cus_8_suffix">মেনে নিচ্ছি।</span></label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="cc9" /><label for="cc9"
+                                data-i18n="legal_cus_9">কোনো বিরোধ হলে প্ল্যাটফর্মের Dispute Resolution Policy অনুযায়ী
+                                বিষয়টি নিষ্পত্তি হবে — আমি সম্মত।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="cc10" /><label for="cc10"
+                                data-i18n="legal_cus_10">জরুরি পরিস্থিতিতে আমি স্থানীয় প্রশাসনের সাথে যোগাযোগ
+                                করব।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="cc11" /><label for="cc11"
+                                data-i18n="legal_cus_11">আমি সম্মতি দিচ্ছি যে আমার তথ্য Digital Personal Data Protection
+                                Act অনুযায়ী সংরক্ষণ করা হবে।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="cc12" /><label for="cc12"
+                                data-i18n="legal_cus_12">আমি জানি যে আমার তথ্য কেবল পরিষেবা প্রদানের উদ্দেশ্যে ব্যবহার
+                                হবে।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="cc13" /><label for="cc13"
+                                data-i18n="legal_cus_13">প্রয়োজনে আইন প্রয়োগকারী সংস্থাকে তথ্য প্রদান করা হতে
+                                পারে।</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="cc14" /><label for="cc14"
+                                data-i18n="legal_cus_14">আমি চাইলে ভবিষ্যতে আমার ডেটা ডিলিট করার অনুরোধ করতে
+                                পারি।</label></div>
+                    </div>
+
+                    <div class="consent-declaration" data-i18n="legal_consent_final">এই ফর্মটি জমা দেওয়ার মাধ্যমে, আমি
+                        উপরের সমস্ত আইনিভাবে বাধ্যতামূলক শর্তাবলী এবং কাজের লোক প্ল্যাটফর্মের শর্তাবলী, গোপনীয়তা নীতি,
+                        রিফান্ড নীতি এবং প্রতিস্থাপন নীতিতে সম্মত হচ্ছি।</div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:8px">
+                        <button class="btn btn-secondary" data-prev data-i18n="btn_prev_step">← Previous Step</button>
+                        <button class="btn btn-primary" onclick="submitCustomerReg()" style="min-width:200px"
+                            data-i18n="btn_reg_complete">✅ Complete Registration</button>
+                    </div>
+                </div>
+
+            </div><!-- reg-card -->
+            <div class="auth-footer" style="text-align:center;margin-top:16px"><span
+                    data-i18n="msg_reg_worker_footer">ইতিমধ্যে অ্যাকাউন্ট আছে?</span> <a href="login-customer.html"
+                    style="color:var(--primary-light);text-decoration:none" data-i18n="link_login">লগইন করুন</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initWizard();
+            initFileUpload('cIdArea', 'cIdFile', 'cIdFileName');
+        });
+
+        function submitCustomerReg() {
+            // Mandatory field validation
+            const name = document.getElementById('cName')?.value?.trim();
+            const address = document.getElementById('cAddress')?.value?.trim();
+            const wtype = document.getElementById('cWorkType')?.value;
+            const phone = document.getElementById('cPhone')?.value?.trim();
+            const email = document.getElementById('cEmail')?.value?.trim();
+            const docType = document.getElementById('cDocType')?.value;
+            const idFile = document.getElementById('cIdFile')?.files?.[0];
+
+            if (!name) { showToast(getTranslation('toast_fill_all'), 'error'); return; }
+            if (!address) { showToast(getTranslation('toast_fill_all'), 'error'); return; }
+            if (!wtype) { showToast(getTranslation('opt_select_type'), 'error'); return; }
+
+            const mobileRegex = /^(?:\+91|91)?[6-9]\d{9}$/;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!phone) { showToast(getTranslation('label_phone_otp'), 'error'); return; }
+            if (!mobileRegex.test(phone)) { showToast('Invalid mobile number', 'error'); return; }
+            if (email && !emailRegex.test(email)) { showToast('Invalid email', 'error'); return; }
+            if (!docType) { showToast(getTranslation('opt_doc_select'), 'error'); return; }
+            if (!idFile) { showToast(getTranslation('label_id_upload'), 'error'); return; }
+
+            const checks = document.querySelectorAll('#customerLegal input[type=checkbox]');
+            const allChecked = Array.from(checks).every(c => c.checked);
+            if (!allChecked) { showToast(getTranslation('toast_legal_error'), 'error'); return; }
+
+            // Convert file to base64, then save
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const pending = JSON.parse(localStorage.getItem('pendingCustomers') || '[]');
+                const regId = 'CREG-' + Date.now();
+                pending.push({
+                    regId, name, address, workType: wtype, phone, email,
+                    docType, docBase64: e.target.result, docFileName: idFile.name,
+                    regDate: new Date().toLocaleDateString('bn-IN'),
+                    status: 'pending'
+                });
+                localStorage.setItem('pendingCustomers', JSON.stringify(pending));
+
+                document.querySelector('.reg-card').innerHTML = `
+                  <div style="text-align:center;padding:40px 20px">
+                    <div style="font-size:64px;margin-bottom:16px">✅</div>
+                    <h2 style="color:var(--text);font-size:22px;margin-bottom:12px" data-i18n="toast_reg_success">নিবন্ধন সফল! আপনার ড্যাশবোর্ডে যাচ্ছেন...</h2>
+                    <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px">
+                      <span data-i18n="msg_wait_admin">অ্যাডমিন অনুমোদন করলে আপনাকে SMS এর মাধ্যমে</span><br/>
+                      <span data-i18n="msg_get_credentials">Customer ID ও পাসওয়ার্ড জানানো হবে।</span><br/>
+                      <strong style="color:var(--secondary)">Registration ID: ${regId}</strong>
+                    </p>
+                    <a href="login-customer.html" class="btn btn-primary" style="margin-top:20px" data-i18n="link_login">লগইন করুন</a>
+                  </div>`;
+                applyTranslations();
+            };
+            reader.readAsDataURL(idFile);
+        }
+    </script>
+</body>
+
+</html>

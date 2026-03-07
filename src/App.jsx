@@ -57,7 +57,7 @@ function App() {
       };
 
       // AUTO-DETECTION & SMART ROUTING LOGIC (Simulated AI)
-      const isFestival = destination.toLowerCase().includes("kolkata") || destination.toLowerCase().includes("gate") || destination.toLowerCase().includes("chowk");
+      const isFestival = destination.toLowerCase().includes("kolkata") || destination.toLowerCase().includes("chowk");
       setFestivalMode(isFestival);
 
       const destClean = destination.split(',')[0] || destination;
