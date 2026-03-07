@@ -26,49 +26,70 @@ export default function RouteResults({ onSelectRoute, apiResult, festivalMode })
         });
     };
 
+    // Use unique data from apiResult if available, otherwise fallback to mocks
+    const getRouteData = (id, type) => {
+        const key = type.toLowerCase().includes('fastest') ? 'fastest' :
+            type.toLowerCase().includes('safest') ? 'safest' :
+                type.toLowerCase().includes('cheapest') || type.toLowerCase().includes('₹10') ? 'cheapest' : null;
+
+        const dynamicData = key ? apiResult?.routes_data?.[key] : null;
+
+        const baseRoutes = {
+            fastest: {
+                id: 1,
+                type: apiResult?.labels?.fastest || 'Fastest Route',
+                time: '32 mins',
+                cost: '45',
+                safety: dynamicSafety || 82,
+                modes: parseRouteModes(apiResult?.fastest_route, [
+                    { icon: <Train size={16} />, label: 'Metro' },
+                    { icon: <Bus size={16} />, label: 'Bus' },
+                    { icon: <PersonStanding size={16} />, label: 'Walk' },
+                ]),
+                tagColor: 'bg-blue-100 text-blue-700 border-blue-200'
+            },
+            safest: {
+                id: 2,
+                type: apiResult?.labels?.safest || 'Safest Route',
+                time: '40 mins',
+                cost: '50',
+                safety: dynamicSafety || 94,
+                modes: parseRouteModes(apiResult?.safest_route, [
+                    { icon: <Train size={16} />, label: 'Metro' },
+                    { icon: <CarTaxiFront size={16} />, label: 'Auto' },
+                ]),
+                tagColor: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                isRecommended: true
+            },
+            cheapest: {
+                id: 3,
+                type: apiResult?.labels?.cheapest || 'Cheapest Route',
+                time: '55 mins',
+                cost: '15',
+                safety: dynamicSafety ? Math.max(0, dynamicSafety - 15) : 76,
+                modes: [
+                    { icon: <Bus size={16} />, label: 'Bus (₹10 Mode)' },
+                ],
+                tagColor: 'bg-amber-100 text-amber-700 border-amber-200'
+            }
+        };
+
+        const route = baseRoutes[key] || baseRoutes.fastest;
+
+        return {
+            ...route,
+            detailed_steps: dynamicData?.detailed_steps || route.detailed_steps,
+            reason: dynamicData?.reason || route.reason,
+            crowd: key === 'safest' ? 'Low' : 'Medium',
+            delay: (id * 2 + 1).toString()
+        };
+    };
+
     const routes = [
-        {
-            id: 1,
-            type: apiResult?.labels?.fastest || 'Fastest Route',
-            time: '32 mins',
-            cost: '45',
-            safety: dynamicSafety || 82,
-            modes: parseRouteModes(apiResult?.fastest_route, [
-                { icon: <Train size={16} />, label: 'Metro' },
-                { icon: <Bus size={16} />, label: 'Bus' },
-                { icon: <PersonStanding size={16} />, label: 'Walk' },
-            ]),
-            tagColor: 'bg-blue-100 text-blue-700 border-blue-200'
-        },
-        {
-            id: 2,
-            type: apiResult?.labels?.safest || 'Safest Route',
-            time: '40 mins',
-            cost: '50',
-            safety: dynamicSafety || 94,
-            modes: parseRouteModes(apiResult?.safest_route, [
-                { icon: <Train size={16} />, label: 'Metro' },
-                { icon: <CarTaxiFront size={16} />, label: 'Auto' },
-            ]),
-            tagColor: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-            isRecommended: true
-        },
-        {
-            id: 3,
-            type: apiResult?.labels?.cheapest || 'Cheapest Route',
-            time: '55 mins',
-            cost: '15',
-            safety: dynamicSafety ? Math.max(0, dynamicSafety - 15) : 76,
-            modes: [
-                { icon: <Bus size={16} />, label: 'Bus (₹10 Mode)' },
-            ],
-            tagColor: 'bg-amber-100 text-amber-700 border-amber-200'
-        }
-    ].map((r, i) => ({
-        ...r,
-        crowd: i === 1 ? 'Low' : 'Medium',
-        delay: (i * 2 + 1).toString()
-    }));
+        getRouteData(1, 'fastest'),
+        getRouteData(2, 'safest'),
+        getRouteData(3, 'cheapest')
+    ];
 
     return (
         <div className="p-4 space-y-4 pb-24 animate-fade-in bg-slate-50 min-h-full">
@@ -113,22 +134,29 @@ export default function RouteResults({ onSelectRoute, apiResult, festivalMode })
                 ))}
             </div>
 
-            {apiResult?.reason && (
-                <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-3xl mb-4 relative overflow-hidden shadow-sm">
-                    <div className="absolute top-0 right-0 w-16 h-16 bg-indigo-100 rounded-full blur-2xl -mr-4 -mt-4"></div>
-                    <div className="relative z-10 flex gap-3">
-                        <div className="bg-indigo-100 p-2 text-indigo-600 rounded-xl h-fit">
-                            <ShieldCheck className="w-5 h-5" />
-                        </div>
-                        <div>
-                            <h3 className="text-sm font-bold text-indigo-900 mb-1">AI Decision Reason</h3>
-                            <p className="text-xs text-indigo-700 font-medium leading-relaxed">
-                                {apiResult.reason}
-                            </p>
+            {/* AI Decision Reason - Dynamic for selected tab */}
+            {(() => {
+                const activeRoute = routes.find(r => r.type.toLowerCase().includes(activeTab));
+                const reason = activeRoute?.reason || apiResult?.reason;
+                if (!reason) return null;
+
+                return (
+                    <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-3xl mb-4 relative overflow-hidden shadow-sm animate-fade-in">
+                        <div className="absolute top-0 right-0 w-16 h-16 bg-indigo-100 rounded-full blur-2xl -mr-4 -mt-4"></div>
+                        <div className="relative z-10 flex gap-3">
+                            <div className="bg-indigo-100 p-2 text-indigo-600 rounded-xl h-fit">
+                                <ShieldCheck className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <h3 className="text-sm font-bold text-indigo-900 mb-1">AI Recommendation Reason</h3>
+                                <p className="text-xs text-indigo-700 font-medium leading-relaxed">
+                                    {reason}
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                );
+            })()}
 
             {routes.map((route) => (
                 <div

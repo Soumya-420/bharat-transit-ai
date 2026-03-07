@@ -62,6 +62,38 @@ function App() {
 
       const destClean = destination.split(',')[0] || destination;
 
+      // Define specific route data for differentiation
+      orchestratedResult.routes_data = {
+        fastest: {
+          reason: "Bypasses 4 congestion points using the express Metro corridor.",
+          detailed_steps: [
+            { type: 'walk', instruction: "Quick walk to Metro Entrance 2", distance: "100m", pathType: "Walking Path" },
+            { type: 'transit', instruction: "Board Metro Blue Line (Express) towards Rajiv Chowk", distance: "Board", pathType: "Transit" },
+            { type: 'transit', instruction: "Transfer to Yellow Line towards Central Secretariat", distance: "Transfer", pathType: "Transit" },
+            { type: 'walk', instruction: `Short 150m walk to ${destClean}`, distance: "150m", pathType: "Walking Path" },
+            { type: 'arrive', instruction: "Arrive at Destination", distance: "Arrive", pathType: "Destination" }
+          ]
+        },
+        safest: {
+          reason: "Prioritizes well-lit, high-frequency bus corridors and minimal walking in quiet zones.",
+          detailed_steps: [
+            { type: 'walk', instruction: "Walk to the main well-lit Bus Stand", distance: "200m", pathType: "Walking Path" },
+            { type: 'transit', instruction: "Board Safeway Bus 764 (CCTV Enabled)", distance: "Board", pathType: "Transit" },
+            { type: 'walk', instruction: "Walk 100m via the main security-monitored corridor", distance: "100m", pathType: "Walking Path" },
+            { type: 'arrive', instruction: "Arrive safely at Destination", distance: "Arrive", pathType: "Destination" }
+          ]
+        },
+        cheapest: {
+          reason: "Optimized for ₹10/₹15 valid DTC transit passes and standard bus lines.",
+          detailed_steps: [
+            { type: 'walk', instruction: "Walk to Local Bus Stop", distance: "250m", pathType: "Walking Path" },
+            { type: 'transit', instruction: "Board Standard Bus Route 413", distance: "Board", pathType: "Transit" },
+            { type: 'walk', instruction: "Walk to final destination", distance: "300m", pathType: "Walking Path" },
+            { type: 'arrive', instruction: "Arrive at Destination", distance: "Arrive", pathType: "Destination" }
+          ]
+        }
+      };
+
       if (isFestival) {
         orchestratedResult.festival_reason = "Major Carnival/Event in progress";
         orchestratedResult.festival_guidance = "AI is routing via crowd-free secondary lanes and pedestrian-friendly paths to avoid heavy event congestion.";
@@ -74,27 +106,27 @@ function App() {
           cheapest: "Cheapest (Festival Optimized)"
         };
 
-        // Granular Step Generation for Festival
-        orchestratedResult.detailed_steps = [
+        // Festival Override for All routes (Simpler for demo)
+        const festivalSteps = [
           { type: 'walk', instruction: "Walk 150m towards the northern exit to avoid main gate crowds", distance: "150m", pathType: "Walking Path" },
           { type: 'turn', instruction: "Turn Right at the police kiosk", distance: "Turn", pathType: "Walking Path" },
           { type: 'transit', instruction: `Board Special Festival Shuttle (Route S-1) towards ${destClean}`, distance: "Board", pathType: "Driving Road" },
           { type: 'walk', instruction: "Walk 200m through the illuminated pedestrian lane", distance: "200m", pathType: "Walking Path" },
           { type: 'arrive', instruction: "Arrive safely at your destination", distance: "Arrive", pathType: "Destination" }
         ];
+
+        orchestratedResult.routes_data.fastest.detailed_steps = festivalSteps;
+        orchestratedResult.routes_data.safest.detailed_steps = festivalSteps;
+        orchestratedResult.routes_data.cheapest.detailed_steps = festivalSteps;
+        orchestratedResult.routes_data.fastest.reason = "Smart festival bypass active.";
+        orchestratedResult.routes_data.safest.reason = "Crowd-safety optimization active.";
+        orchestratedResult.routes_data.cheapest.reason = "Budget-optimized festival shuttle.";
       } else {
         orchestratedResult.labels = {
           fastest: "Fastest Route",
           safest: "Safest Route",
           cheapest: "Cheapest Route"
         };
-
-        orchestratedResult.detailed_steps = [
-          { type: 'walk', instruction: "Wait at Nehru Place Stop", distance: "0m", pathType: "Walking Path" },
-          { type: 'transit', instruction: "Board Bus 764 towards Dhaula Kuan", distance: "Board", pathType: "Driving Road" },
-          { type: 'walk', instruction: "Alight at Dhaula Kuan", distance: "0m", pathType: "Walking Path" },
-          { type: 'arrive', instruction: "Walk 200m to Destination", distance: "200m", pathType: "Destination" }
-        ];
       }
 
       setApiResult(orchestratedResult);
