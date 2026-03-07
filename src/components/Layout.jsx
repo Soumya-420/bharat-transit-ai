@@ -1,7 +1,80 @@
-import React from 'react';
-import { Menu, MoreVertical, Home, QrCode, Shield, IndianRupee, User } from 'lucide-react';
+import React, { useState } from 'react';
+import { Menu, MoreVertical, Home, QrCode, Shield, IndianRupee, User, X, Globe, Check } from 'lucide-react';
+
+// 22+ Indian Languages
+const LANGUAGES = [
+    { code: 'EN', label: 'English', native: 'English' },
+    { code: 'HI', label: 'Hindi', native: 'हिंदी' },
+    { code: 'BN', label: 'Bengali', native: 'বাংলা' },
+    { code: 'TE', label: 'Telugu', native: 'తెలుగు' },
+    { code: 'MR', label: 'Marathi', native: 'मराठी' },
+    { code: 'TA', label: 'Tamil', native: 'தமிழ்' },
+    { code: 'GU', label: 'Gujarati', native: 'ગુજરાતી' },
+    { code: 'KN', label: 'Kannada', native: 'ಕನ್ನಡ' },
+    { code: 'ML', label: 'Malayalam', native: 'മലയാളം' },
+    { code: 'PA', label: 'Punjabi', native: 'ਪੰਜਾਬੀ' },
+    { code: 'UR', label: 'Urdu', native: 'اردو' },
+    { code: 'OD', label: 'Odia', native: 'ଓଡ଼ିଆ' },
+    { code: 'AS', label: 'Assamese', native: 'অসমীয়া' },
+    { code: 'MN', label: 'Maithili', native: 'मैथिली' },
+    { code: 'SA', label: 'Sanskrit', native: 'संस्कृत' },
+    { code: 'SD', label: 'Sindhi', native: 'سنڌي' },
+    { code: 'KS', label: 'Kashmiri', native: 'کشمیری' },
+    { code: 'KO', label: 'Konkani', native: 'कोंकणी' },
+    { code: 'MZ', label: 'Mizo', native: 'Mizo' },
+    { code: 'NT', label: 'Nepali', native: 'नेपाली' },
+    { code: 'BP', label: 'Bhojpuri', native: 'भोजपुरी' },
+    { code: 'TL', label: 'Tulu', native: 'ತುಳು' },
+];
+
+// Global translations map (key → language code → translated string)
+export const TRANSLATIONS = {
+    offlineReady: {
+        EN: 'Offline Ready', HI: 'ऑफ़लाइन तैयार', BN: 'অফলাইন প্রস্তুত',
+        TE: 'ఆఫ్లైన్ సిద్ధం', MR: 'ऑफलाइन तयार', TA: 'ஆஃப்லைன் தயார்',
+        GU: 'ઑફલાઇન તૈयார', KN: 'ಆಫ್‌ಲೈನ್ ಸಿದ್ಧ', ML: 'ഓഫ്‌ലൈൻ തയ്യാർ',
+        PA: 'ਔਫਲਾਈਨ ਤਿਆਰ', UR: 'آف لائن تیار', OD: 'ଅଫଲାଇନ ପ୍ରସ୍ତୁତ',
+    },
+    home: {
+        EN: 'Home', HI: 'होम', BN: 'হোম', TE: 'హోం', MR: 'होम', TA: 'முகப்பு',
+        GU: 'હોમ', KN: 'ಹೋಮ್', ML: 'ഹോം', PA: 'ਹੋਮ', UR: 'ہوم', OD: 'ହୋମ',
+    },
+    scan: {
+        EN: 'Scan', HI: 'स्कैन', BN: 'স্ক্যান', TE: 'స్కాన్', MR: 'स्कॅन', TA: 'ஸ்கேன்',
+        GU: 'સ્કૅન', KN: 'ಸ್ಕ್ಯಾನ್', ML: 'സ്കാൻ', PA: 'ਸਕੈਨ', UR: 'اسکین', OD: 'ସ୍କ୍ୟାନ',
+    },
+    companion: {
+        EN: 'Companion', HI: 'साथी', BN: 'সঙ্গী', TE: 'సహచరుడు', MR: 'साथी', TA: 'தோழர்',
+        GU: 'સાથી', KN: 'ಸಹ', ML: 'സഹചാരി', PA: 'ਸਾਥੀ', UR: 'ساتھی', OD: 'ସାଥୀ',
+    },
+    budget: {
+        EN: 'Budget', HI: 'बजट', BN: 'বাজেট', TE: 'బడ్జెట్', MR: 'बजेट', TA: 'பட்ஜெட்',
+        GU: 'બજેટ', KN: 'ಬಜೆಟ್', ML: 'ബജറ്റ്', PA: 'ਬਜਟ', UR: 'بجٹ', OD: 'ବଜେଟ',
+    },
+    profile: {
+        EN: 'Profile', HI: 'प्रोफ़ाइल', BN: 'প্রোফাইল', TE: 'ప్రొఫైల్', MR: 'प्रोफाइल', TA: 'சுயவிவரம்',
+        GU: 'પ્રોફાઇલ', KN: 'ಪ್ರೊಫೈಲ್', ML: 'പ്രൊഫൈൽ', PA: 'ਪ੍ਰੋਫਾਈਲ', UR: 'پروفائل', OD: 'ପ୍ରୋଫାଇଲ',
+    },
+    findRoutes: {
+        EN: 'Find Routes', HI: 'रास्ते खोजें', BN: 'রুট খুঁজুন', TE: 'మార్గాలు కనుగొనండి', MR: 'मार्ग शोधा',
+        TA: 'வழிகளை கண்டறி', GU: 'માર્ગ શોધો', KN: 'ಮಾರ್ಗ ಹುಡುಕಿ', ML: 'വഴികൾ കണ്ടെത്തുക',
+        PA: 'ਰਸਤੇ ਲੱਭੋ', UR: 'راستے تلاش کریں', OD: 'ରାସ୍ତା ଖୋଜ',
+    },
+    selectLanguage: {
+        EN: 'Select Language', HI: 'भाषा चुनें', BN: 'ভাষা বেছে নিন', TE: 'భాష ఎంచుకోండి',
+        MR: 'भाषा निवडा', TA: 'மொழி தேர்ந்தெடு', GU: 'ભાષા પસંદ કરો', KN: 'ಭಾಷೆ ಆಯ್ಕೆ ಮಾಡಿ',
+        ML: 'ഭാഷ തിരഞ്ഞെടുക്കുക', PA: 'ਭਾਸ਼ਾ ਚੁਣੋ', UR: 'زبان منتخب کریں', OD: 'ଭାଷା ଚୟନ କରନ୍ତୁ',
+    }
+};
+
+export function t(key, lang) {
+    return TRANSLATIONS[key]?.[lang] || TRANSLATIONS[key]?.['EN'] || key;
+}
 
 export default function Layout({ children, currentScreen, setCurrentScreen, lang, setLang }) {
+    const [showMenu, setShowMenu] = useState(false);
+    const activeLang = LANGUAGES.find(l => l.code === lang) || LANGUAGES[0];
+
     return (
         <div className="flex flex-col h-screen max-w-md mx-auto bg-surface-50 shadow-2xl overflow-hidden relative border-x border-slate-200">
 
@@ -14,30 +87,19 @@ export default function Layout({ children, currentScreen, setCurrentScreen, lang
                     <h1 className="text-xl font-bold text-slate-800 tracking-tight leading-tight">
                         Bharat <span className="text-accent-amber">Transit</span> AI
                     </h1>
-                    <div className="flex items-center gap-1 mt-0.5 bg-slate-100 px-2 py-0.5 rounded-md">
-                        <span
-                            onClick={() => setLang('EN')}
-                            className={`text-[9px] font-bold uppercase tracking-tighter cursor-pointer transition-colors ${lang === 'EN' ? 'text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
-                        >
-                            EN
-                        </span>
-                        <div className="w-[1px] h-2 bg-slate-300 mx-0.5"></div>
-                        <span
-                            onClick={() => setLang('HI')}
-                            className={`text-[9px] font-bold uppercase tracking-tighter cursor-pointer transition-colors ${lang === 'HI' ? 'text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
-                        >
-                            हिंदी
-                        </span>
-                        <div className="w-[1px] h-2 bg-slate-200 mx-0.5"></div>
-                        <div className="flex items-center gap-1 ml-1 pl-1 border-l border-slate-200">
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                        <div className="flex items-center gap-1">
                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
                             <span className="text-[8px] font-black text-emerald-600 uppercase tracking-[0.1em]">
-                                {lang === 'EN' ? 'Offline Ready' : 'ऑफ़लाइन तैयार'}
+                                {t('offlineReady', lang)}
                             </span>
                         </div>
                     </div>
                 </div>
-                <button className="p-2 -mr-2 rounded-full hover:bg-slate-100 transition-colors interactive-tap text-slate-700">
+                <button
+                    onClick={() => setShowMenu(true)}
+                    className="p-2 -mr-2 rounded-full hover:bg-slate-100 transition-colors interactive-tap text-slate-700"
+                >
                     <MoreVertical className="w-6 h-6" />
                 </button>
             </header>
@@ -50,39 +112,60 @@ export default function Layout({ children, currentScreen, setCurrentScreen, lang
             {/* Bottom Navigation Bar */}
             <nav className="bg-white border-t border-slate-200 px-2 py-2 pb-safe z-20">
                 <ul className="flex justify-between items-center">
-                    <NavItem
-                        icon={<Home />}
-                        label={lang === 'EN' ? 'Home' : 'होम'}
-                        isActive={currentScreen === 'home'}
-                        onClick={() => setCurrentScreen('home')}
-                    />
-                    <NavItem
-                        icon={<QrCode />}
-                        label={lang === 'EN' ? 'Scan' : 'स्क্যান'}
-                        isActive={currentScreen === 'scan'}
-                        onClick={() => setCurrentScreen('scan')}
-                    />
-                    <NavItem
-                        icon={<Shield />}
-                        label={lang === 'EN' ? 'Companion' : 'साथी'}
-                        isActive={currentScreen === 'companion'}
-                        onClick={() => setCurrentScreen('companion')}
-                    />
-                    <NavItem
-                        icon={<IndianRupee />}
-                        label={lang === 'EN' ? 'Budget' : 'बजट'}
-                        isActive={currentScreen === 'budget'}
-                        onClick={() => setCurrentScreen('budget')}
-                    />
-                    <NavItem
-                        icon={<User />}
-                        label={lang === 'EN' ? 'Profile' : 'प्रोफ़ाइल'}
-                        isActive={currentScreen === 'profile'}
-                        onClick={() => setCurrentScreen('profile')}
-                    />
+                    <NavItem icon={<Home />} label={t('home', lang)} isActive={currentScreen === 'home'} onClick={() => setCurrentScreen('home')} />
+                    <NavItem icon={<QrCode />} label={t('scan', lang)} isActive={currentScreen === 'scan'} onClick={() => setCurrentScreen('scan')} />
+                    <NavItem icon={<Shield />} label={t('companion', lang)} isActive={currentScreen === 'companion'} onClick={() => setCurrentScreen('companion')} />
+                    <NavItem icon={<IndianRupee />} label={t('budget', lang)} isActive={currentScreen === 'budget'} onClick={() => setCurrentScreen('budget')} />
+                    <NavItem icon={<User />} label={t('profile', lang)} isActive={currentScreen === 'profile'} onClick={() => setCurrentScreen('profile')} />
                 </ul>
             </nav>
 
+            {/* 3-dot Menu: Language Picker */}
+            {showMenu && (
+                <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[5000] flex items-end animate-fade-in" onClick={() => setShowMenu(false)}>
+                    <div
+                        className="w-full max-w-md mx-auto bg-white rounded-t-[2.5rem] pb-8 animate-slide-up border-t-4 border-primary-500 overflow-hidden"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-6 pt-6 pb-0">
+                            <div className="flex items-center gap-3">
+                                <div className="bg-primary-50 p-2.5 rounded-2xl">
+                                    <Globe className="w-5 h-5 text-primary-600" />
+                                </div>
+                                <div>
+                                    <h3 className="font-black text-slate-800 text-base">{t('selectLanguage', lang)}</h3>
+                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">22+ Indian Languages</p>
+                                </div>
+                            </div>
+                            <button onClick={() => setShowMenu(false)} className="bg-slate-100 p-2 rounded-full text-slate-500">
+                                <X size={18} />
+                            </button>
+                        </div>
+
+                        {/* Language Grid */}
+                        <div className="px-4 pt-5 max-h-[60vh] overflow-y-auto">
+                            <div className="grid grid-cols-2 gap-2">
+                                {LANGUAGES.map(lng => (
+                                    <button
+                                        key={lng.code}
+                                        onClick={() => { setLang(lng.code); setShowMenu(false); }}
+                                        className={`flex items-center justify-between px-4 py-3 rounded-2xl border-2 transition-all text-left group ${lang === lng.code ? 'bg-primary-50 border-primary-400 shadow-md' : 'bg-slate-50 border-slate-100 hover:border-primary-200 hover:bg-primary-50/50'}`}
+                                    >
+                                        <div>
+                                            <p className={`font-black text-sm ${lang === lng.code ? 'text-primary-700' : 'text-slate-700'}`}>{lng.native}</p>
+                                            <p className="text-[10px] font-bold text-slate-400">{lng.label}</p>
+                                        </div>
+                                        {lang === lng.code && (
+                                            <Check size={16} className="text-primary-600 shrink-0" />
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
