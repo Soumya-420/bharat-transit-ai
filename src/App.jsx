@@ -6,6 +6,7 @@ import LiveNavigation from './components/LiveNavigation';
 import SafeCompanion from './components/SafeCompanion';
 import VisionAI from './components/VisionAI';
 import BudgetMode from './components/BudgetMode';
+import FestivalSmart from './components/FestivalSmart';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState('home');
@@ -151,6 +152,8 @@ function App() {
         return <HomeSearch onSearch={handleSearch} isLoading={isLoading} setCurrentScreen={setCurrentScreen} lang={lang} />;
       case 'results':
         return <RouteResults onSelectRoute={handleSelectRoute} apiResult={apiResult} festivalMode={festivalMode} lang={lang} />;
+      case 'festival':
+        return <FestivalSmart lang={lang} />;
       case 'navigation':
         return <LiveNavigation route={selectedRoute} apiResult={apiResult} festivalMode={festivalMode} lang={lang} />;
       case 'companion':

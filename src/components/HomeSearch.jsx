@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Mic, Navigation, Shield, RotateCw, Loader2 } from 'lucide-react';
+import { Search, MapPin, Mic, Navigation, Shield, RotateCw, Loader2, Flame, ChevronRight } from 'lucide-react';
 
 // Map language code → BCP47 speech recognition locale
 const SPEECH_LOCALE = {
@@ -125,6 +125,26 @@ export default function HomeSearch({ onSearch, isLoading, setCurrentScreen, lang
 
     return (
         <div className="p-4 space-y-6 pb-20 animate-slide-up">
+            {/* 🎉 Festival-Smart Alert Banner */}
+            <div
+                onClick={() => setCurrentScreen('festival')}
+                className="bg-gradient-to-r from-orange-500 to-red-500 rounded-3xl p-4 flex items-center gap-4 shadow-lg shadow-orange-500/30 cursor-pointer interactive-tap hover:scale-[1.01] transition-all relative overflow-hidden"
+            >
+                <div className="absolute right-0 top-0 w-24 h-24 bg-white/10 rounded-full blur-2xl -mr-8 -mt-8"></div>
+                <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
+                    <Flame className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1 relative z-10">
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                        <div className="w-1.5 h-1.5 bg-yellow-300 rounded-full animate-pulse"></div>
+                        <p className="text-[9px] text-orange-100 font-black uppercase tracking-widest">Festival-Smart AI Active</p>
+                    </div>
+                    <p className="font-black text-white text-sm leading-tight">🎨 Holi Procession detected nearby</p>
+                    <p className="text-[10px] text-orange-100 font-bold mt-0.5">Chandni Chowk · Extreme crowd · Tap to see alt routes</p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-white/70 shrink-0 relative z-10" />
+            </div>
+
             {/* Search Card */}
             <div className="bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
                 {/* Inputs */}
