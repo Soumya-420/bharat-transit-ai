@@ -110,10 +110,15 @@ export default function VisionAI({ lang, onNavigate }) {
     const handleStartNav = () => {
         if (onNavigate) {
             onNavigate({
+                id: 2,
                 name: "Bus 764",
-                type: "bus",
-                duration: "25 min",
-                price: "₹10",
+                type: "DTC Bus 764",
+                time: "25 min",
+                cost: "₹10",
+                safety: 94,
+                emoji: '🚍',
+                color: '#16a34a',
+                bgGradient: 'from-emerald-600 to-teal-600',
                 path: "DTC Route 764",
                 detailed_steps: [
                     { type: 'walk', icon: '🚶', text: lang === 'HI' ? "नेहरू प्लेस स्टॉप पर प्रतीक्षा करें" : "Wait at Nehru Place Stop", distance: "0m", pathType: "Walking Path" },
