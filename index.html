@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Bharat Transit AI</title>
+  <style>
+    /* Hide Google Translate top bar & branding */
+    .goog-te-banner-frame,
+    .goog-te-balloon-frame {
+      display: none !important;
+    }
+
+    body {
+      top: 0 !important;
+    }
+
+    .goog-te-gadget {
+      display: none !important;
+    }
+
+    .skiptranslate {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <!-- Hidden Google Translate element - powers language switching -->
+  <div id="google_translate_element" style="display:none;"></div>
+  <script type="text/javascript">
+    // Force English default on first load of the session
+    if (!sessionStorage.getItem('bta_lang_init')) {
+      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + location.hostname + ';';
+      sessionStorage.setItem('bta_lang_init', 'true');
+    }
+
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+    // Helper to switch language programmatically
+    window.changeAppLanguage = function (langCode) {
+      if (langCode === 'EN') {
+        // Restore original language
+        var iframe = document.querySelector('.goog-te-banner-frame');
+        if (iframe) {
+          var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+          var restoreEl = innerDoc.getElementsByTagName('button');
+          for (var i = 0; i < restoreEl.length; i++) {
+            if (restoreEl[i].id.indexOf('restore') >= 0) { restoreEl[i].click(); return; }
+          }
+        }
+        // Fallback: clear cookies and reload
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + location.hostname + ';';
+        sessionStorage.setItem('language_reset', 'true');
+        location.reload();
+        return;
+      }
+      var select = document.querySelector('.goog-te-combo');
+      if (select) {
+        select.value = langCode.toLowerCase();
+        select.dispatchEvent(new Event('change'));
+      } else {
+        // Widget not loaded yet - set cookie directly
+        document.cookie = 'googtrans=/en/' + langCode.toLowerCase() + '; path=/';
+        document.cookie = 'googtrans=/en/' + langCode.toLowerCase() + '; path=/; domain=' + location.hostname;
+        location.reload();
+      }
+    };
+  </script>
+  <script type="module" src="/src/main.jsx"></script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+
+</html>
