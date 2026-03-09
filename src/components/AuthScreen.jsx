@@ -109,7 +109,7 @@ export default function AuthScreen({ onLogin }) {
             trustScore: score,
             trustInfo: trustLabel(score)
         };
-        localStorage.setItem('bta_user_' + phone, JSON.stringify(fullProfile));
+        localStorage.setItem('bta_user_' + profile.phone, JSON.stringify(fullProfile));
 
         setPhase('trust');
     };
